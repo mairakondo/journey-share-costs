@@ -228,7 +228,7 @@
   .stop-body h3 { @apply font-display text-base font-extrabold; }
   .stop-body p { @apply mt-1 flex items-center gap-1 text-xs text-muted-foreground; }
   .stop-title-row { @apply flex items-center gap-2; }
-  .spot-badge { @apply ml-auto inline-flex shrink-0 rounded-md bg-sun/25 px-2 py-1 text-[10px] font-extrabold text-sun-foreground; }
+  .spot-badge { @apply inline-flex shrink-0 rounded-md bg-sun/25 px-2 py-1 text-[10px] font-extrabold text-sun-foreground; }
   .stop-actions { @apply flex shrink-0 items-center gap-1; }
   .empty-day { @apply rounded-2xl border border-dashed border-border bg-surface p-8 text-center text-sm font-semibold text-muted-foreground; }
   .day-note { @apply h-fit rounded-2xl bg-primary p-6 text-primary-foreground; }
