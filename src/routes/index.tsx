@@ -77,7 +77,7 @@ function TravelersApp() {
         <header className="topbar">
           <button onClick={() => setView("home")} className="brand" aria-label="Roamly home">
             <span className="brand-mark"><Plane size={19} /></span>
-            <span>roamly</span>
+            <span>Travelers</span>
           </button>
           <div className="flex items-center gap-2">
             {view !== "home" && <span className="hidden text-sm font-semibold text-muted-foreground sm:inline">Lisbon · May 18–23</span>}
