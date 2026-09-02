@@ -253,11 +253,12 @@ const initialPhotos: Photo[] = [
 ];
 
 const initialExpenses: Expense[] = [
-  { id: "e1", day: 1, time: "09:45", place: "Rua de Belém 84", label: "Pastéis & coffee", amount: 18.6, payer: "Maira", source: "scan" },
-  { id: "e2", day: 1, time: "11:10", place: "Praça do Império", label: "Monastery tickets", amount: 40, payer: "Jon", source: "scan" },
-  { id: "e3", day: 1, time: "14:55", place: "LX Factory", label: "Lunch at Rio Maravilha", amount: 86.4, payer: "Ana", source: "scan" },
-  { id: "e4", day: 0, time: "16:15", place: "Praça do Comércio", label: "Airport taxi", amount: 32, payer: "Maira", source: "manual" },
-  { id: "e5", day: 1, time: "20:30", place: "Bairro Alto", label: "Late drinks", amount: 24.5, payer: "Luis", source: "manual" },
+  { id: "e1", day: 1, time: "09:45", place: "Rua de Belém 84", label: "Pastéis & coffee", amount: 18.6, payer: "Maira", source: "scan", split: equalSplit() },
+  { id: "e2", day: 1, time: "11:10", place: "Praça do Império", label: "Monastery tickets", amount: 40, payer: "Jon", source: "scan", split: equalSplit() },
+  { id: "e3", day: 1, time: "14:55", place: "LX Factory", label: "Lunch at Rio Maravilha", amount: 86.4, payer: "Ana", source: "scan", split: { mode: "shares", participants: ["You", "Jon", "Ana"], values: { You: 1, Jon: 2, Ana: 1 } } },
+  { id: "e4", day: 0, time: "16:15", place: "Praça do Comércio", label: "Airport taxi", amount: 32, payer: "Maira", source: "manual", split: equalSplit(["You", "Jon"]) },
+  { id: "e5", day: 1, time: "20:30", place: "Bairro Alto", label: "Late drinks", amount: 24.5, payer: "Luis", source: "manual", split: { mode: "percent", participants: ["You", "Luis"], values: { You: 40, Luis: 60 } } },
+
 ];
 
 const minutes = (t: string) => {
