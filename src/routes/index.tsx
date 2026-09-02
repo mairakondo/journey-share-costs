@@ -193,7 +193,7 @@ const initialStops: Stop[] = [
 
 type Photo = { id: string; src: string; day: number; time: string; place: string; stopId?: string | null };
 
-type SplitMode = "equal" | "shares" | "percent";
+type SplitMode = "equal" | "exact" | "percent";
 type Split = { mode: SplitMode; participants: string[]; values: Record<string, number> };
 
 type Expense = { id: string; day: number; time: string; place: string; label: string; amount: number; payer: string; source: "scan" | "manual"; stopId?: string | null; split: Split };
@@ -215,7 +215,10 @@ function splitShares(rawSplit: Split | undefined, amount: number): Record<string
     const each = amount / people.length;
     return Object.fromEntries(people.map((n) => [n, each]));
   }
-  const weights = people.map((n) => Math.max(0, Number(split.values[n] ?? (split.mode === "percent" ? 100 / people.length : 1))));
+  if (split.mode === "exact") {
+    return Object.fromEntries(people.map((n) => [n, Math.max(0, Number(split.values[n] ?? 0))]));
+  }
+  const weights = people.map((n) => Math.max(0, Number(split.values[n] ?? 100 / people.length)));
   const total = weights.reduce((s, w) => s + w, 0);
   if (total === 0) return Object.fromEntries(people.map((n) => [n, 0]));
   return Object.fromEntries(people.map((n, i) => [n, (amount * weights[i]!) / total]));
@@ -223,7 +226,7 @@ function splitShares(rawSplit: Split | undefined, amount: number): Record<string
 
 const splitLabel = (raw: Split | undefined) => {
   const split = normalizeSplit(raw);
-  return `${split.participants.length} ${split.participants.length === 1 ? "traveler" : "travelers"} · ${split.mode === "equal" ? "equally" : split.mode === "shares" ? "by number" : "by percentage"}`;
+  return `${split.participants.length} ${split.participants.length === 1 ? "traveler" : "travelers"} · ${split.mode === "equal" ? "equally" : split.mode === "exact" ? "exact amounts" : "by percentage"}`;
 };
 
 function SplitPicker({ split: rawSplit, amount, onChange }: { split: Split | undefined; amount: number; onChange: (s: Split) => void }) {
@@ -236,22 +239,31 @@ function SplitPicker({ split: rawSplit, amount, onChange }: { split: Split | und
   };
   const setValue = (name: string, v: number) => onChange({ ...split, values: { ...split.values, [name]: v } });
   const percentTotal = split.participants.reduce((s, n) => s + Number(split.values[n] ?? 0), 0);
+  const exactTotal = split.participants.reduce((s, n) => s + Math.max(0, Number(split.values[n] ?? 0)), 0);
+  const exactDiff = Math.round(amount - exactTotal);
+  const defaults = (mode: SplitMode) => {
+    const n = Math.max(1, split.participants.length);
+    if (mode === "percent") return Object.fromEntries(split.participants.map((p) => [p, Math.round((100 / n) * 10) / 10]));
+    if (mode === "exact") return Object.fromEntries(split.participants.map((p) => [p, Math.round(amount / n)]));
+    return {};
+  };
   return <div className="split-picker">
     <div className="split-modes" role="group" aria-label="Split type">
-      {([["equal", "Equally"], ["shares", "By number"], ["percent", "By percentage"]] as [SplitMode, string][]).map(([mode, label]) =>
-        <button key={mode} className={split.mode === mode ? "active" : ""} onClick={() => onChange({ ...split, mode, values: mode === "percent" ? Object.fromEntries(split.participants.map((n) => [n, Math.round((100 / Math.max(1, split.participants.length)) * 10) / 10])) : Object.fromEntries(split.participants.map((n) => [n, 1])) })}>{label}</button>)}
+      {([["equal", "Equally"], ["exact", "Exact amounts"], ["percent", "By percentage"]] as [SplitMode, string][]).map(([mode, label]) =>
+        <button key={mode} className={split.mode === mode ? "active" : ""} onClick={() => onChange({ ...split, mode, values: defaults(mode) })}>{label}</button>)}
     </div>
     <div className="split-rows">
       {members.map((m) => {
         const on = split.participants.includes(m.name);
         return <div key={m.name} className={on ? "split-row on" : "split-row"}>
           <button className="split-person" onClick={() => toggle(m.name)} aria-pressed={on}><span className={m.tone}>{m.initials}</span>{m.name}<i>{on && <Check size={12} />}</i></button>
-          {on && split.mode !== "equal" && <div className="split-value"><input inputMode="decimal" aria-label={`${split.mode === "percent" ? "Percentage" : "Shares"} for ${m.name}`} value={String(split.values[m.name] ?? "")} onChange={(e) => setValue(m.name, Number(e.target.value.replace(",", ".")) || 0)} /><small>{split.mode === "percent" ? "%" : "×"}</small></div>}
-          {on && <strong>{euro(shares[m.name] ?? 0)}</strong>}
+          {on && split.mode !== "equal" && <div className="split-value">{split.mode === "exact" && <small>¥</small>}<input inputMode="decimal" aria-label={`${split.mode === "percent" ? "Percentage" : "Amount"} for ${m.name}`} value={String(split.values[m.name] ?? "")} onChange={(e) => setValue(m.name, Number(e.target.value.replace(",", ".")) || 0)} />{split.mode === "percent" && <small>%</small>}</div>}
+          {on && split.mode !== "exact" && <strong>{euro(shares[m.name] ?? 0)}</strong>}
         </div>;
       })}
     </div>
     {split.participants.length === 0 && <p className="split-hint warn">Pick at least one traveler.</p>}
+    {split.mode === "exact" && split.participants.length > 0 && <p className={Math.abs(exactDiff) > 1 ? "split-hint warn" : "split-hint"}>Assigned {euro(exactTotal)} of {euro(amount)}{Math.abs(exactDiff) > 1 ? ` — ${exactDiff > 0 ? `${euro(exactDiff)} left to assign` : `${euro(Math.abs(exactDiff))} over`}` : " — all set"}</p>}
     {split.mode === "percent" && split.participants.length > 0 && <p className={Math.abs(percentTotal - 100) > 0.5 ? "split-hint warn" : "split-hint"}>Percentages total {Math.round(percentTotal * 10) / 10}%{Math.abs(percentTotal - 100) > 0.5 ? " — we’ll scale it to the amount." : ""}</p>}
   </div>;
 }
@@ -270,7 +282,7 @@ const initialPhotos: Photo[] = [
 const initialExpenses: Expense[] = [
   { id: "e1", day: 1, time: "09:45", place: "Tsukiji Outer Market", label: "Sushi breakfast", amount: 3200, payer: "Maira", source: "scan", split: equalSplit() },
   { id: "e2", day: 1, time: "11:10", place: "Asakusa 2-3-1", label: "Temple omamori", amount: 1800, payer: "Jon", source: "scan", split: equalSplit() },
-  { id: "e3", day: 1, time: "14:55", place: "Toyosu 6-1-16", label: "teamLab tickets", amount: 15600, payer: "Ana", source: "scan", split: { mode: "shares", participants: ["You", "Jon", "Ana"], values: { You: 1, Jon: 2, Ana: 1 } } },
+  { id: "e3", day: 1, time: "14:55", place: "Toyosu 6-1-16", label: "teamLab tickets", amount: 15600, payer: "Ana", source: "scan", split: { mode: "exact", participants: ["You", "Jon", "Ana"], values: { You: 5600, Jon: 6000, Ana: 4000 } } },
   { id: "e4", day: 0, time: "16:15", place: "Shibuya Crossing", label: "Narita Express", amount: 6400, payer: "Maira", source: "manual", split: equalSplit(["You", "Jon"]) },
   { id: "e5", day: 1, time: "20:30", place: "Golden Gai", label: "Late drinks", amount: 5200, payer: "Luis", source: "manual", split: { mode: "percent", participants: ["You", "Luis"], values: { You: 40, Luis: 60 } } },
 
