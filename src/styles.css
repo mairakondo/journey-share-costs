@@ -19,6 +19,8 @@
  */
 
 @theme inline {
+  --font-sans: "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -59,28 +61,35 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-money: var(--money);
+  --color-money-foreground: var(--money-foreground);
+  --color-sky: var(--sky);
+  --color-sky-foreground: var(--sky-foreground);
+  --color-sun: var(--sun);
+  --color-sun-foreground: var(--sun-foreground);
+  --color-surface: var(--surface);
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --radius: 1rem;
+  --background: oklch(0.975 0.012 85);
+  --foreground: oklch(0.24 0.035 164);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
+  --primary: oklch(0.57 0.145 156);
+  --primary-foreground: oklch(0.99 0.004 100);
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
+  --muted: oklch(0.94 0.014 87);
+  --muted-foreground: oklch(0.49 0.028 170);
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
+  --border: oklch(0.88 0.02 90);
+  --input: oklch(0.88 0.02 90);
   --ring: oklch(0.704 0.04 256.788);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -95,6 +104,13 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+  --money: oklch(0.7 0.13 50);
+  --money-foreground: oklch(0.25 0.05 45);
+  --sky: oklch(0.76 0.09 224);
+  --sky-foreground: oklch(0.23 0.05 235);
+  --sun: oklch(0.84 0.13 85);
+  --sun-foreground: oklch(0.3 0.06 65);
+  --surface: oklch(0.995 0.004 90);
 }
 
 .dark {
@@ -140,5 +156,95 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    letter-spacing: 0;
   }
+  button, input { font: inherit; }
+  button { cursor: pointer; }
 }
+
+@layer components {
+  .app-frame { @apply relative mx-auto min-h-screen w-full max-w-[1180px] overflow-x-hidden bg-background; }
+  .page-pad { @apply px-5 pt-8 sm:px-8 lg:px-12 lg:pt-12; }
+  .topbar { @apply sticky top-0 z-30 grid grid-cols-[minmax(0,1fr)_auto] items-center border-b border-border bg-background/95 px-5 py-3 backdrop-blur sm:px-8 lg:px-12; }
+  .brand { @apply flex min-w-0 items-center gap-2 font-display text-xl font-extrabold; }
+  .brand-mark { @apply grid size-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground; }
+  .avatar { @apply grid size-10 shrink-0 place-items-center rounded-full bg-foreground text-xs font-extrabold text-background; }
+  .icon-button { @apply grid size-10 shrink-0 place-items-center rounded-full border border-border bg-surface text-foreground transition hover:border-primary hover:text-primary; }
+  .eyebrow { @apply text-[11px] font-extrabold uppercase text-muted-foreground; letter-spacing: .12em; }
+  .page-title { @apply mt-1 font-display text-4xl font-extrabold sm:text-5xl; }
+  .hero-row { @apply flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between; }
+  .primary-action, .secondary-action { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-sm font-extrabold transition active:scale-[.98]; }
+  .primary-action { @apply bg-primary text-primary-foreground hover:brightness-95; }
+  .secondary-action { @apply border border-border bg-surface text-foreground; }
+  .primary-action.wide { @apply w-full; }
+  .segmented { @apply mt-10 inline-grid grid-cols-2 rounded-xl bg-muted p-1; }
+  .segmented button { @apply rounded-lg px-5 py-2 text-sm font-bold text-muted-foreground; }
+  .segmented button.active { @apply bg-surface text-foreground shadow-sm; }
+  .segmented span { @apply ml-1 text-xs; }
+  .trip-grid { @apply mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-[1.45fr_.9fr]; }
+  .trip-card { @apply relative min-h-72 overflow-hidden rounded-2xl text-left text-primary-foreground; }
+  .trip-card.featured { @apply md:row-span-2 md:min-h-[490px]; }
+  .trip-card img { @apply absolute inset-0 h-full w-full object-cover transition duration-500; }
+  .trip-card:hover img { @apply scale-[1.03]; }
+  .trip-overlay { @apply absolute inset-0 flex flex-col justify-between bg-gradient-to-t from-foreground/90 via-foreground/15 to-foreground/25 p-5 sm:p-7; }
+  .trip-overlay.compact { @apply p-5; }
+  .trip-overlay h2 { @apply font-display text-4xl font-extrabold; }
+  .compact h2 { @apply text-2xl; }
+  .status-pill { @apply flex w-fit items-center gap-2 rounded-full bg-background/90 px-3 py-1.5 text-xs font-extrabold text-foreground backdrop-blur; }
+  .status-pill span { @apply size-2 rounded-full bg-primary; }
+  .status-pill.muted { @apply text-muted-foreground; }
+  .avatar-stack { @apply flex items-center; }
+  .avatar-stack > span { @apply -ml-1 grid size-8 place-items-center rounded-full border-2 border-surface text-[10px] font-black first:ml-0; }
+  .open-label { @apply inline-flex items-center gap-2 text-sm font-extrabold; }
+  .budget-card { @apply flex min-h-48 flex-col justify-between rounded-2xl border border-border bg-surface p-5; }
+  .budget-card h3 { @apply mt-1 font-display text-2xl font-extrabold; }
+  .budget-card h3 span { @apply text-sm font-semibold text-muted-foreground; }
+  .money-icon { @apply grid size-10 place-items-center rounded-xl bg-money/20 text-money-foreground; }
+  .progress { @apply h-2 overflow-hidden rounded-full bg-muted; }
+  .progress span { @apply block h-full w-[69%] rounded-full bg-money; }
+  .offline-banner { @apply sticky top-0 z-50 flex w-full items-center gap-2 bg-foreground px-5 py-2 text-left text-xs font-bold text-background; }
+  .trip-heading { @apply grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4; }
+  .section-tabs { @apply mt-8 flex gap-6 border-b border-border; }
+  .section-tabs button { @apply relative pb-3 text-sm font-bold text-muted-foreground; }
+  .section-tabs button.active { @apply text-foreground after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-primary; }
+  .day-strip { @apply -mx-5 mt-5 flex gap-2 overflow-x-auto px-5 pb-2 sm:mx-0 sm:px-0; scrollbar-width: none; }
+  .day-strip button { @apply min-w-24 rounded-xl border border-border bg-surface px-4 py-3 text-sm font-extrabold; }
+  .day-strip button span { @apply mb-1 block text-[10px] uppercase text-muted-foreground; }
+  .day-strip button.active { @apply border-primary bg-primary text-primary-foreground; }
+  .day-strip button.active span { @apply text-primary-foreground/80; }
+  .content-grid { @apply mt-7 grid gap-8 lg:grid-cols-[1fr_300px]; }
+  .date-heading, .section-heading { @apply flex items-end justify-between gap-4; }
+  .date-heading h2, .section-heading h2 { @apply font-display text-2xl font-extrabold; }
+  .weather { @apply grid grid-cols-[auto_auto] items-center gap-x-2 text-primary; }
+  .weather span { @apply text-lg font-black; }.weather small { @apply col-span-2 text-right text-[10px] font-bold text-muted-foreground; }
+  .timeline { @apply mt-6; }
+  .stop-card { @apply grid grid-cols-[52px_18px_minmax(0,1fr)] items-stretch; }
+  .time { @apply pt-5 text-xs font-extrabold text-muted-foreground; }
+  .timeline-dot { @apply relative flex justify-center before:absolute before:inset-y-0 before:w-px before:bg-border; }
+  .timeline-dot span { @apply z-10 mt-6 size-3 rounded-full border-[3px] border-background bg-primary; }
+  .stop-body { @apply mb-3 flex min-w-0 items-center gap-3 rounded-xl border border-border bg-surface p-4; }
+  .stop-icon { @apply grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary; }
+  .stop-body h3 { @apply truncate font-display text-base font-extrabold; }
+  .stop-body p { @apply mt-1 flex items-center gap-1 text-xs text-muted-foreground; }
+  .spot-badge { @apply mt-2 inline-flex rounded-md bg-sun/25 px-2 py-1 text-[10px] font-extrabold text-sun-foreground; }
+  .day-note { @apply h-fit rounded-2xl bg-primary p-6 text-primary-foreground; }
+  .day-note .eyebrow { @apply text-primary-foreground/70; }.day-note h3 { @apply mt-2 font-display text-2xl font-extrabold; }.day-note > p:not(.eyebrow) { @apply mt-2 text-sm leading-6 text-primary-foreground/80; }
+  .mini-map { @apply mt-7 flex h-32 flex-col items-center justify-center gap-2 rounded-xl bg-primary-foreground/10 text-sm font-bold; }
+  .bottom-nav { @apply fixed inset-x-0 bottom-0 z-40 mx-auto grid max-w-lg grid-cols-3 border-t border-border bg-surface/95 px-3 pb-[max(10px,env(safe-area-inset-bottom))] pt-2 backdrop-blur lg:bottom-5 lg:rounded-2xl lg:border lg:shadow-xl; }
+  .bottom-nav button { @apply flex flex-col items-center gap-1 rounded-xl py-2 text-[11px] font-bold text-muted-foreground; }.bottom-nav svg { @apply size-5; }.bottom-nav button.active { @apply bg-primary/10 text-primary; }
+  .emergency-intro { @apply mt-8 flex items-center gap-4; }.emergency-intro > span { @apply grid size-12 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary; }.emergency-intro h2 { @apply font-display text-2xl font-extrabold; }.emergency-intro p { @apply text-sm text-muted-foreground; }
+  .emergency-grid { @apply mt-6 grid gap-3 md:grid-cols-2; }.emergency-card { @apply flex gap-4 rounded-2xl border border-border bg-surface p-5; }.emergency-icon { @apply grid size-11 shrink-0 place-items-center rounded-xl bg-sun/25 text-sun-foreground; }.emergency-card h3 { @apply mt-1 font-display text-lg font-extrabold; }.emergency-card p:not(.eyebrow) { @apply mt-1 text-sm text-muted-foreground; }.emergency-card a { @apply mt-4 inline-flex items-center gap-2 font-extrabold text-primary; }
+  .cost-hero { @apply mt-8 grid gap-6 rounded-2xl bg-money/20 p-6 md:grid-cols-[1fr_1.2fr] md:items-center md:p-9; }.cost-hero h2 { @apply mt-2 font-display text-4xl font-extrabold; }.cost-hero > div > p:last-child { @apply mt-3 text-sm text-muted-foreground; }
+  .scan-button { @apply grid min-h-28 grid-cols-[auto_1fr_auto] items-center gap-x-4 rounded-2xl bg-money p-5 text-left text-money-foreground transition hover:brightness-95; }.scan-button > span { @apply row-span-2 grid size-14 place-items-center rounded-xl bg-surface/40; }.scan-button b { @apply self-end text-lg; }.scan-button small { @apply self-start opacity-75; }.scan-button > svg { @apply row-span-2; }
+  .cost-layout { @apply mt-9 grid gap-8 lg:grid-cols-[1fr_280px]; }.settled-pill { @apply rounded-full bg-money/15 px-3 py-1 text-xs font-bold text-money-foreground; }.balance-list { @apply mt-4 overflow-hidden rounded-2xl border border-border bg-surface; }.balance-list article { @apply grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border p-4 last:border-0; }.balance-list article > span { @apply grid size-10 place-items-center rounded-full text-xs font-black; }.balance-list h3 { @apply font-extrabold; }.balance-list p { @apply text-xs text-muted-foreground; }.balance-list strong { @apply text-sm; }.balance-list .positive { @apply text-primary; }.muted-amount { @apply text-muted-foreground; }
+  .future-space { @apply rounded-2xl border border-dashed border-money/50 p-6; }.future-space > svg { @apply mb-8 text-money; }.future-space h3 { @apply mt-1 font-display text-xl font-extrabold; }.future-space > p:last-child { @apply mt-2 text-sm text-muted-foreground; }
+  .photo-heading { @apply mt-8; }.photo-days { @apply mt-6 space-y-8; }.photo-day-title { @apply flex w-full items-center justify-between py-2 text-left; }.photo-day-title span { @apply flex flex-col; }.photo-day-title b { @apply font-display text-lg; }.photo-day-title small { @apply text-xs text-muted-foreground; }.photo-day-title svg { @apply transition; }
+  .photo-grid { @apply grid grid-cols-3 gap-2 sm:grid-cols-4; }.photo-tile { @apply relative aspect-square overflow-hidden rounded-xl; }.photo-tile img { @apply h-full w-full object-cover transition hover:scale-105; }.photo-tile > span { @apply absolute inset-0 grid place-items-center bg-foreground/55 text-xl font-black text-background; }.photo-tile > small { @apply absolute inset-x-1 bottom-1 flex items-center justify-center gap-1 rounded-md bg-primary px-1 py-1 text-[9px] font-bold text-primary-foreground; }.gesture-hint { @apply mt-3 text-xs text-muted-foreground; }
+  .modal-backdrop { @apply fixed inset-0 z-[60] flex items-end justify-center bg-foreground/45 p-0 backdrop-blur-sm sm:items-center sm:p-5; }.modal-sheet { @apply max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-3xl bg-background p-6 shadow-2xl sm:rounded-3xl; }.modal-head, .scan-success { @apply flex items-center justify-between gap-4; }.modal-head h2, .scan-success h2 { @apply font-display text-2xl font-extrabold; }
+  .form-grid { @apply my-6 space-y-4; }.form-grid label, .amount-edit label { @apply block text-xs font-extrabold text-muted-foreground; }.form-grid input, .amount-edit input { @apply mt-2 w-full rounded-xl border border-input bg-surface px-4 py-3 text-sm font-semibold text-foreground outline-none focus:border-primary; }.two-cols { @apply grid grid-cols-2 gap-3; }.input-icon { @apply relative; }.input-icon svg { @apply absolute left-4 top-1/2 mt-1 -translate-y-1/2 text-muted-foreground; }.input-icon input { @apply pl-11; }.invite-row { @apply mt-2 flex items-center justify-between rounded-xl border border-input bg-surface p-3; }.invite-button { @apply inline-flex items-center gap-1 text-sm font-extrabold text-primary; }
+  .scan-success > span { @apply grid size-12 shrink-0 place-items-center rounded-xl bg-money/20 text-money-foreground; }.scan-success > button { @apply ml-auto; }.amount-edit { @apply my-6 rounded-2xl bg-muted p-5; }.amount-edit > div { @apply flex items-baseline; }.amount-edit > div span { @apply text-2xl font-black; }.amount-edit > div input { @apply border-0 bg-transparent p-0 pl-2 font-display text-5xl font-extrabold; }.member-picker { @apply mb-6; }.member-picker > div { @apply mt-3 flex gap-2 overflow-x-auto pb-2; }.member-picker button { @apply relative flex min-w-16 flex-col items-center gap-1 rounded-xl border border-border p-2 text-xs font-bold; }.member-picker button > span { @apply grid size-10 place-items-center rounded-full text-xs font-black; }.member-picker button.selected { @apply border-money bg-money/10; }.member-picker i { @apply absolute right-1 top-1 grid size-4 place-items-center rounded-full bg-money text-money-foreground; }.money-action { @apply flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-money font-extrabold text-money-foreground; }.confirmation { @apply py-10 text-center; }.confirmation > span { @apply mx-auto mb-4 grid size-20 place-items-center rounded-full bg-primary/15 text-primary; }.confirmation p { @apply mb-8 font-bold; }
+  .summary-wrap { @apply mx-auto mt-8 grid max-w-4xl overflow-hidden rounded-2xl bg-surface shadow-xl md:grid-cols-2; }.summary-photo { @apply relative min-h-[350px] text-primary-foreground; }.summary-photo img { @apply absolute inset-0 h-full w-full object-cover; }.summary-photo > div { @apply absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-foreground/90 via-transparent p-7; }.summary-photo p { @apply mt-6 text-sm font-bold; }.summary-photo h2 { @apply font-display text-4xl font-extrabold; }.summary-content { @apply flex flex-col justify-center p-7; }.summary-content > h2 { @apply mt-1 font-display text-3xl font-extrabold; }.summary-stats { @apply my-7 grid grid-cols-3 gap-2; }.summary-stats article { @apply flex min-w-0 flex-col rounded-xl bg-muted p-3; }.summary-stats svg { @apply mb-4 size-5 text-primary; }.summary-stats strong { @apply text-lg; }.summary-stats span { @apply text-[10px] font-bold text-muted-foreground; }.summary-back { @apply mx-auto mt-4 inline-flex items-center gap-2 text-sm font-bold text-muted-foreground; }
+}
+
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; } }
