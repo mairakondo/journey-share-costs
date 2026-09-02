@@ -346,7 +346,6 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
   </button>;
 
   return <>
-    <div className="section-tabs"><button className="active">Itinerary</button><button onClick={() => setView("emergency")}>Emergency info</button></div>
     <div className="day-strip">{["Sun 18", "Mon 19", "Tue 20", "Wed 21", "Thu 22"].map((d, i) => <button key={d} onClick={() => setDay(i)} className={day === i ? "active" : ""}><span>Day {i + 1}</span>{d}</button>)}</div>
     <div className="content-grid">
       <section>
@@ -450,7 +449,7 @@ function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: 
 }
 
 function Emergency() {
-  return <><div className="section-tabs"><button>Itinerary</button><button className="active">Emergency info</button></div><div className="emergency-intro"><span><ShieldCheck size={25} /></span><div><h2>Help, when you need it</h2><p>Saved on your device and available offline.</p></div></div><section className="emergency-grid">
+  return <><div className="emergency-intro"><span><ShieldCheck size={25} /></span><div><h2>Help, when you need it</h2><p>Saved on your device and available offline.</p></div></div><section className="emergency-grid">
     {[{ icon: <HeartPulse />, label: "Nearest hospital", title: "St. Luke's International Hospital", detail: "Akashi-cho 9-1 · 2.4 km", number: "+81 3 3541 5151" }, { icon: <Landmark />, label: "U.S. Embassy", title: "Embassy of the United States", detail: "Akasaka 1-10-5 · 4.1 km", number: "+81 3 3224 5000" }, { icon: <Phone />, label: "National emergency", title: "Police 110 · Fire & Ambulance 119", detail: "Available 24 hours", number: "110" }].map((x) => <article className="emergency-card" key={x.label}><span className="emergency-icon">{x.icon}</span><div className="flex-1"><p className="eyebrow">{x.label}</p><h3>{x.title}</h3><p>{x.detail}</p><a href={`tel:${x.number}`}><Phone size={16} /> {x.number}</a></div></article>)}
   </section></>;
 }
@@ -536,7 +535,7 @@ function PhotoAssign({ photo, stops, onClose, onAssign }: { photo: Photo; stops:
 }
 
 function BottomNav({ view, setView }: { view: View; setView: (v: View) => void }) {
-  return <nav className="bottom-nav" aria-label="Trip navigation">{[{ id: "plan", label: "Plan", icon: <MapPin /> }, { id: "costs", label: "Costs", icon: <WalletCards /> }, { id: "photos", label: "Photos", icon: <Image /> }].map((item) => <button key={item.id} className={(view === item.id || (view === "emergency" && item.id === "plan")) ? "active" : ""} onClick={() => setView(item.id as View)}>{item.icon}<span>{item.label}</span></button>)}</nav>;
+  return <nav className="bottom-nav" aria-label="Trip navigation">{[{ id: "plan", label: "Plan", icon: <MapPin /> }, { id: "costs", label: "Costs", icon: <WalletCards /> }, { id: "photos", label: "Photos", icon: <Image /> }, { id: "emergency", label: "Emergency", icon: <ShieldCheck /> }].map((item) => <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => setView(item.id as View)}>{item.icon}<span>{item.label}</span></button>)}</nav>;
 }
 
 function CreateTrip({ onClose, onCreate }: { onClose: () => void; onCreate: () => void }) {
