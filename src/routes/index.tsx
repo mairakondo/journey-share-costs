@@ -65,6 +65,7 @@ function TravelersApp() {
   const [offline, setOffline] = useState(true);
   const [stops, setStops] = useState<Stop[]>(initialStops);
   const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
+  const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
 
   const openTrip = () => setView("plan");
 
@@ -92,13 +93,13 @@ function TravelersApp() {
         {view === "home" ? (
           <Dashboard onOpen={openTrip} onCreate={() => setCreateOpen(true)} onSummary={() => setView("summary")} />
         ) : (
-          <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} stops={stops} setStops={setStops} photos={photos} setPhotos={setPhotos} />
+          <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} stops={stops} setStops={setStops} photos={photos} setPhotos={setPhotos} expenses={expenses} setExpenses={setExpenses} />
         )}
 
         {view !== "home" && view !== "summary" && <BottomNav view={view} setView={setView} />}
       </div>
       {createOpen && <CreateTrip onClose={() => setCreateOpen(false)} onCreate={() => { setCreateOpen(false); setView("plan"); }} />}
-      {scanOpen && <ReceiptConfirm onClose={() => setScanOpen(false)} />}
+      {scanOpen && <ReceiptConfirm onClose={() => setScanOpen(false)} stops={stops} onSave={(e) => setExpenses((prev) => [...prev, e])} />}
     </main>
   );
 }
@@ -163,16 +164,16 @@ function Dashboard({ onOpen, onCreate, onSummary }: { onOpen: () => void; onCrea
   );
 }
 
-function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos }: { view: View; setView: (v: View) => void; onScan: () => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void }) {
+function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, expenses, setExpenses }: { view: View; setView: (v: View) => void; onScan: () => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void; expenses: Expense[]; setExpenses: (fn: (p: Expense[]) => Expense[]) => void }) {
   return (
     <div className="page-pad trip-page pb-28">
       <div className="trip-heading">
         <div className="flex min-w-0 items-center gap-3"><IconButton label="Back to trips" onClick={() => setView("home")}><ArrowLeft size={20} /></IconButton><div className="min-w-0"><p className="eyebrow">May 18–23 · 4 travelers</p><h1 className="truncate text-3xl font-extrabold">Lisbon escape</h1></div></div>
         <div className="avatar-stack hidden sm:flex">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
       </div>
-      {view === "plan" && <Itinerary setView={setView} stops={stops} setStops={setStops} photos={photos} />}
+      {view === "plan" && <Itinerary setView={setView} stops={stops} setStops={setStops} photos={photos} expenses={expenses} setExpenses={setExpenses} />}
       {view === "emergency" && <Emergency />}
-      {view === "costs" && <Costs onScan={onScan} />}
+      {view === "costs" && <Costs onScan={onScan} stops={stops} expenses={expenses} setView={setView} />}
       {view === "photos" && <Photos stops={stops} photos={photos} setPhotos={setPhotos} />}
       {view === "summary" && <Summary setView={setView} />}
     </div>
@@ -190,6 +191,8 @@ const initialStops: Stop[] = [
 
 type Photo = { id: string; src: string; day: number; time: string; place: string; stopId?: string | null };
 
+type Expense = { id: string; day: number; time: string; place: string; label: string; amount: number; payer: string; source: "scan" | "manual"; stopId?: string | null };
+
 const initialPhotos: Photo[] = [
   { id: "p1", src: lisbon, day: 0, time: "16:20", place: "Praça do Comércio" },
   { id: "p2", src: lisbon, day: 0, time: "16:55", place: "Praça do Comércio, Baixa" },
@@ -198,6 +201,14 @@ const initialPhotos: Photo[] = [
   { id: "p5", src: kyoto, day: 1, time: "11:25", place: "Praça do Império" },
   { id: "p6", src: copenhagen, day: 1, time: "14:50", place: "Rua Rodrigues de Faria 103" },
   { id: "p7", src: lisbon, day: 1, time: "15:30", place: "LX Factory" },
+];
+
+const initialExpenses: Expense[] = [
+  { id: "e1", day: 1, time: "09:45", place: "Rua de Belém 84", label: "Pastéis & coffee", amount: 18.6, payer: "Maira", source: "scan" },
+  { id: "e2", day: 1, time: "11:10", place: "Praça do Império", label: "Monastery tickets", amount: 40, payer: "Jon", source: "scan" },
+  { id: "e3", day: 1, time: "14:55", place: "LX Factory", label: "Lunch at Rio Maravilha", amount: 86.4, payer: "Ana", source: "scan" },
+  { id: "e4", day: 0, time: "16:15", place: "Praça do Comércio", label: "Airport taxi", amount: 32, payer: "Maira", source: "manual" },
+  { id: "e5", day: 1, time: "20:30", place: "Bairro Alto", label: "Late drinks", amount: 24.5, payer: "Luis", source: "manual" },
 ];
 
 const minutes = (t: string) => {
@@ -213,18 +224,22 @@ const placeScore = (a: string, b: string) => {
   return wordsA.length ? hits / wordsA.length : 0;
 };
 
-function resolveStop(photo: Photo, stops: Stop[]): Stop | null {
-  if (photo.stopId) return stops.find((s) => s.id === photo.stopId) ?? null;
-  const sameDay = stops.filter((s) => s.day === photo.day);
+type Taggable = { day: number; time: string; place: string; stopId?: string | null };
+
+function resolveStop(item: Taggable, stops: Stop[]): Stop | null {
+  if (item.stopId) return stops.find((s) => s.id === item.stopId) ?? null;
+  const sameDay = stops.filter((s) => s.day === item.day);
   let best: { stop: Stop; score: number } | null = null;
   for (const stop of sameDay) {
-    const gap = Math.abs(minutes(photo.time) - minutes(stop.time));
+    const gap = Math.abs(minutes(item.time) - minutes(stop.time));
     if (gap > 120) continue;
-    const score = placeScore(photo.place, `${stop.place} ${stop.title}`) * 2 + (1 - gap / 120);
+    const score = placeScore(item.place, `${stop.place} ${stop.title}`) * 2 + (1 - gap / 120);
     if (!best || score > best.score) best = { stop, score };
   }
   return best && best.score > 0.6 ? best.stop : null;
 }
+
+const euro = (n: number) => `€${n.toFixed(2)}`;
 
 function groupPhotosByStop(dayPhotos: Photo[], stops: Stop[]) {
   const groups: { stop: Stop | null; photos: Photo[] }[] = [];
@@ -238,33 +253,82 @@ function groupPhotosByStop(dayPhotos: Photo[], stops: Stop[]) {
   return groups.sort((a, b) => (a.stop ? a.stop.time : "99:99").localeCompare(b.stop ? b.stop.time : "99:99"));
 }
 
-function Itinerary({ setView, stops, setStops, photos }: { setView: (v: View) => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[] }) {
+
+function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: { setView: (v: View) => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; expenses: Expense[]; setExpenses: (fn: (p: Expense[]) => Expense[]) => void }) {
   const [day, setDay] = useState(1);
   const [editing, setEditing] = useState<Stop | null>(null);
+  const [editingCost, setEditingCost] = useState<Expense | null>(null);
 
   const dayStops = stops.filter((s) => s.day === day).sort((a, b) => a.time.localeCompare(b.time));
+  const dayExpenses = expenses.filter((e) => e.day === day);
+  const stopExpenses = (id: string) => dayExpenses.filter((e) => resolveStop(e, stops)?.id === id).sort((a, b) => a.time.localeCompare(b.time));
+  const looseExpenses = dayExpenses.filter((e) => !resolveStop(e, stops)).sort((a, b) => a.time.localeCompare(b.time));
+  const dayTotal = dayExpenses.reduce((sum, e) => sum + e.amount, 0);
 
   const saveStop = (stop: Stop) => {
     setStops((prev) => (prev.some((s) => s.id === stop.id) ? prev.map((s) => (s.id === stop.id ? stop : s)) : [...prev, stop]));
     setEditing(null);
   };
   const deleteStop = (id: string) => setStops((prev) => prev.filter((s) => s.id !== id));
+  const saveExpense = (e: Expense) => {
+    setExpenses((prev) => (prev.some((x) => x.id === e.id) ? prev.map((x) => (x.id === e.id ? e : x)) : [...prev, e]));
+    setEditingCost(null);
+  };
+  const deleteExpense = (id: string) => setExpenses((prev) => prev.filter((x) => x.id !== id));
+  const newExpense = (stop?: Stop): Expense => ({ id: `e${Date.now()}`, day, time: stop?.time ?? "12:00", place: stop?.place ?? "", label: "", amount: 0, payer: "Maira", source: "manual", stopId: stop?.id ?? null });
+
+  const costRow = (e: Expense) => <button key={e.id} className="cost-chip" onClick={() => setEditingCost(e)} aria-label={`Edit cost ${e.label}`}>
+    <ReceiptText size={14} /><span>{e.label || "Untitled cost"}</span><small>{e.time} · {e.payer}{e.source === "scan" ? " · receipt" : ""}</small><strong>{euro(e.amount)}</strong>
+  </button>;
 
   return <>
     <div className="section-tabs"><button className="active">Itinerary</button><button onClick={() => setView("emergency")}>Emergency info</button></div>
     <div className="day-strip">{["Sun 18", "Mon 19", "Tue 20", "Wed 21", "Thu 22"].map((d, i) => <button key={d} onClick={() => setDay(i)} className={day === i ? "active" : ""}><span>Day {i + 1}</span>{d}</button>)}</div>
     <div className="content-grid">
       <section>
-        <div className="date-heading"><div><p className="eyebrow">Day {day + 1}</p><h2>{day === 0 ? "Olá, Lisboa!" : ["Belém & riverside", "Alfama slow day", "Sintra day trip", "Last tastes"][day - 1]}</h2></div><div className="flex items-center gap-3"><div className="weather"><CloudSun size={23} /><span>24°</span><small>Sunny</small></div><button className="secondary-action" onClick={() => setEditing({ id: `s${Date.now()}`, day, time: "10:00", title: "", place: "", tag: "Explore" })}><Plus size={17} /> Add</button></div></div>
-        <div className="timeline">{dayStops.map((stop) => <article className="stop-card" key={stop.id}><div className="time">{stop.time}</div><div className="timeline-dot"><span /></div><div className="stop-body"><div className="stop-icon"><MapPin size={16} /></div><div className="min-w-0 flex-1"><h3>{stop.title}</h3><p><MapPin size={14} /> {stop.place}</p>{stop.tag && <span className="spot-badge">{stop.tag}</span>}{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).length > 0 && <div className="stop-photos">{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).slice(0, 3).map((p) => <img key={p.id} src={p.src} alt={`${stop.title} photo`} width={80} height={80} loading="lazy" />)}<small>{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).length} photos matched</small></div>}</div><div className="stop-actions"><IconButton label={`Edit ${stop.title}`} onClick={() => setEditing(stop)}><Pencil size={16} /></IconButton><IconButton label={`Delete ${stop.title}`} onClick={() => deleteStop(stop.id)}><Trash2 size={16} /></IconButton></div></div></article>)}
+        <div className="date-heading"><div><p className="eyebrow">Day {day + 1} · {euro(dayTotal)} spent</p><h2>{day === 0 ? "Olá, Lisboa!" : ["Belém & riverside", "Alfama slow day", "Sintra day trip", "Last tastes"][day - 1]}</h2></div><div className="flex items-center gap-3"><div className="weather"><CloudSun size={23} /><span>24°</span><small>Sunny</small></div><button className="secondary-action" onClick={() => setEditing({ id: `s${Date.now()}`, day, time: "10:00", title: "", place: "", tag: "Explore" })}><Plus size={17} /> Add</button></div></div>
+        <div className="timeline">{dayStops.map((stop) => <article className="stop-card" key={stop.id}><div className="time">{stop.time}</div><div className="timeline-dot"><span /></div><div className="stop-body"><div className="stop-icon"><MapPin size={16} /></div><div className="min-w-0 flex-1"><h3>{stop.title}</h3><p><MapPin size={14} /> {stop.place}</p>{stop.tag && <span className="spot-badge">{stop.tag}</span>}{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).length > 0 && <div className="stop-photos">{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).slice(0, 3).map((p) => <img key={p.id} src={p.src} alt={`${stop.title} photo`} width={80} height={80} loading="lazy" />)}<small>{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).length} photos matched</small></div>}
+          <div className="stop-costs">{stopExpenses(stop.id).map(costRow)}<button className="add-cost" onClick={() => setEditingCost(newExpense(stop))}><Plus size={14} /> Add cost</button></div>
+        </div><div className="stop-actions"><IconButton label={`Edit ${stop.title}`} onClick={() => setEditing(stop)}><Pencil size={16} /></IconButton><IconButton label={`Delete ${stop.title}`} onClick={() => deleteStop(stop.id)}><Trash2 size={16} /></IconButton></div></div></article>)}
           {dayStops.length === 0 && <p className="empty-day">No activities yet for this day. Tap “Add” to plan something.</p>}
+          {looseExpenses.length > 0 && <article className="stop-card"><div className="time">—</div><div className="timeline-dot"><span /></div><div className="stop-body"><div className="stop-icon"><ReceiptText size={16} /></div><div className="min-w-0 flex-1"><h3>Costs without an activity</h3><p>Matched by place and time when you plan one.</p><div className="stop-costs">{looseExpenses.map(costRow)}</div></div></div></article>}
         </div>
       </section>
-      <aside className="day-note"><p className="eyebrow">Today’s note</p><h3>Take it slow.</h3><p>The tram gets busy after 10. We saved the walking route offline.</p><div className="mini-map"><MapPin size={25} /><span>{dayStops.length} stops · 4.2 km</span></div></aside>
+      <aside className="day-note"><p className="eyebrow">Today’s note</p><h3>Take it slow.</h3><p>The tram gets busy after 10. We saved the walking route offline.</p><div className="mini-map"><MapPin size={25} /><span>{dayStops.length} stops · 4.2 km</span></div><button className="secondary-action mt-4" onClick={() => setEditingCost(newExpense())}><Plus size={17} /> Add cost to this day</button></aside>
     </div>
     {editing && <StopEditor stop={editing} onClose={() => setEditing(null)} onSave={saveStop} onDelete={stops.some((s) => s.id === editing.id) ? () => { deleteStop(editing.id); setEditing(null); } : undefined} />}
+    {editingCost && <ExpenseEditor expense={editingCost} stops={stops} onClose={() => setEditingCost(null)} onSave={saveExpense} onDelete={expenses.some((x) => x.id === editingCost.id) ? () => { deleteExpense(editingCost.id); setEditingCost(null); } : undefined} />}
   </>;
 }
+
+function ExpenseEditor({ expense, stops, onClose, onSave, onDelete }: { expense: Expense; stops: Stop[]; onClose: () => void; onSave: (e: Expense) => void; onDelete?: (() => void) | undefined }) {
+  const [draft, setDraft] = useState(expense);
+  const isNew = !onDelete;
+  const auto = resolveStop({ ...draft, stopId: null }, stops);
+  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label={isNew ? "Add cost" : "Edit cost"}>
+    <div className="modal-sheet">
+      <div className="modal-head"><div><p className="eyebrow">Day {draft.day + 1} · {draft.source === "scan" ? "From receipt" : "Manual"}</p><h2>{isNew ? "Add cost" : "Edit cost"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>
+      <div className="form-grid">
+        <label>What was it?<input value={draft.label} placeholder="Lunch at Rio Maravilha" onChange={(e) => setDraft({ ...draft, label: e.target.value })} /></label>
+        <div className="two-cols">
+          <label>Amount (€)<input inputMode="decimal" value={draft.amount ? String(draft.amount) : ""} placeholder="0.00" onChange={(e) => setDraft({ ...draft, amount: Number(e.target.value.replace(",", ".")) || 0 })} /></label>
+          <label>Time<input type="time" value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} /></label>
+        </div>
+        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Rua de Belém 84" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
+        <label>Paid by<input value={draft.payer} onChange={(e) => setDraft({ ...draft, payer: e.target.value })} /></label>
+        <label>Attach to activity
+          <select value={draft.stopId ?? ""} onChange={(e) => setDraft({ ...draft, stopId: e.target.value || null })}>
+            <option value="">Auto-match{auto ? ` · ${auto.title}` : " · no match yet"}</option>
+            {[...stops].sort((a, b) => a.day - b.day || a.time.localeCompare(b.time)).map((s) => <option key={s.id} value={s.id}>Day {s.day + 1} · {s.time} · {s.title}</option>)}
+          </select>
+        </label>
+      </div>
+      <button className="money-action wide" disabled={!draft.label.trim() || !draft.amount} onClick={() => onSave({ ...draft, label: draft.label.trim(), place: draft.place.trim(), day: draft.stopId ? (stops.find((s) => s.id === draft.stopId)?.day ?? draft.day) : draft.day })}><Check size={19} /> {isNew ? "Add cost" : "Save cost"}</button>
+      {onDelete && <button className="summary-back" onClick={onDelete}><Trash2 size={17} /> Delete cost</button>}
+    </div>
+  </div>;
+}
+
 
 function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: () => void; onSave: (s: Stop) => void; onDelete?: (() => void) | undefined }) {
   const [draft, setDraft] = useState(stop);
@@ -292,10 +356,23 @@ function Emergency() {
   </section></>;
 }
 
-function Costs({ onScan }: { onScan: () => void }) {
+function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops: Stop[]; expenses: Expense[]; setView: (v: View) => void }) {
+  const total = expenses.reduce((s, e) => s + e.amount, 0);
+  const days = [...new Set(expenses.map((e) => e.day))].sort((a, b) => a - b);
+
   return <><div className="cost-hero"><div><p className="eyebrow">Group expenses</p><h2>Keep it easy,<br />keep it fair.</h2><p>Snap a receipt and we’ll help with the rest.</p></div><button onClick={onScan} className="scan-button"><span><Camera size={25} /></span><b>Scan receipt</b><small>Camera or photo library</small><ArrowRight size={19} /></button></div>
     <div className="cost-layout"><section><div className="section-heading"><div><p className="eyebrow">Settle up</p><h2>Running balance</h2></div><span className="settled-pill">€286.40 total</span></div><div className="balance-list"><article><span className="bg-sky text-sky-foreground">JR</span><div><h3>Jon owes you</h3><p>3 shared expenses</p></div><strong className="positive">+ €48.20</strong></article><article><span className="bg-money text-money-foreground">AL</span><div><h3>You owe Ana</h3><p>Dinner at Prado</p></div><strong>− €23.75</strong></article><article><span className="bg-sun text-sun-foreground">LM</span><div><h3>Luis is settled</h3><p>All caught up</p></div><strong className="muted-amount">€0</strong></article></div></section><aside className="future-space"><ReceiptText size={22} /><p className="eyebrow">Coming next</p><h3>Flexible splitting</h3><p>Equal, shares or percentages — with borrowed and lent tags.</p></aside></div>
+    <div className="section-heading mt-8"><div><p className="eyebrow">When it happened</p><h2>Spending timeline</h2></div><span className="settled-pill">{euro(total)} tracked</span></div>
+    <div className="spend-timeline">{days.map((d) => <section key={d}>
+      <header><h3>Day {d + 1}</h3><strong>{euro(expenses.filter((e) => e.day === d).reduce((s, e) => s + e.amount, 0))}</strong></header>
+      {expenses.filter((e) => e.day === d).sort((a, b) => a.time.localeCompare(b.time)).map((e) => {
+        const stop = resolveStop(e, stops);
+        return <article key={e.id}><span className="cost-time">{e.time}</span><div className="min-w-0 flex-1"><h4>{e.label}</h4><p>{stop ? `${stop.title} · ${stop.place}` : e.place || "No activity matched"}</p></div><div className="cost-meta"><strong>{euro(e.amount)}</strong><small>{e.source === "scan" ? "Receipt" : "Manual"} · {e.payer}</small></div></article>;
+      })}
+    </section>)}</div>
+    <button className="secondary-action mt-4" onClick={() => setView("plan")}><Plus size={17} /> Add a cost in the timeline</button>
   </>;
+
 }
 
 function Photos({ stops, photos, setPhotos }: { stops: Stop[]; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void }) {
@@ -357,11 +434,21 @@ function CreateTrip({ onClose, onCreate }: { onClose: () => void; onCreate: () =
   return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Create a trip"><div className="modal-sheet"><div className="modal-head"><div><p className="eyebrow">New adventure</p><h2>Create a trip</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div><div className="form-grid"><label>Trip name<input defaultValue="Lisbon escape" /></label><label>Destination<div className="input-icon"><MapPin size={17} /><input defaultValue="Lisbon, Portugal" /></div></label><div className="two-cols"><label>Starts<input type="date" defaultValue="2026-05-18" /></label><label>Ends<input type="date" defaultValue="2026-05-23" /></label></div><label>Invite members<div className="invite-row"><div className="avatar-stack">{members.slice(0, 3).map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div><button className="invite-button"><Plus size={16} /> Add people</button></div></label></div><button className="primary-action wide" onClick={onCreate}>Create trip <ArrowRight size={19} /></button></div></div>;
 }
 
-function ReceiptConfirm({ onClose }: { onClose: () => void }) {
+function ReceiptConfirm({ onClose, stops, onSave }: { onClose: () => void; stops: Stop[]; onSave: (e: Expense) => void }) {
   const [confirmed, setConfirmed] = useState(false);
   const [selected, setSelected] = useState([0, 1, 2]);
-  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Confirm scanned receipt"><div className="modal-sheet receipt-sheet"><div className="scan-success"><span><ReceiptText size={26} /></span><div><p className="eyebrow">Receipt found</p><h2>{confirmed ? "Expense added!" : "Check the details"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>{confirmed ? <div className="confirmation"><span><Check size={34} /></span><p>€86.40 split between 3 travelers</p><button className="primary-action wide" onClick={onClose}>Done</button></div> : <><div className="amount-edit"><label>Amount</label><div><span>€</span><input defaultValue="86.40" inputMode="decimal" /></div><input defaultValue="Dinner at Prado" aria-label="Expense name" /></div><div className="member-picker"><p className="eyebrow">Who was it for?</p><div>{members.map((m, i) => <button key={m.name} className={selected.includes(i) ? "selected" : ""} onClick={() => setSelected(selected.includes(i) ? selected.filter(x => x !== i) : [...selected, i])}><span className={m.tone}>{m.initials}</span>{m.name}<i>{selected.includes(i) && <Check size={12} />}</i></button>)}</div></div><button className="money-action" onClick={() => setConfirmed(true)}><Check size={20} /> Confirm expense</button></>}</div></div>;
+  const [draft, setDraft] = useState({ amount: "86.40", label: "Lunch at Rio Maravilha", place: "LX Factory", time: "14:55", day: 1 });
+  const match = resolveStop({ day: draft.day, time: draft.time, place: draft.place }, stops);
+  const confirm = () => {
+    onSave({ id: `e${Date.now()}`, day: draft.day, time: draft.time, place: draft.place, label: draft.label, amount: Number(draft.amount.replace(",", ".")) || 0, payer: "Maira", source: "scan", stopId: null });
+    setConfirmed(true);
+  };
+  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Confirm scanned receipt"><div className="modal-sheet receipt-sheet"><div className="scan-success"><span><ReceiptText size={26} /></span><div><p className="eyebrow">Receipt found</p><h2>{confirmed ? "Expense added!" : "Check the details"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>{confirmed ? <div className="confirmation"><span><Check size={34} /></span><p>{euro(Number(draft.amount.replace(",", ".")) || 0)} split between {selected.length} travelers</p><p className="text-sm">{match ? `Added to your timeline at ${draft.time} · ${match.title}` : `Added to your Day ${draft.day + 1} timeline at ${draft.time}`}</p><button className="primary-action wide" onClick={onClose}>Done</button></div> : <><div className="amount-edit"><label>Amount</label><div><span>€</span><input value={draft.amount} inputMode="decimal" onChange={(e) => setDraft({ ...draft, amount: e.target.value })} /></div><input value={draft.label} aria-label="Expense name" onChange={(e) => setDraft({ ...draft, label: e.target.value })} /></div>
+    <div className="two-cols"><label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label><label>Time<input type="time" value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} /></label></div>
+    <p className="match-hint"><MapPin size={14} /> {match ? `Matches “${match.title}” on your timeline` : "No activity matched yet — it will sit on the day timeline"}</p>
+    <div className="member-picker"><p className="eyebrow">Who was it for?</p><div>{members.map((m, i) => <button key={m.name} className={selected.includes(i) ? "selected" : ""} onClick={() => setSelected(selected.includes(i) ? selected.filter(x => x !== i) : [...selected, i])}><span className={m.tone}>{m.initials}</span>{m.name}<i>{selected.includes(i) && <Check size={12} />}</i></button>)}</div></div><button className="money-action" onClick={confirm}><Check size={20} /> Confirm expense</button></>}</div></div>;
 }
+
 
 function Summary({ setView }: { setView: (v: View) => void }) {
   const days = [
