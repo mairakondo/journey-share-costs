@@ -171,6 +171,7 @@ function TripShell({ view, setView, onScan }: { view: View; setView: (v: View) =
       {view === "emergency" && <Emergency />}
       {view === "costs" && <Costs onScan={onScan} />}
       {view === "photos" && <Photos />}
+      {view === "summary" && <Summary setView={setView} />}
     </div>
   );
 }
@@ -228,4 +229,6 @@ function ReceiptConfirm({ onClose }: { onClose: () => void }) {
   return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Confirm scanned receipt"><div className="modal-sheet receipt-sheet"><div className="scan-success"><span><ReceiptText size={26} /></span><div><p className="eyebrow">Receipt found</p><h2>{confirmed ? "Expense added!" : "Check the details"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>{confirmed ? <div className="confirmation"><span><Check size={34} /></span><p>€86.40 split between 3 travelers</p><button className="primary-action wide" onClick={onClose}>Done</button></div> : <><div className="amount-edit"><label>Amount</label><div><span>€</span><input defaultValue="86.40" inputMode="decimal" /></div><input defaultValue="Dinner at Prado" aria-label="Expense name" /></div><div className="member-picker"><p className="eyebrow">Who was it for?</p><div>{members.map((m, i) => <button key={m.name} className={selected.includes(i) ? "selected" : ""} onClick={() => setSelected(selected.includes(i) ? selected.filter(x => x !== i) : [...selected, i])}><span className={m.tone}>{m.initials}</span>{m.name}<i>{selected.includes(i) && <Check size={12} />}</i></button>)}</div></div><button className="money-action" onClick={() => setConfirmed(true)}><Check size={20} /> Confirm expense</button></>}</div></div>;
 }
 
-function Summary({ setView }: { setView: (v: View) => void }) { return <div />; }
+function Summary({ setView }: { setView: (v: View) => void }) {
+  return <section className="summary-wrap"><div className="summary-photo"><img src={kyoto} alt="Cherry blossoms over a Kyoto lane" width={1280} height={800} /><div><span className="status-pill muted">Trip complete</span><p>March 24–31 · 8 days</p><h2>Kyoto,<br />together.</h2></div></div><div className="summary-content"><p className="eyebrow">After trip</p><h2>One for the books</h2><div className="summary-stats"><article><WalletCards /><strong>€2,846</strong><span>Total spent</span></article><article><Image /><strong>184</strong><span>Photos shared</span></article><article><MapPin /><strong>27</strong><span>Places visited</span></article></div><button className="primary-action wide"><Download size={19} /> Export highlights</button><button className="summary-back" onClick={() => setView("home")}><ArrowLeft size={17} /> Back to all trips</button></div></section>;
+}
