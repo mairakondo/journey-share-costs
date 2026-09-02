@@ -342,7 +342,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
   const newExpense = (stop?: Stop): Expense => ({ id: `e${Date.now()}`, day, time: stop?.time ?? "12:00", place: stop?.place ?? "", label: "", amount: 0, payer: "Maira", source: "manual", stopId: stop?.id ?? null, split: equalSplit() });
 
   const costRow = (e: Expense) => <button key={e.id} className="cost-chip" onClick={() => setEditingCost(e)} aria-label={`Edit cost ${e.label}`}>
-    <ReceiptText size={14} /><span>{e.label || "Untitled cost"}</span><small>{e.time} · {e.payer}{e.source === "scan" ? " · receipt" : ""}</small><strong>{euro(e.amount)}</strong>
+    <ReceiptText size={14} /><span><b>{e.label || "Untitled cost"}</b><small>{e.time} · {e.payer}{e.source === "scan" ? " · receipt" : ""}</small></span><strong>{euro(e.amount)}</strong>
   </button>;
 
   return <>
@@ -359,9 +359,24 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
             </div>}
           </div></div>
 
-        <div className="timeline">{dayStops.map((stop) => <article className="stop-card" key={stop.id}><div className="time">{stop.time}</div><div className="timeline-dot"><span /></div><div className="stop-body"><div className="stop-icon"><MapPin size={16} /></div><div className="min-w-0 flex-1"><h3 className="stop-title-row"><span className="truncate">{stop.title}</span>{stop.tag && <span className="spot-badge">{stop.tag}</span>}</h3><p><MapPin size={14} /> {stop.place}</p>{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).length > 0 && <div className="stop-photos">{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).slice(0, 3).map((p) => <img key={p.id} src={p.src} alt={`${stop.title} photo`} width={80} height={80} loading="lazy" />)}<small>{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).length} photos matched</small></div>}
-          <div className="stop-costs">{stopExpenses(stop.id).map(costRow)}<button className="add-cost" onClick={() => setEditingCost(newExpense(stop))}><Plus size={14} /> Add cost</button></div>
-        </div><div className="stop-actions"><IconButton label={`Edit ${stop.title}`} onClick={() => setEditing(stop)}><Pencil size={16} /></IconButton><IconButton label={`Delete ${stop.title}`} onClick={() => deleteStop(stop.id)}><Trash2 size={16} /></IconButton></div></div></article>)}
+        <div className="timeline">{dayStops.map((stop) => {
+          const matchedPhotos = photos.filter((p) => resolveStop(p, stops)?.id === stop.id);
+          const matchedExpenses = stopExpenses(stop.id);
+          return <article className="stop-card" key={stop.id}>
+            <div className="time">{stop.time}</div><div className="timeline-dot"><span /></div>
+            <div className="stop-body">
+              <div className="stop-card-head">
+                <div className="stop-title-row"><h3>{stop.title}</h3>{stop.tag && <span className="spot-badge">{stop.tag}</span>}</div>
+                <div className="stop-actions"><IconButton label={`Edit ${stop.title}`} onClick={() => setEditing(stop)}><Pencil size={16} /></IconButton><IconButton label={`Delete ${stop.title}`} onClick={() => deleteStop(stop.id)}><Trash2 size={16} /></IconButton></div>
+              </div>
+              <div className="stop-summary">
+                <div className="stop-place"><span className="stop-icon"><MapPin size={16} /></span><p>{stop.place}</p></div>
+                {matchedPhotos.length > 0 && <div className="stop-photo-preview"><img src={matchedPhotos[0]?.src} alt={`${stop.title} photo`} width={160} height={160} loading="lazy" />{matchedPhotos.length > 1 && <span>+{matchedPhotos.length - 1}</span>}<small>{matchedPhotos.length} {matchedPhotos.length === 1 ? "photo" : "photos"}</small></div>}
+              </div>
+              <div className="stop-footer"><div className="stop-costs">{matchedExpenses.map(costRow)}{matchedExpenses.length === 0 && <span className="no-cost">No costs yet</span>}</div><button className="add-cost" onClick={() => setEditingCost(newExpense(stop))}><Plus size={14} /> Add cost</button></div>
+            </div>
+          </article>;
+        })}
           {dayStops.length === 0 && <p className="empty-day">No activities yet for this day. Tap “Add” to plan something.</p>}
           {looseExpenses.length > 0 && <article className="stop-card"><div className="time">—</div><div className="timeline-dot"><span /></div><div className="stop-body"><div className="stop-icon"><ReceiptText size={16} /></div><div className="min-w-0 flex-1"><h3>Costs without an activity</h3><p>Matched by place and time when you plan one.</p><div className="stop-costs">{looseExpenses.map(costRow)}</div></div></div></article>}
         </div>
