@@ -65,6 +65,7 @@ function TravelersApp() {
   const [offline, setOffline] = useState(true);
   const [stops, setStops] = useState<Stop[]>(initialStops);
   const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
+  const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
 
   const openTrip = () => setView("plan");
 
@@ -92,13 +93,13 @@ function TravelersApp() {
         {view === "home" ? (
           <Dashboard onOpen={openTrip} onCreate={() => setCreateOpen(true)} onSummary={() => setView("summary")} />
         ) : (
-          <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} stops={stops} setStops={setStops} photos={photos} setPhotos={setPhotos} />
+          <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} stops={stops} setStops={setStops} photos={photos} setPhotos={setPhotos} expenses={expenses} setExpenses={setExpenses} />
         )}
 
         {view !== "home" && view !== "summary" && <BottomNav view={view} setView={setView} />}
       </div>
       {createOpen && <CreateTrip onClose={() => setCreateOpen(false)} onCreate={() => { setCreateOpen(false); setView("plan"); }} />}
-      {scanOpen && <ReceiptConfirm onClose={() => setScanOpen(false)} />}
+      {scanOpen && <ReceiptConfirm onClose={() => setScanOpen(false)} stops={stops} onSave={(e) => setExpenses((prev) => [...prev, e])} />}
     </main>
   );
 }
@@ -163,16 +164,16 @@ function Dashboard({ onOpen, onCreate, onSummary }: { onOpen: () => void; onCrea
   );
 }
 
-function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos }: { view: View; setView: (v: View) => void; onScan: () => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void }) {
+function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, expenses, setExpenses }: { view: View; setView: (v: View) => void; onScan: () => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void; expenses: Expense[]; setExpenses: (fn: (p: Expense[]) => Expense[]) => void }) {
   return (
     <div className="page-pad trip-page pb-28">
       <div className="trip-heading">
         <div className="flex min-w-0 items-center gap-3"><IconButton label="Back to trips" onClick={() => setView("home")}><ArrowLeft size={20} /></IconButton><div className="min-w-0"><p className="eyebrow">May 18–23 · 4 travelers</p><h1 className="truncate text-3xl font-extrabold">Lisbon escape</h1></div></div>
         <div className="avatar-stack hidden sm:flex">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
       </div>
-      {view === "plan" && <Itinerary setView={setView} stops={stops} setStops={setStops} photos={photos} />}
+      {view === "plan" && <Itinerary setView={setView} stops={stops} setStops={setStops} photos={photos} expenses={expenses} setExpenses={setExpenses} />}
       {view === "emergency" && <Emergency />}
-      {view === "costs" && <Costs onScan={onScan} />}
+      {view === "costs" && <Costs onScan={onScan} stops={stops} expenses={expenses} setView={setView} />}
       {view === "photos" && <Photos stops={stops} photos={photos} setPhotos={setPhotos} />}
       {view === "summary" && <Summary setView={setView} />}
     </div>
