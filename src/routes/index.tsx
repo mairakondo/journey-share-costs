@@ -383,7 +383,7 @@ function ExpenseEditor({ expense, stops, onClose, onSave, onDelete }: { expense:
       setScanState("done");
     }, 900);
   };
-  const canSave = Boolean(draft.label.trim()) && draft.amount > 0 && draft.split.participants.length > 0;
+  const canSave = Boolean(draft.label.trim()) && draft.amount > 0 && normalizeSplit(draft.split).participants.length > 0;
   return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label={isNew ? "Add cost" : "Edit cost"}>
     <div className="modal-sheet">
       <div className="modal-head"><div><p className="eyebrow">Day {draft.day + 1} · {draft.source === "scan" ? "From receipt" : "Manual"}</p><h2>{isNew ? "Add cost" : "Edit cost"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>
