@@ -223,7 +223,7 @@
   .time { @apply pt-5 text-xs font-extrabold text-muted-foreground; }
   .timeline-dot { @apply relative flex justify-center before:absolute before:inset-y-0 before:w-px before:bg-border; }
   .timeline-dot span { @apply z-10 mt-6 size-3 rounded-full border-[3px] border-background bg-primary; }
-  .stop-body { @apply mb-3 flex min-w-0 items-center gap-3 rounded-xl border border-border bg-surface p-4; }
+  .stop-body { @apply mb-3 flex min-w-0 items-start gap-3 rounded-xl border border-border bg-surface p-4; }
   .stop-icon { @apply grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary; }
   .stop-body h3 { @apply font-display text-base font-extrabold; }
   .stop-body p { @apply mt-1 flex items-center gap-1 text-xs text-muted-foreground; }
