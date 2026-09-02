@@ -247,11 +247,55 @@ function Costs({ onScan }: { onScan: () => void }) {
   </>;
 }
 
-function Photos() {
-  const [cluster, setCluster] = useState<number | null>(null);
-  const [moved, setMoved] = useState(false);
-  const photos = [lisbon, lisbon, copenhagen, kyoto, lisbon, copenhagen];
-  return <><div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><button className="secondary-action"><Plus size={18} /> Add photos</button></div><section className="photo-days"><article><button className="photo-day-title" onClick={() => setCluster(cluster === 1 ? null : 1)}><span><b>Day 1</b><small>Arrival & Baixa · 18 photos</small></span><ChevronRight size={19} className={cluster === 1 ? "rotate-90" : ""} /></button><div className="photo-grid">{photos.slice(0, cluster === 1 ? 6 : 3).map((photo, i) => <button key={i} className="photo-tile" onClick={() => setMoved(!moved)}><img src={photo} alt={`Lisbon group memory ${i + 1}`} width={1280} height={800} loading="lazy" />{i === 2 && <span>+15</span>}{moved && i === 0 && <small><Check size={13} /> Moved to Day 2</small>}</button>)}</div><p className="gesture-hint">Tap a photo to reassign it to the next day</p></article><article><button className="photo-day-title" onClick={() => setCluster(cluster === 2 ? null : 2)}><span><b>Day 2</b><small>Belém & riverside · 26 photos</small></span><ChevronRight size={19} /></button><div className="photo-grid">{[copenhagen, lisbon, kyoto].map((photo, i) => <button key={i} className="photo-tile"><img src={photo} alt={`Riverside memory ${i + 1}`} width={1280} height={800} loading="lazy" /></button>)}</div></article></section></>;
+function Photos({ stops, photos, setPhotos }: { stops: Stop[]; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void }) {
+  const [openDay, setOpenDay] = useState<number | null>(0);
+  const [assigning, setAssigning] = useState<Photo | null>(null);
+  const days = Array.from(new Set(photos.map((p) => p.day))).sort((a, b) => a - b);
+
+  return <>
+    <div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><button className="secondary-action"><Plus size={18} /> Add photos</button></div>
+    <p className="gesture-hint">Photos are matched to itinerary activities by place, date and time. Tap a photo to move it to another activity.</p>
+    <section className="photo-days">
+      {days.map((day) => {
+        const dayPhotos = photos.filter((p) => p.day === day);
+        const expanded = openDay === day;
+        const groups = groupPhotosByStop(dayPhotos, stops);
+        return <article key={day}>
+          <button className="photo-day-title" onClick={() => setOpenDay(expanded ? null : day)}>
+            <span><b>Day {day + 1}</b><small>{groups.filter((g) => g.stop).length} activities · {dayPhotos.length} photos</small></span>
+            <ChevronRight size={19} className={expanded ? "rotate-90" : ""} />
+          </button>
+          {expanded && groups.map((group) => <div className="activity-cluster" key={group.stop?.id ?? "unmatched"}>
+            <p className="cluster-label">{group.stop ? <><MapPin size={13} /> {group.stop.time} · {group.stop.title}</> : <><Image size={13} /> Not matched to an activity</>}</p>
+            <div className="photo-grid">{group.photos.map((photo) => <button key={photo.id} className="photo-tile" onClick={() => setAssigning(photo)}>
+              <img src={photo.src} alt={`${photo.place} memory`} width={1280} height={800} loading="lazy" />
+              <small>{photo.time} · {photo.place}</small>
+              {photo.stopId && <span><Check size={12} /></span>}
+            </button>)}</div>
+          </div>)}
+        </article>;
+      })}
+    </section>
+    {assigning && <PhotoAssign photo={assigning} stops={stops} onClose={() => setAssigning(null)} onAssign={(stopId) => {
+      setPhotos((prev) => prev.map((p) => (p.id === assigning.id ? { ...p, stopId, day: stopId ? (stops.find((s) => s.id === stopId)?.day ?? p.day) : p.day } : p)));
+      setAssigning(null);
+    }} />}
+  </>;
+}
+
+function PhotoAssign({ photo, stops, onClose, onAssign }: { photo: Photo; stops: Stop[]; onClose: () => void; onAssign: (stopId: string | null) => void }) {
+  const current = resolveStop(photo, stops);
+  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Move photo to activity">
+    <div className="modal-sheet">
+      <div className="modal-head"><div><p className="eyebrow">{photo.time} · {photo.place}</p><h2>Move photo</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>
+      <div className="assign-list">
+        {[...stops].sort((a, b) => a.day - b.day || a.time.localeCompare(b.time)).map((stop) => <button key={stop.id} className={current?.id === stop.id ? "selected" : ""} onClick={() => onAssign(stop.id)}>
+          <b>D{stop.day + 1} · {stop.time}</b><span>{stop.title}<small>{stop.place}</small></span>{current?.id === stop.id && <Check size={16} />}
+        </button>)}
+        <button onClick={() => onAssign(null)}>Auto-match by place & time</button>
+      </div>
+    </div>
+  </div>;
 }
 
 function BottomNav({ view, setView }: { view: View; setView: (v: View) => void }) {
