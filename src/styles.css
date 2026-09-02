@@ -228,6 +228,8 @@
   .stop-body h3 { @apply truncate font-display text-base font-extrabold; }
   .stop-body p { @apply mt-1 flex items-center gap-1 text-xs text-muted-foreground; }
   .spot-badge { @apply mt-2 inline-flex rounded-md bg-sun/25 px-2 py-1 text-[10px] font-extrabold text-sun-foreground; }
+  .stop-actions { @apply flex shrink-0 items-center gap-1; }
+  .empty-day { @apply rounded-2xl border border-dashed border-border bg-surface p-8 text-center text-sm font-semibold text-muted-foreground; }
   .day-note { @apply h-fit rounded-2xl bg-primary p-6 text-primary-foreground; }
   .day-note .eyebrow { @apply text-primary-foreground/70; }.day-note h3 { @apply mt-2 font-display text-2xl font-extrabold; }.day-note > p:not(.eyebrow) { @apply mt-2 text-sm leading-6 text-primary-foreground/80; }
   .mini-map { @apply mt-7 flex h-32 flex-col items-center justify-center gap-2 rounded-xl bg-primary-foreground/10 text-sm font-bold; }
