@@ -4,6 +4,7 @@ import {
   ArrowRight,
   Camera,
   Check,
+  ChevronLeft,
   ChevronRight,
   CloudSun,
   Download,
@@ -18,6 +19,7 @@ import {
   Plus,
   ReceiptText,
   Search,
+  Shuffle,
   ShieldCheck,
   Trash2,
   Users,
@@ -510,11 +512,12 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
 function Photos({ stops, photos, setPhotos }: { stops: Stop[]; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void }) {
   const [openDay, setOpenDay] = useState<number | null>(0);
   const [assigning, setAssigning] = useState<Photo | null>(null);
+  const [viewing, setViewing] = useState<Photo | null>(null);
   const days = Array.from(new Set(photos.map((p) => p.day))).sort((a, b) => a - b);
 
   return <>
     <div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><button className="secondary-action"><Plus size={18} /> Add photos</button></div>
-    <p className="gesture-hint">Photos are matched to itinerary activities by place, date and time. Tap a photo to move it to another activity.</p>
+    <p className="gesture-hint">Photos are matched to itinerary activities by place, date and time. Tap a photo to view it, or move it to another activity.</p>
     <section className="photo-days">
       {days.map((day) => {
         const dayPhotos = photos.filter((p) => p.day === day);
@@ -527,7 +530,7 @@ function Photos({ stops, photos, setPhotos }: { stops: Stop[]; photos: Photo[]; 
           </button>
           {expanded && groups.map((group) => <div className="activity-cluster" key={group.stop?.id ?? "unmatched"}>
             <p className="cluster-label">{group.stop ? <><MapPin size={13} /> {group.stop.time} · {group.stop.title}</> : <><Image size={13} /> Not matched to an activity</>}</p>
-            <div className="photo-grid">{group.photos.map((photo) => <button key={photo.id} className="photo-tile" onClick={() => setAssigning(photo)}>
+            <div className="photo-grid">{group.photos.map((photo) => <button key={photo.id} className="photo-tile" onClick={() => setViewing(photo)}>
               <img src={photo.src} alt={`${photo.place} memory`} width={1280} height={800} loading="lazy" />
               <small className="photo-meta">{photo.time}</small>
               {photo.stopId && <i className="manual-badge"><Check size={12} /></i>}
@@ -536,11 +539,31 @@ function Photos({ stops, photos, setPhotos }: { stops: Stop[]; photos: Photo[]; 
         </article>;
       })}
     </section>
+    {viewing && <PhotoLightbox photo={viewing} photos={photos} stops={stops} onClose={() => setViewing(null)} onPrev={(p) => setViewing(p)} onNext={(p) => setViewing(p)} onMove={() => { setAssigning(viewing); setViewing(null); }} />}
     {assigning && <PhotoAssign photo={assigning} stops={stops} onClose={() => setAssigning(null)} onAssign={(stopId) => {
       setPhotos((prev) => prev.map((p) => (p.id === assigning.id ? { ...p, stopId, day: stopId ? (stops.find((s) => s.id === stopId)?.day ?? p.day) : p.day } : p)));
       setAssigning(null);
     }} />}
   </>;
+}
+
+function PhotoLightbox({ photo, photos, stops, onClose, onPrev, onNext, onMove }: { photo: Photo; photos: Photo[]; stops: Stop[]; onClose: () => void; onPrev: (p: Photo) => void; onNext: (p: Photo) => void; onMove: () => void }) {
+  const idx = photos.findIndex((p) => p.id === photo.id);
+  const prev = photos[idx - 1];
+  const next = photos[idx + 1];
+  const stop = resolveStop(photo, stops);
+  return <div className="modal-backdrop lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" onClick={onClose}>
+    <div className="lightbox-bar">
+      <IconButton label="Close" onClick={onClose}><X size={22} /></IconButton>
+      <div className="min-w-0"><p className="eyebrow">{photo.time} · {photo.place}</p>{stop && <p className="lightbox-stop"><MapPin size={13} /> {stop.title}</p>}</div>
+      <button className="secondary-action" onClick={(e) => { e.stopPropagation(); onMove(); }}><Shuffle size={16} /> Move</button>
+    </div>
+    <div className="lightbox-stage" onClick={(e) => e.stopPropagation()}>
+      <img src={photo.src} alt={`${photo.place} memory`} />
+      {prev && <button className="lightbox-nav prev" aria-label="Previous photo" onClick={() => onPrev(prev)}><ChevronLeft size={26} /></button>}
+      {next && <button className="lightbox-nav next" aria-label="Next photo" onClick={() => onNext(next)}><ChevronRight size={26} /></button>}
+    </div>
+  </div>;
 }
 
 function PhotoAssign({ photo, stops, onClose, onAssign }: { photo: Photo; stops: Stop[]; onClose: () => void; onAssign: (stopId: string | null) => void }) {

@@ -272,6 +272,15 @@
   .cluster-label { @apply mb-2 flex items-center gap-1 text-xs font-extrabold text-muted-foreground; }
   .photo-tile .photo-meta { @apply bg-foreground/70 text-background; }
   .manual-badge { @apply absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-primary text-primary-foreground; }
+  .lightbox { @apply flex-col items-stretch justify-start p-0; }
+  .lightbox-bar { @apply flex items-center gap-3 bg-background/95 px-4 py-3; }
+  .lightbox-bar .eyebrow { @apply text-[11px]; }
+  .lightbox-stop { @apply flex items-center gap-1 text-xs font-bold; }
+  .lightbox-stage { @apply relative flex flex-1 items-center justify-center overflow-hidden bg-black p-3; }
+  .lightbox-stage img { @apply max-h-[78vh] max-w-full rounded-xl object-contain; }
+  .lightbox-nav { @apply absolute top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-background/85 text-foreground shadow-lg transition hover:bg-background; }
+  .lightbox-nav.prev { @apply left-3; }
+  .lightbox-nav.next { @apply right-3; }
   .stop-costs { @apply grid min-w-0 gap-1.5; }
   .cost-chip { @apply grid min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 rounded-xl bg-money/12 px-3 py-2 text-left transition hover:bg-money/20; }
   .cost-chip > span { @apply min-w-0; }
