@@ -193,7 +193,7 @@ const initialStops: Stop[] = [
 
 type Photo = { id: string; src: string; day: number; time: string; place: string; stopId?: string | null };
 
-type SplitMode = "equal" | "shares" | "percent";
+type SplitMode = "equal" | "exact" | "percent";
 type Split = { mode: SplitMode; participants: string[]; values: Record<string, number> };
 
 type Expense = { id: string; day: number; time: string; place: string; label: string; amount: number; payer: string; source: "scan" | "manual"; stopId?: string | null; split: Split };
@@ -215,7 +215,10 @@ function splitShares(rawSplit: Split | undefined, amount: number): Record<string
     const each = amount / people.length;
     return Object.fromEntries(people.map((n) => [n, each]));
   }
-  const weights = people.map((n) => Math.max(0, Number(split.values[n] ?? (split.mode === "percent" ? 100 / people.length : 1))));
+  if (split.mode === "exact") {
+    return Object.fromEntries(people.map((n) => [n, Math.max(0, Number(split.values[n] ?? 0))]));
+  }
+  const weights = people.map((n) => Math.max(0, Number(split.values[n] ?? 100 / people.length)));
   const total = weights.reduce((s, w) => s + w, 0);
   if (total === 0) return Object.fromEntries(people.map((n) => [n, 0]));
   return Object.fromEntries(people.map((n, i) => [n, (amount * weights[i]!) / total]));
@@ -223,7 +226,7 @@ function splitShares(rawSplit: Split | undefined, amount: number): Record<string
 
 const splitLabel = (raw: Split | undefined) => {
   const split = normalizeSplit(raw);
-  return `${split.participants.length} ${split.participants.length === 1 ? "traveler" : "travelers"} · ${split.mode === "equal" ? "equally" : split.mode === "shares" ? "by number" : "by percentage"}`;
+  return `${split.participants.length} ${split.participants.length === 1 ? "traveler" : "travelers"} · ${split.mode === "equal" ? "equally" : split.mode === "exact" ? "exact amounts" : "by percentage"}`;
 };
 
 function SplitPicker({ split: rawSplit, amount, onChange }: { split: Split | undefined; amount: number; onChange: (s: Split) => void }) {
