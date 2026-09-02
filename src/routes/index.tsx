@@ -12,13 +12,14 @@ import {
   Landmark,
   MapPin,
   MoreHorizontal,
+  Pencil,
   Phone,
   Plane,
   Plus,
   ReceiptText,
   Search,
   ShieldCheck,
-  Sparkles,
+  Trash2,
   Users,
   WalletCards,
   WifiOff,
@@ -176,24 +177,62 @@ function TripShell({ view, setView, onScan }: { view: View; setView: (v: View) =
   );
 }
 
+type Stop = { id: string; day: number; time: string; title: string; place: string; tag: string };
+
+const initialStops: Stop[] = [
+  { id: "s1", day: 1, time: "09:30", title: "Pastéis de Belém", place: "Rua de Belém 84", tag: "Local favorite" },
+  { id: "s2", day: 1, time: "11:00", title: "Jerónimos Monastery", place: "Praça do Império", tag: "Must see" },
+  { id: "s3", day: 1, time: "14:30", title: "LX Factory", place: "Rua Rodrigues de Faria 103", tag: "Explore" },
+  { id: "s4", day: 0, time: "16:00", title: "Check in & Baixa stroll", place: "Praça do Comércio", tag: "Easy start" },
+];
+
 function Itinerary({ setView }: { setView: (v: View) => void }) {
   const [day, setDay] = useState(1);
-  const stops = [
-    { time: "09:30", title: "Pastéis de Belém", place: "Rua de Belém 84", icon: <Sparkles size={16} />, tag: "Local favorite", phone: true },
-    { time: "11:00", title: "Jerónimos Monastery", place: "Praça do Império", icon: <Landmark size={16} />, tag: "Must see" },
-    { time: "14:30", title: "LX Factory", place: "Rua Rodrigues de Faria 103", icon: <MapPin size={16} />, tag: "Explore" },
-  ];
+  const [stops, setStops] = useState<Stop[]>(initialStops);
+  const [editing, setEditing] = useState<Stop | null>(null);
+
+  const dayStops = stops.filter((s) => s.day === day).sort((a, b) => a.time.localeCompare(b.time));
+
+  const saveStop = (stop: Stop) => {
+    setStops((prev) => (prev.some((s) => s.id === stop.id) ? prev.map((s) => (s.id === stop.id ? stop : s)) : [...prev, stop]));
+    setEditing(null);
+  };
+  const deleteStop = (id: string) => setStops((prev) => prev.filter((s) => s.id !== id));
+
   return <>
     <div className="section-tabs"><button className="active">Itinerary</button><button onClick={() => setView("emergency")}>Emergency info</button></div>
     <div className="day-strip">{["Sun 18", "Mon 19", "Tue 20", "Wed 21", "Thu 22"].map((d, i) => <button key={d} onClick={() => setDay(i)} className={day === i ? "active" : ""}><span>Day {i + 1}</span>{d}</button>)}</div>
     <div className="content-grid">
       <section>
-        <div className="date-heading"><div><p className="eyebrow">Day {day + 1}</p><h2>{day === 0 ? "Olá, Lisboa!" : ["Belém & riverside", "Alfama slow day", "Sintra day trip", "Last tastes"][day - 1]}</h2></div><div className="weather"><CloudSun size={23} /><span>24°</span><small>Sunny</small></div></div>
-        <div className="timeline">{stops.map((stop, i) => <article className="stop-card" key={stop.title}><div className="time">{stop.time}</div><div className="timeline-dot"><span /></div><div className="stop-body"><div className="stop-icon">{stop.icon}</div><div className="min-w-0 flex-1"><h3>{stop.title}</h3><p><MapPin size={14} /> {stop.place}</p><span className="spot-badge">{stop.tag}</span></div>{stop.phone && <IconButton label="Call venue"><Phone size={17} /></IconButton>}<ChevronRight size={18} className="text-muted-foreground" /></div></article>)}</div>
+        <div className="date-heading"><div><p className="eyebrow">Day {day + 1}</p><h2>{day === 0 ? "Olá, Lisboa!" : ["Belém & riverside", "Alfama slow day", "Sintra day trip", "Last tastes"][day - 1]}</h2></div><div className="flex items-center gap-3"><div className="weather"><CloudSun size={23} /><span>24°</span><small>Sunny</small></div><button className="secondary-action" onClick={() => setEditing({ id: `s${Date.now()}`, day, time: "10:00", title: "", place: "", tag: "Explore" })}><Plus size={17} /> Add</button></div></div>
+        <div className="timeline">{dayStops.map((stop) => <article className="stop-card" key={stop.id}><div className="time">{stop.time}</div><div className="timeline-dot"><span /></div><div className="stop-body"><div className="stop-icon"><MapPin size={16} /></div><div className="min-w-0 flex-1"><h3>{stop.title}</h3><p><MapPin size={14} /> {stop.place}</p>{stop.tag && <span className="spot-badge">{stop.tag}</span>}</div><div className="stop-actions"><IconButton label={`Edit ${stop.title}`} onClick={() => setEditing(stop)}><Pencil size={16} /></IconButton><IconButton label={`Delete ${stop.title}`} onClick={() => deleteStop(stop.id)}><Trash2 size={16} /></IconButton></div></div></article>)}
+          {dayStops.length === 0 && <p className="empty-day">No activities yet for this day. Tap “Add” to plan something.</p>}
+        </div>
       </section>
-      <aside className="day-note"><p className="eyebrow">Today’s note</p><h3>Take it slow.</h3><p>The tram gets busy after 10. We saved the walking route offline.</p><div className="mini-map"><MapPin size={25} /><span>3 stops · 4.2 km</span></div></aside>
+      <aside className="day-note"><p className="eyebrow">Today’s note</p><h3>Take it slow.</h3><p>The tram gets busy after 10. We saved the walking route offline.</p><div className="mini-map"><MapPin size={25} /><span>{dayStops.length} stops · 4.2 km</span></div></aside>
     </div>
+    {editing && <StopEditor stop={editing} onClose={() => setEditing(null)} onSave={saveStop} onDelete={stops.some((s) => s.id === editing.id) ? () => { deleteStop(editing.id); setEditing(null); } : undefined} />}
   </>;
+}
+
+function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: () => void; onSave: (s: Stop) => void; onDelete?: (() => void) | undefined }) {
+  const [draft, setDraft] = useState(stop);
+  const isNew = !onDelete;
+  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label={isNew ? "Add activity" : "Edit activity"}>
+    <div className="modal-sheet">
+      <div className="modal-head"><div><p className="eyebrow">Day {draft.day + 1}</p><h2>{isNew ? "Add activity" : "Edit activity"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>
+      <div className="form-grid">
+        <label>Activity<input value={draft.title} placeholder="Pastéis de Belém" onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></label>
+        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Rua de Belém 84" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
+        <div className="two-cols">
+          <label>Time<input type="time" value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} /></label>
+          <label>Tag<input value={draft.tag} placeholder="Must see" onChange={(e) => setDraft({ ...draft, tag: e.target.value })} /></label>
+        </div>
+      </div>
+      <button className="primary-action wide" disabled={!draft.title.trim()} onClick={() => onSave({ ...draft, title: draft.title.trim(), place: draft.place.trim() })}><Check size={19} /> {isNew ? "Add activity" : "Save changes"}</button>
+      {onDelete && <button className="summary-back" onClick={onDelete}><Trash2 size={17} /> Delete activity</button>}
+    </div>
+  </div>;
 }
 
 function Emergency() {
