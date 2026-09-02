@@ -492,8 +492,8 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
         const stop = resolveStop(e, stops);
         return <article key={e.id}>
           <div className="cost-line"><span className="cost-time">{e.time}</span><h4>{e.label}</h4><strong>{euro(e.amount)}</strong></div>
-          <p className="cost-place">{stop ? `${stop.title} · ${stop.place}` : e.place || "No activity matched"}</p>
-          <p className="cost-foot"><span className="split-tag"><Users size={13} /> Split {splitLabel(e.split)}</span><small>{e.source === "scan" ? "Receipt" : "Manual"} · {e.payer}</small></p>
+          <p className="cost-place"><MapPin size={13} /> <span>{stop ? `${stop.title} · ${stop.place}` : e.place || "No activity matched"}</span></p>
+          <div className="cost-foot"><span className="split-tag"><Users size={13} /> Split {splitLabel(e.split)}</span><small>{e.source === "scan" ? "Scanned receipt" : "Added manually"} · Paid by {e.payer}</small></div>
         </article>;
       })}
     </section>)}</div>
