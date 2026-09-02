@@ -4,6 +4,7 @@ import {
   ArrowRight,
   Camera,
   Check,
+  ChevronLeft,
   ChevronRight,
   CloudSun,
   Download,
