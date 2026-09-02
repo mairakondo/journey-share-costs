@@ -443,7 +443,7 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
       <header><h3>Day {d + 1}</h3><strong>{euro(expenses.filter((e) => e.day === d).reduce((s, e) => s + e.amount, 0))}</strong></header>
       {expenses.filter((e) => e.day === d).sort((a, b) => a.time.localeCompare(b.time)).map((e) => {
         const stop = resolveStop(e, stops);
-        return <article key={e.id}><span className="cost-time">{e.time}</span><div className="min-w-0 flex-1"><h4>{e.label}</h4><p>{stop ? `${stop.title} · ${stop.place}` : e.place || "No activity matched"}</p></div><div className="cost-meta"><strong>{euro(e.amount)}</strong><small>{e.source === "scan" ? "Receipt" : "Manual"} · {e.payer}</small></div></article>;
+        return <article key={e.id}><span className="cost-time">{e.time}</span><div className="min-w-0 flex-1"><h4>{e.label}</h4><p>{stop ? `${stop.title} · ${stop.place}` : e.place || "No activity matched"}</p><p className="split-tag"><Users size={13} /> Split {splitLabel(e.split)}</p></div><div className="cost-meta"><strong>{euro(e.amount)}</strong><small>{e.source === "scan" ? "Receipt" : "Manual"} · {e.payer}</small></div></article>;
       })}
     </section>)}</div>
     <button className="secondary-action mt-4" onClick={() => setView("plan")}><Plus size={17} /> Add a cost in the timeline</button>
