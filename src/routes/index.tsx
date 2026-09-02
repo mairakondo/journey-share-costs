@@ -355,7 +355,10 @@ function Emergency() {
   </section></>;
 }
 
-function Costs({ onScan }: { onScan: () => void }) {
+function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops: Stop[]; expenses: Expense[]; setView: (v: View) => void }) {
+  const total = expenses.reduce((s, e) => s + e.amount, 0);
+  const days = [...new Set(expenses.map((e) => e.day))].sort((a, b) => a - b);
+
   return <><div className="cost-hero"><div><p className="eyebrow">Group expenses</p><h2>Keep it easy,<br />keep it fair.</h2><p>Snap a receipt and we’ll help with the rest.</p></div><button onClick={onScan} className="scan-button"><span><Camera size={25} /></span><b>Scan receipt</b><small>Camera or photo library</small><ArrowRight size={19} /></button></div>
     <div className="cost-layout"><section><div className="section-heading"><div><p className="eyebrow">Settle up</p><h2>Running balance</h2></div><span className="settled-pill">€286.40 total</span></div><div className="balance-list"><article><span className="bg-sky text-sky-foreground">JR</span><div><h3>Jon owes you</h3><p>3 shared expenses</p></div><strong className="positive">+ €48.20</strong></article><article><span className="bg-money text-money-foreground">AL</span><div><h3>You owe Ana</h3><p>Dinner at Prado</p></div><strong>− €23.75</strong></article><article><span className="bg-sun text-sun-foreground">LM</span><div><h3>Luis is settled</h3><p>All caught up</p></div><strong className="muted-amount">€0</strong></article></div></section><aside className="future-space"><ReceiptText size={22} /><p className="eyebrow">Coming next</p><h3>Flexible splitting</h3><p>Equal, shares or percentages — with borrowed and lent tags.</p></aside></div>
   </>;
