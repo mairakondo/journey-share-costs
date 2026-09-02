@@ -220,17 +220,28 @@
   .weather { @apply grid grid-cols-[auto_auto] items-center gap-x-2 text-primary; }
   .weather span { @apply text-lg font-black; }.weather small { @apply col-span-2 text-right text-[10px] font-bold text-muted-foreground; }
   .timeline { @apply mt-6; }
-  .stop-card { @apply grid grid-cols-[52px_18px_minmax(0,1fr)] items-stretch; }
-  .time { @apply pt-5 text-xs font-extrabold text-muted-foreground; }
+  .stop-card { @apply grid grid-cols-[34px_minmax(0,1fr)] items-stretch sm:grid-cols-[52px_18px_minmax(0,1fr)]; }
+  .time { @apply col-start-2 row-start-1 mb-1 self-end text-[11px] font-extrabold uppercase text-muted-foreground sm:col-start-1 sm:mb-0 sm:pt-5 sm:normal-case; }
   .timeline-dot { @apply relative flex justify-center before:absolute before:inset-y-0 before:w-px before:bg-border; }
-  .timeline-dot span { @apply z-10 mt-6 size-3 rounded-full border-[3px] border-background bg-primary; }
-  .stop-body { @apply mb-3 flex min-w-0 items-start gap-3 rounded-xl border border-border bg-surface p-4; }
+  .timeline-dot { @apply col-start-1 row-span-2 row-start-1 sm:col-start-2 sm:row-span-1 sm:row-start-1; }
+  .timeline-dot span { @apply z-10 mt-1.5 size-3 rounded-full border-[3px] border-background bg-primary sm:mt-6; }
+  .stop-body { @apply col-start-2 row-start-2 mb-4 min-w-0 overflow-hidden rounded-xl border border-border bg-surface p-4 sm:col-start-3 sm:row-start-1; }
   .stop-icon { @apply grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary; }
   .stop-body h3 { @apply font-display text-base font-extrabold; }
   .stop-body p { @apply mt-1 flex items-center gap-1 text-xs text-muted-foreground; }
-  .stop-title-row { @apply flex items-center gap-2; }
+  .stop-card-head { @apply grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2; }
+  .stop-title-row { @apply flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1; }
   .spot-badge { @apply inline-flex shrink-0 rounded-md bg-sun/25 px-2 py-1 text-[10px] font-extrabold text-sun-foreground; }
   .stop-actions { @apply flex shrink-0 items-center gap-1; }
+  .stop-actions .icon-button { @apply size-9; }
+  .stop-summary { @apply mt-3 grid min-h-20 grid-cols-[minmax(0,1fr)_80px] gap-3; }
+  .stop-place { @apply flex min-w-0 items-start gap-2; }
+  .stop-place p { @apply mt-1 break-words leading-5; }
+  .stop-photo-preview { @apply relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-muted; }
+  .stop-photo-preview img { @apply h-full w-full object-cover; }
+  .stop-photo-preview > span { @apply absolute right-1 top-1 rounded-md bg-foreground/75 px-1.5 py-0.5 text-[9px] font-black text-background; }
+  .stop-photo-preview > small { @apply absolute inset-x-1 bottom-1 rounded-md bg-surface/90 px-1 py-0.5 text-center text-[9px] font-extrabold text-foreground backdrop-blur; }
+  .stop-footer { @apply mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-2 border-t border-border/60 pt-3; }
   .empty-day { @apply rounded-2xl border border-dashed border-border bg-surface p-8 text-center text-sm font-semibold text-muted-foreground; }
   .day-note { @apply h-fit rounded-2xl bg-primary p-6 text-primary-foreground; }
   .day-note .eyebrow { @apply text-primary-foreground/70; }.day-note h3 { @apply mt-2 font-display text-2xl font-extrabold; }.day-note > p:not(.eyebrow) { @apply mt-2 text-sm leading-6 text-primary-foreground/80; }
@@ -260,15 +271,14 @@
   .cluster-label { @apply mb-2 flex items-center gap-1 text-xs font-extrabold text-muted-foreground; }
   .photo-tile .photo-meta { @apply bg-foreground/70 text-background; }
   .manual-badge { @apply absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-primary text-primary-foreground; }
-  .stop-photos { @apply mt-3 flex items-center gap-1; }
-  .stop-photos img { @apply size-9 rounded-lg object-cover; }
-  .stop-photos small { @apply ml-1 text-[10px] font-bold text-muted-foreground; }
-  .stop-costs { @apply mt-3 flex flex-wrap items-center gap-2; }
-  .cost-chip { @apply flex items-center gap-2 rounded-xl bg-money/12 px-3 py-2 text-left transition hover:bg-money/20; }
-  .cost-chip span { @apply max-w-[10rem] truncate text-xs font-extrabold text-foreground; }
-  .cost-chip small { @apply text-[10px] font-bold text-muted-foreground; }
+  .stop-costs { @apply grid min-w-0 gap-1.5; }
+  .cost-chip { @apply grid min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 rounded-xl bg-money/12 px-3 py-2 text-left transition hover:bg-money/20; }
+  .cost-chip > span { @apply min-w-0; }
+  .cost-chip b { @apply block truncate text-xs font-extrabold text-foreground; }
+  .cost-chip small { @apply block truncate text-[10px] font-bold text-muted-foreground; }
   .cost-chip strong { @apply text-xs font-extrabold text-money-foreground; }
-  .add-cost { @apply flex items-center gap-1 rounded-xl border border-dashed border-money/50 px-3 py-2 text-xs font-extrabold text-money-foreground transition hover:bg-money/12; }
+  .no-cost { @apply self-center text-[10px] font-bold text-muted-foreground; }
+  .add-cost { @apply flex min-h-9 shrink-0 items-center gap-1 rounded-xl border border-dashed border-money/50 px-3 py-2 text-xs font-extrabold text-money-foreground transition hover:bg-money/12; }
   .match-hint { @apply mt-3 flex items-center gap-2 rounded-xl bg-muted px-3 py-2 text-xs font-bold text-muted-foreground; }
   .spend-timeline { @apply mt-4 grid gap-4; }
   .spend-timeline > section { @apply rounded-3xl bg-card p-4 shadow-sm; }
