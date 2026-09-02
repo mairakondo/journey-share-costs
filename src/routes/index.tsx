@@ -191,7 +191,56 @@ const initialStops: Stop[] = [
 
 type Photo = { id: string; src: string; day: number; time: string; place: string; stopId?: string | null };
 
-type Expense = { id: string; day: number; time: string; place: string; label: string; amount: number; payer: string; source: "scan" | "manual"; stopId?: string | null };
+type SplitMode = "equal" | "shares" | "percent";
+type Split = { mode: SplitMode; participants: string[]; values: Record<string, number> };
+
+type Expense = { id: string; day: number; time: string; place: string; label: string; amount: number; payer: string; source: "scan" | "manual"; stopId?: string | null; split: Split };
+
+const equalSplit = (names: string[] = members.map((m) => m.name)): Split => ({ mode: "equal", participants: names, values: {} });
+
+function splitShares(split: Split, amount: number): Record<string, number> {
+  const people = split.participants;
+  if (people.length === 0) return {};
+  if (split.mode === "equal") {
+    const each = amount / people.length;
+    return Object.fromEntries(people.map((n) => [n, each]));
+  }
+  const weights = people.map((n) => Math.max(0, Number(split.values[n] ?? (split.mode === "percent" ? 100 / people.length : 1))));
+  const total = weights.reduce((s, w) => s + w, 0);
+  if (total === 0) return Object.fromEntries(people.map((n) => [n, 0]));
+  return Object.fromEntries(people.map((n, i) => [n, (amount * weights[i]!) / total]));
+}
+
+const splitLabel = (split: Split) => `${split.participants.length} ${split.participants.length === 1 ? "traveler" : "travelers"} · ${split.mode === "equal" ? "equally" : split.mode === "shares" ? "by number" : "by percentage"}`;
+
+function SplitPicker({ split, amount, onChange }: { split: Split; amount: number; onChange: (s: Split) => void }) {
+  const shares = splitShares(split, amount);
+  const toggle = (name: string) => {
+    const participants = split.participants.includes(name) ? split.participants.filter((n) => n !== name) : [...split.participants, name];
+    onChange({ ...split, participants });
+  };
+  const setValue = (name: string, v: number) => onChange({ ...split, values: { ...split.values, [name]: v } });
+  const percentTotal = split.participants.reduce((s, n) => s + Number(split.values[n] ?? 0), 0);
+  return <div className="split-picker">
+    <div className="split-modes" role="group" aria-label="Split type">
+      {([["equal", "Equally"], ["shares", "By number"], ["percent", "By percentage"]] as [SplitMode, string][]).map(([mode, label]) =>
+        <button key={mode} className={split.mode === mode ? "active" : ""} onClick={() => onChange({ ...split, mode, values: mode === "percent" ? Object.fromEntries(split.participants.map((n) => [n, Math.round((100 / Math.max(1, split.participants.length)) * 10) / 10])) : Object.fromEntries(split.participants.map((n) => [n, 1])) })}>{label}</button>)}
+    </div>
+    <div className="split-rows">
+      {members.map((m) => {
+        const on = split.participants.includes(m.name);
+        return <div key={m.name} className={on ? "split-row on" : "split-row"}>
+          <button className="split-person" onClick={() => toggle(m.name)} aria-pressed={on}><span className={m.tone}>{m.initials}</span>{m.name}<i>{on && <Check size={12} />}</i></button>
+          {on && split.mode !== "equal" && <div className="split-value"><input inputMode="decimal" aria-label={`${split.mode === "percent" ? "Percentage" : "Shares"} for ${m.name}`} value={String(split.values[m.name] ?? "")} onChange={(e) => setValue(m.name, Number(e.target.value.replace(",", ".")) || 0)} /><small>{split.mode === "percent" ? "%" : "×"}</small></div>}
+          {on && <strong>{euro(shares[m.name] ?? 0)}</strong>}
+        </div>;
+      })}
+    </div>
+    {split.participants.length === 0 && <p className="split-hint warn">Pick at least one traveler.</p>}
+    {split.mode === "percent" && split.participants.length > 0 && <p className={Math.abs(percentTotal - 100) > 0.5 ? "split-hint warn" : "split-hint"}>Percentages total {Math.round(percentTotal * 10) / 10}%{Math.abs(percentTotal - 100) > 0.5 ? " — we’ll scale it to the amount." : ""}</p>}
+  </div>;
+}
+
 
 const initialPhotos: Photo[] = [
   { id: "p1", src: lisbon, day: 0, time: "16:20", place: "Praça do Comércio" },
@@ -204,11 +253,12 @@ const initialPhotos: Photo[] = [
 ];
 
 const initialExpenses: Expense[] = [
-  { id: "e1", day: 1, time: "09:45", place: "Rua de Belém 84", label: "Pastéis & coffee", amount: 18.6, payer: "Maira", source: "scan" },
-  { id: "e2", day: 1, time: "11:10", place: "Praça do Império", label: "Monastery tickets", amount: 40, payer: "Jon", source: "scan" },
-  { id: "e3", day: 1, time: "14:55", place: "LX Factory", label: "Lunch at Rio Maravilha", amount: 86.4, payer: "Ana", source: "scan" },
-  { id: "e4", day: 0, time: "16:15", place: "Praça do Comércio", label: "Airport taxi", amount: 32, payer: "Maira", source: "manual" },
-  { id: "e5", day: 1, time: "20:30", place: "Bairro Alto", label: "Late drinks", amount: 24.5, payer: "Luis", source: "manual" },
+  { id: "e1", day: 1, time: "09:45", place: "Rua de Belém 84", label: "Pastéis & coffee", amount: 18.6, payer: "Maira", source: "scan", split: equalSplit() },
+  { id: "e2", day: 1, time: "11:10", place: "Praça do Império", label: "Monastery tickets", amount: 40, payer: "Jon", source: "scan", split: equalSplit() },
+  { id: "e3", day: 1, time: "14:55", place: "LX Factory", label: "Lunch at Rio Maravilha", amount: 86.4, payer: "Ana", source: "scan", split: { mode: "shares", participants: ["You", "Jon", "Ana"], values: { You: 1, Jon: 2, Ana: 1 } } },
+  { id: "e4", day: 0, time: "16:15", place: "Praça do Comércio", label: "Airport taxi", amount: 32, payer: "Maira", source: "manual", split: equalSplit(["You", "Jon"]) },
+  { id: "e5", day: 1, time: "20:30", place: "Bairro Alto", label: "Late drinks", amount: 24.5, payer: "Luis", source: "manual", split: { mode: "percent", participants: ["You", "Luis"], values: { You: 40, Luis: 60 } } },
+
 ];
 
 const minutes = (t: string) => {
@@ -275,7 +325,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
     setEditingCost(null);
   };
   const deleteExpense = (id: string) => setExpenses((prev) => prev.filter((x) => x.id !== id));
-  const newExpense = (stop?: Stop): Expense => ({ id: `e${Date.now()}`, day, time: stop?.time ?? "12:00", place: stop?.place ?? "", label: "", amount: 0, payer: "Maira", source: "manual", stopId: stop?.id ?? null });
+  const newExpense = (stop?: Stop): Expense => ({ id: `e${Date.now()}`, day, time: stop?.time ?? "12:00", place: stop?.place ?? "", label: "", amount: 0, payer: "Maira", source: "manual", stopId: stop?.id ?? null, split: equalSplit() });
 
   const costRow = (e: Expense) => <button key={e.id} className="cost-chip" onClick={() => setEditingCost(e)} aria-label={`Edit cost ${e.label}`}>
     <ReceiptText size={14} /><span>{e.label || "Untitled cost"}</span><small>{e.time} · {e.payer}{e.source === "scan" ? " · receipt" : ""}</small><strong>{euro(e.amount)}</strong>
@@ -301,13 +351,34 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
   </>;
 }
 
+const sampleReceipts = [
+  { label: "Lunch at Rio Maravilha", place: "LX Factory", amount: 86.4, time: "14:55" },
+  { label: "Tram 28 tickets", place: "Praça Martim Moniz", amount: 12, time: "10:20" },
+  { label: "Dinner at Time Out Market", place: "Av. 24 de Julho 49", amount: 64.8, time: "20:10" },
+];
+
 function ExpenseEditor({ expense, stops, onClose, onSave, onDelete }: { expense: Expense; stops: Stop[]; onClose: () => void; onSave: (e: Expense) => void; onDelete?: (() => void) | undefined }) {
   const [draft, setDraft] = useState(expense);
+  const [scanState, setScanState] = useState<"idle" | "scanning" | "done">(expense.source === "scan" ? "done" : "idle");
   const isNew = !onDelete;
   const auto = resolveStop({ ...draft, stopId: null }, stops);
+  const scan = () => {
+    setScanState("scanning");
+    const r = sampleReceipts[Math.floor(Math.random() * sampleReceipts.length)]!;
+    setTimeout(() => {
+      setDraft((d) => ({ ...d, label: r.label, place: r.place, amount: r.amount, time: r.time, source: "scan" }));
+      setScanState("done");
+    }, 900);
+  };
+  const canSave = Boolean(draft.label.trim()) && draft.amount > 0 && draft.split.participants.length > 0;
   return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label={isNew ? "Add cost" : "Edit cost"}>
     <div className="modal-sheet">
       <div className="modal-head"><div><p className="eyebrow">Day {draft.day + 1} · {draft.source === "scan" ? "From receipt" : "Manual"}</p><h2>{isNew ? "Add cost" : "Edit cost"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>
+      <button className="scan-inline" onClick={scan} disabled={scanState === "scanning"}>
+        <span><Camera size={20} /></span>
+        <div><b>{scanState === "scanning" ? "Reading your receipt…" : scanState === "done" ? "Receipt details filled in" : "Scan a receipt"}</b><small>{scanState === "done" ? "Check the amount, place and time below" : "We’ll fill the amount, place and time for you"}</small></div>
+        {scanState === "done" ? <Check size={18} /> : <ArrowRight size={18} />}
+      </button>
       <div className="form-grid">
         <label>What was it?<input value={draft.label} placeholder="Lunch at Rio Maravilha" onChange={(e) => setDraft({ ...draft, label: e.target.value })} /></label>
         <div className="two-cols">
@@ -323,8 +394,13 @@ function ExpenseEditor({ expense, stops, onClose, onSave, onDelete }: { expense:
           </select>
         </label>
       </div>
-      <button className="money-action wide" disabled={!draft.label.trim() || !draft.amount} onClick={() => onSave({ ...draft, label: draft.label.trim(), place: draft.place.trim(), day: draft.stopId ? (stops.find((s) => s.id === draft.stopId)?.day ?? draft.day) : draft.day })}><Check size={19} /> {isNew ? "Add cost" : "Save cost"}</button>
+      <div className="split-block">
+        <p className="eyebrow">Split between travelers</p>
+        <SplitPicker split={draft.split} amount={draft.amount} onChange={(split) => setDraft({ ...draft, split })} />
+      </div>
+      <button className="money-action wide" disabled={!canSave} onClick={() => onSave({ ...draft, label: draft.label.trim(), place: draft.place.trim(), day: draft.stopId ? (stops.find((s) => s.id === draft.stopId)?.day ?? draft.day) : draft.day })}><Check size={19} /> {isNew ? "Add cost" : "Save cost"}</button>
       {onDelete && <button className="summary-back" onClick={onDelete}><Trash2 size={17} /> Delete cost</button>}
+
     </div>
   </div>;
 }
@@ -367,7 +443,7 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
       <header><h3>Day {d + 1}</h3><strong>{euro(expenses.filter((e) => e.day === d).reduce((s, e) => s + e.amount, 0))}</strong></header>
       {expenses.filter((e) => e.day === d).sort((a, b) => a.time.localeCompare(b.time)).map((e) => {
         const stop = resolveStop(e, stops);
-        return <article key={e.id}><span className="cost-time">{e.time}</span><div className="min-w-0 flex-1"><h4>{e.label}</h4><p>{stop ? `${stop.title} · ${stop.place}` : e.place || "No activity matched"}</p></div><div className="cost-meta"><strong>{euro(e.amount)}</strong><small>{e.source === "scan" ? "Receipt" : "Manual"} · {e.payer}</small></div></article>;
+        return <article key={e.id}><span className="cost-time">{e.time}</span><div className="min-w-0 flex-1"><h4>{e.label}</h4><p>{stop ? `${stop.title} · ${stop.place}` : e.place || "No activity matched"}</p><p className="split-tag"><Users size={13} /> Split {splitLabel(e.split)}</p></div><div className="cost-meta"><strong>{euro(e.amount)}</strong><small>{e.source === "scan" ? "Receipt" : "Manual"} · {e.payer}</small></div></article>;
       })}
     </section>)}</div>
     <button className="secondary-action mt-4" onClick={() => setView("plan")}><Plus size={17} /> Add a cost in the timeline</button>
@@ -436,17 +512,19 @@ function CreateTrip({ onClose, onCreate }: { onClose: () => void; onCreate: () =
 
 function ReceiptConfirm({ onClose, stops, onSave }: { onClose: () => void; stops: Stop[]; onSave: (e: Expense) => void }) {
   const [confirmed, setConfirmed] = useState(false);
-  const [selected, setSelected] = useState([0, 1, 2]);
+  const [split, setSplit] = useState<Split>(equalSplit(["You", "Jon", "Ana"]));
   const [draft, setDraft] = useState({ amount: "86.40", label: "Lunch at Rio Maravilha", place: "LX Factory", time: "14:55", day: 1 });
+  const amount = Number(draft.amount.replace(",", ".")) || 0;
   const match = resolveStop({ day: draft.day, time: draft.time, place: draft.place }, stops);
   const confirm = () => {
-    onSave({ id: `e${Date.now()}`, day: draft.day, time: draft.time, place: draft.place, label: draft.label, amount: Number(draft.amount.replace(",", ".")) || 0, payer: "Maira", source: "scan", stopId: null });
+    onSave({ id: `e${Date.now()}`, day: draft.day, time: draft.time, place: draft.place, label: draft.label, amount, payer: "Maira", source: "scan", stopId: null, split });
     setConfirmed(true);
   };
-  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Confirm scanned receipt"><div className="modal-sheet receipt-sheet"><div className="scan-success"><span><ReceiptText size={26} /></span><div><p className="eyebrow">Receipt found</p><h2>{confirmed ? "Expense added!" : "Check the details"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>{confirmed ? <div className="confirmation"><span><Check size={34} /></span><p>{euro(Number(draft.amount.replace(",", ".")) || 0)} split between {selected.length} travelers</p><p className="text-sm">{match ? `Added to your timeline at ${draft.time} · ${match.title}` : `Added to your Day ${draft.day + 1} timeline at ${draft.time}`}</p><button className="primary-action wide" onClick={onClose}>Done</button></div> : <><div className="amount-edit"><label>Amount</label><div><span>€</span><input value={draft.amount} inputMode="decimal" onChange={(e) => setDraft({ ...draft, amount: e.target.value })} /></div><input value={draft.label} aria-label="Expense name" onChange={(e) => setDraft({ ...draft, label: e.target.value })} /></div>
+  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Confirm scanned receipt"><div className="modal-sheet receipt-sheet"><div className="scan-success"><span><ReceiptText size={26} /></span><div><p className="eyebrow">Receipt found</p><h2>{confirmed ? "Expense added!" : "Check the details"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>{confirmed ? <div className="confirmation"><span><Check size={34} /></span><p>{euro(amount)} split {splitLabel(split)}</p><p className="text-sm">{match ? `Added to your timeline at ${draft.time} · ${match.title}` : `Added to your Day ${draft.day + 1} timeline at ${draft.time}`}</p><button className="primary-action wide" onClick={onClose}>Done</button></div> : <><div className="amount-edit"><label>Amount</label><div><span>€</span><input value={draft.amount} inputMode="decimal" onChange={(e) => setDraft({ ...draft, amount: e.target.value })} /></div><input value={draft.label} aria-label="Expense name" onChange={(e) => setDraft({ ...draft, label: e.target.value })} /></div>
     <div className="two-cols"><label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label><label>Time<input type="time" value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} /></label></div>
     <p className="match-hint"><MapPin size={14} /> {match ? `Matches “${match.title}” on your timeline` : "No activity matched yet — it will sit on the day timeline"}</p>
-    <div className="member-picker"><p className="eyebrow">Who was it for?</p><div>{members.map((m, i) => <button key={m.name} className={selected.includes(i) ? "selected" : ""} onClick={() => setSelected(selected.includes(i) ? selected.filter(x => x !== i) : [...selected, i])}><span className={m.tone}>{m.initials}</span>{m.name}<i>{selected.includes(i) && <Check size={12} />}</i></button>)}</div></div><button className="money-action" onClick={confirm}><Check size={20} /> Confirm expense</button></>}</div></div>;
+    <div className="split-block"><p className="eyebrow">Split between travelers</p><SplitPicker split={split} amount={amount} onChange={setSplit} /></div><button className="money-action" disabled={split.participants.length === 0} onClick={confirm}><Check size={20} /> Confirm expense</button></>}</div></div>;
+
 }
 
 
