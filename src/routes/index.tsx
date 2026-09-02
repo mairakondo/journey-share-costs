@@ -63,6 +63,8 @@ function TravelersApp() {
   const [createOpen, setCreateOpen] = useState(false);
   const [scanOpen, setScanOpen] = useState(false);
   const [offline, setOffline] = useState(true);
+  const [stops, setStops] = useState<Stop[]>(initialStops);
+  const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
 
   const openTrip = () => setView("plan");
 
@@ -90,7 +92,7 @@ function TravelersApp() {
         {view === "home" ? (
           <Dashboard onOpen={openTrip} onCreate={() => setCreateOpen(true)} onSummary={() => setView("summary")} />
         ) : (
-          <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} />
+          <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} stops={stops} setStops={setStops} photos={photos} setPhotos={setPhotos} />
         )}
 
         {view !== "home" && view !== "summary" && <BottomNav view={view} setView={setView} />}
@@ -161,17 +163,17 @@ function Dashboard({ onOpen, onCreate, onSummary }: { onOpen: () => void; onCrea
   );
 }
 
-function TripShell({ view, setView, onScan }: { view: View; setView: (v: View) => void; onScan: () => void }) {
+function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos }: { view: View; setView: (v: View) => void; onScan: () => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void }) {
   return (
     <div className="page-pad trip-page pb-28">
       <div className="trip-heading">
         <div className="flex min-w-0 items-center gap-3"><IconButton label="Back to trips" onClick={() => setView("home")}><ArrowLeft size={20} /></IconButton><div className="min-w-0"><p className="eyebrow">May 18–23 · 4 travelers</p><h1 className="truncate text-3xl font-extrabold">Lisbon escape</h1></div></div>
         <div className="avatar-stack hidden sm:flex">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
       </div>
-      {view === "plan" && <Itinerary setView={setView} />}
+      {view === "plan" && <Itinerary setView={setView} stops={stops} setStops={setStops} photos={photos} />}
       {view === "emergency" && <Emergency />}
       {view === "costs" && <Costs onScan={onScan} />}
-      {view === "photos" && <Photos />}
+      {view === "photos" && <Photos stops={stops} photos={photos} setPhotos={setPhotos} />}
       {view === "summary" && <Summary setView={setView} />}
     </div>
   );
@@ -186,9 +188,58 @@ const initialStops: Stop[] = [
   { id: "s4", day: 0, time: "16:00", title: "Check in & Baixa stroll", place: "Praça do Comércio", tag: "Easy start" },
 ];
 
-function Itinerary({ setView }: { setView: (v: View) => void }) {
+type Photo = { id: string; src: string; day: number; time: string; place: string; stopId?: string | null };
+
+const initialPhotos: Photo[] = [
+  { id: "p1", src: lisbon, day: 0, time: "16:20", place: "Praça do Comércio" },
+  { id: "p2", src: lisbon, day: 0, time: "16:55", place: "Praça do Comércio, Baixa" },
+  { id: "p3", src: copenhagen, day: 0, time: "21:10", place: "Bairro Alto" },
+  { id: "p4", src: lisbon, day: 1, time: "09:40", place: "Rua de Belém 84" },
+  { id: "p5", src: kyoto, day: 1, time: "11:25", place: "Praça do Império" },
+  { id: "p6", src: copenhagen, day: 1, time: "14:50", place: "Rua Rodrigues de Faria 103" },
+  { id: "p7", src: lisbon, day: 1, time: "15:30", place: "LX Factory" },
+];
+
+const minutes = (t: string) => {
+  const [h, m] = t.split(":");
+  return Number(h) * 60 + Number(m ?? 0);
+};
+
+const placeScore = (a: string, b: string) => {
+  const norm = (v: string) => v.toLowerCase().replace(/[^a-z0-9 ]/g, " ").split(/\s+/).filter((w) => w.length > 2);
+  const wordsA = norm(a);
+  const wordsB = new Set(norm(b));
+  const hits = wordsA.filter((w) => wordsB.has(w)).length;
+  return wordsA.length ? hits / wordsA.length : 0;
+};
+
+function resolveStop(photo: Photo, stops: Stop[]): Stop | null {
+  if (photo.stopId) return stops.find((s) => s.id === photo.stopId) ?? null;
+  const sameDay = stops.filter((s) => s.day === photo.day);
+  let best: { stop: Stop; score: number } | null = null;
+  for (const stop of sameDay) {
+    const gap = Math.abs(minutes(photo.time) - minutes(stop.time));
+    if (gap > 120) continue;
+    const score = placeScore(photo.place, `${stop.place} ${stop.title}`) * 2 + (1 - gap / 120);
+    if (!best || score > best.score) best = { stop, score };
+  }
+  return best && best.score > 0.6 ? best.stop : null;
+}
+
+function groupPhotosByStop(dayPhotos: Photo[], stops: Stop[]) {
+  const groups: { stop: Stop | null; photos: Photo[] }[] = [];
+  const push = (stop: Stop | null, photo: Photo) => {
+    const key = stop?.id ?? null;
+    const found = groups.find((g) => (g.stop?.id ?? null) === key);
+    if (found) found.photos.push(photo);
+    else groups.push({ stop, photos: [photo] });
+  };
+  for (const photo of dayPhotos) push(resolveStop(photo, stops), photo);
+  return groups.sort((a, b) => (a.stop ? a.stop.time : "99:99").localeCompare(b.stop ? b.stop.time : "99:99"));
+}
+
+function Itinerary({ setView, stops, setStops, photos }: { setView: (v: View) => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[] }) {
   const [day, setDay] = useState(1);
-  const [stops, setStops] = useState<Stop[]>(initialStops);
   const [editing, setEditing] = useState<Stop | null>(null);
 
   const dayStops = stops.filter((s) => s.day === day).sort((a, b) => a.time.localeCompare(b.time));
@@ -205,7 +256,7 @@ function Itinerary({ setView }: { setView: (v: View) => void }) {
     <div className="content-grid">
       <section>
         <div className="date-heading"><div><p className="eyebrow">Day {day + 1}</p><h2>{day === 0 ? "Olá, Lisboa!" : ["Belém & riverside", "Alfama slow day", "Sintra day trip", "Last tastes"][day - 1]}</h2></div><div className="flex items-center gap-3"><div className="weather"><CloudSun size={23} /><span>24°</span><small>Sunny</small></div><button className="secondary-action" onClick={() => setEditing({ id: `s${Date.now()}`, day, time: "10:00", title: "", place: "", tag: "Explore" })}><Plus size={17} /> Add</button></div></div>
-        <div className="timeline">{dayStops.map((stop) => <article className="stop-card" key={stop.id}><div className="time">{stop.time}</div><div className="timeline-dot"><span /></div><div className="stop-body"><div className="stop-icon"><MapPin size={16} /></div><div className="min-w-0 flex-1"><h3>{stop.title}</h3><p><MapPin size={14} /> {stop.place}</p>{stop.tag && <span className="spot-badge">{stop.tag}</span>}</div><div className="stop-actions"><IconButton label={`Edit ${stop.title}`} onClick={() => setEditing(stop)}><Pencil size={16} /></IconButton><IconButton label={`Delete ${stop.title}`} onClick={() => deleteStop(stop.id)}><Trash2 size={16} /></IconButton></div></div></article>)}
+        <div className="timeline">{dayStops.map((stop) => <article className="stop-card" key={stop.id}><div className="time">{stop.time}</div><div className="timeline-dot"><span /></div><div className="stop-body"><div className="stop-icon"><MapPin size={16} /></div><div className="min-w-0 flex-1"><h3>{stop.title}</h3><p><MapPin size={14} /> {stop.place}</p>{stop.tag && <span className="spot-badge">{stop.tag}</span>}{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).length > 0 && <div className="stop-photos">{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).slice(0, 3).map((p) => <img key={p.id} src={p.src} alt={`${stop.title} photo`} width={80} height={80} loading="lazy" />)}<small>{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).length} photos matched</small></div>}</div><div className="stop-actions"><IconButton label={`Edit ${stop.title}`} onClick={() => setEditing(stop)}><Pencil size={16} /></IconButton><IconButton label={`Delete ${stop.title}`} onClick={() => deleteStop(stop.id)}><Trash2 size={16} /></IconButton></div></div></article>)}
           {dayStops.length === 0 && <p className="empty-day">No activities yet for this day. Tap “Add” to plan something.</p>}
         </div>
       </section>
@@ -247,11 +298,55 @@ function Costs({ onScan }: { onScan: () => void }) {
   </>;
 }
 
-function Photos() {
-  const [cluster, setCluster] = useState<number | null>(null);
-  const [moved, setMoved] = useState(false);
-  const photos = [lisbon, lisbon, copenhagen, kyoto, lisbon, copenhagen];
-  return <><div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><button className="secondary-action"><Plus size={18} /> Add photos</button></div><section className="photo-days"><article><button className="photo-day-title" onClick={() => setCluster(cluster === 1 ? null : 1)}><span><b>Day 1</b><small>Arrival & Baixa · 18 photos</small></span><ChevronRight size={19} className={cluster === 1 ? "rotate-90" : ""} /></button><div className="photo-grid">{photos.slice(0, cluster === 1 ? 6 : 3).map((photo, i) => <button key={i} className="photo-tile" onClick={() => setMoved(!moved)}><img src={photo} alt={`Lisbon group memory ${i + 1}`} width={1280} height={800} loading="lazy" />{i === 2 && <span>+15</span>}{moved && i === 0 && <small><Check size={13} /> Moved to Day 2</small>}</button>)}</div><p className="gesture-hint">Tap a photo to reassign it to the next day</p></article><article><button className="photo-day-title" onClick={() => setCluster(cluster === 2 ? null : 2)}><span><b>Day 2</b><small>Belém & riverside · 26 photos</small></span><ChevronRight size={19} /></button><div className="photo-grid">{[copenhagen, lisbon, kyoto].map((photo, i) => <button key={i} className="photo-tile"><img src={photo} alt={`Riverside memory ${i + 1}`} width={1280} height={800} loading="lazy" /></button>)}</div></article></section></>;
+function Photos({ stops, photos, setPhotos }: { stops: Stop[]; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void }) {
+  const [openDay, setOpenDay] = useState<number | null>(0);
+  const [assigning, setAssigning] = useState<Photo | null>(null);
+  const days = Array.from(new Set(photos.map((p) => p.day))).sort((a, b) => a - b);
+
+  return <>
+    <div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><button className="secondary-action"><Plus size={18} /> Add photos</button></div>
+    <p className="gesture-hint">Photos are matched to itinerary activities by place, date and time. Tap a photo to move it to another activity.</p>
+    <section className="photo-days">
+      {days.map((day) => {
+        const dayPhotos = photos.filter((p) => p.day === day);
+        const expanded = openDay === day;
+        const groups = groupPhotosByStop(dayPhotos, stops);
+        return <article key={day}>
+          <button className="photo-day-title" onClick={() => setOpenDay(expanded ? null : day)}>
+            <span><b>Day {day + 1}</b><small>{groups.filter((g) => g.stop).length} activities · {dayPhotos.length} photos</small></span>
+            <ChevronRight size={19} className={expanded ? "rotate-90" : ""} />
+          </button>
+          {expanded && groups.map((group) => <div className="activity-cluster" key={group.stop?.id ?? "unmatched"}>
+            <p className="cluster-label">{group.stop ? <><MapPin size={13} /> {group.stop.time} · {group.stop.title}</> : <><Image size={13} /> Not matched to an activity</>}</p>
+            <div className="photo-grid">{group.photos.map((photo) => <button key={photo.id} className="photo-tile" onClick={() => setAssigning(photo)}>
+              <img src={photo.src} alt={`${photo.place} memory`} width={1280} height={800} loading="lazy" />
+              <small className="photo-meta">{photo.time}</small>
+              {photo.stopId && <i className="manual-badge"><Check size={12} /></i>}
+            </button>)}</div>
+          </div>)}
+        </article>;
+      })}
+    </section>
+    {assigning && <PhotoAssign photo={assigning} stops={stops} onClose={() => setAssigning(null)} onAssign={(stopId) => {
+      setPhotos((prev) => prev.map((p) => (p.id === assigning.id ? { ...p, stopId, day: stopId ? (stops.find((s) => s.id === stopId)?.day ?? p.day) : p.day } : p)));
+      setAssigning(null);
+    }} />}
+  </>;
+}
+
+function PhotoAssign({ photo, stops, onClose, onAssign }: { photo: Photo; stops: Stop[]; onClose: () => void; onAssign: (stopId: string | null) => void }) {
+  const current = resolveStop(photo, stops);
+  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Move photo to activity">
+    <div className="modal-sheet">
+      <div className="modal-head"><div><p className="eyebrow">{photo.time} · {photo.place}</p><h2>Move photo</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>
+      <div className="assign-list">
+        {[...stops].sort((a, b) => a.day - b.day || a.time.localeCompare(b.time)).map((stop) => <button key={stop.id} className={current?.id === stop.id ? "selected" : ""} onClick={() => onAssign(stop.id)}>
+          <b>D{stop.day + 1} · {stop.time}</b><span>{stop.title}<small>{stop.place}</small></span>{current?.id === stop.id && <Check size={16} />}
+        </button>)}
+        <button onClick={() => onAssign(null)}>Auto-match by place & time</button>
+      </div>
+    </div>
+  </div>;
 }
 
 function BottomNav({ view, setView }: { view: View; setView: (v: View) => void }) {
