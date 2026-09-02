@@ -290,7 +290,7 @@
   .cost-card-head { @apply flex min-w-0 items-center justify-between gap-3; }
   .cost-card-head strong { @apply shrink-0 text-sm font-extrabold text-money-foreground; }
   .spend-timeline article h4 { @apply mt-1 min-w-0 break-words text-sm font-extrabold leading-5; }
-  .cost-details { @apply mt-3 grid min-w-0 gap-2 border-t border-border/60 pt-3; }
+  .cost-details { @apply mt-3 grid w-full min-w-0 gap-2 border-t border-border/60 pt-3; }
   .cost-details > div { @apply grid min-w-0 grid-cols-[5rem_minmax(0,1fr)] items-start gap-2; }
   .cost-details dt { @apply flex items-center gap-1 text-xs font-bold text-muted-foreground; }
   .cost-details dt svg { @apply shrink-0; }
@@ -361,7 +361,7 @@
   .spend-timeline header { @apply grid grid-cols-1 items-start gap-1; }
   .spend-timeline header h3,
   .spend-timeline header strong { @apply whitespace-normal; }
-  .spend-timeline article { @apply py-3.5; }
+  .spend-timeline article { @apply block w-full min-w-0 py-3.5; }
   .cost-card-head { @apply w-full; }
   .cost-time { @apply w-auto; }
   .spend-timeline article h4 { @apply w-full; }
