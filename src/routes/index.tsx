@@ -325,7 +325,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
     setEditingCost(null);
   };
   const deleteExpense = (id: string) => setExpenses((prev) => prev.filter((x) => x.id !== id));
-  const newExpense = (stop?: Stop): Expense => ({ id: `e${Date.now()}`, day, time: stop?.time ?? "12:00", place: stop?.place ?? "", label: "", amount: 0, payer: "Maira", source: "manual", stopId: stop?.id ?? null });
+  const newExpense = (stop?: Stop): Expense => ({ id: `e${Date.now()}`, day, time: stop?.time ?? "12:00", place: stop?.place ?? "", label: "", amount: 0, payer: "Maira", source: "manual", stopId: stop?.id ?? null, split: equalSplit() });
 
   const costRow = (e: Expense) => <button key={e.id} className="cost-chip" onClick={() => setEditingCost(e)} aria-label={`Edit cost ${e.label}`}>
     <ReceiptText size={14} /><span>{e.label || "Untitled cost"}</span><small>{e.time} · {e.payer}{e.source === "scan" ? " · receipt" : ""}</small><strong>{euro(e.amount)}</strong>
