@@ -191,7 +191,56 @@ const initialStops: Stop[] = [
 
 type Photo = { id: string; src: string; day: number; time: string; place: string; stopId?: string | null };
 
-type Expense = { id: string; day: number; time: string; place: string; label: string; amount: number; payer: string; source: "scan" | "manual"; stopId?: string | null };
+type SplitMode = "equal" | "shares" | "percent";
+type Split = { mode: SplitMode; participants: string[]; values: Record<string, number> };
+
+type Expense = { id: string; day: number; time: string; place: string; label: string; amount: number; payer: string; source: "scan" | "manual"; stopId?: string | null; split: Split };
+
+const equalSplit = (names: string[] = members.map((m) => m.name)): Split => ({ mode: "equal", participants: names, values: {} });
+
+function splitShares(split: Split, amount: number): Record<string, number> {
+  const people = split.participants;
+  if (people.length === 0) return {};
+  if (split.mode === "equal") {
+    const each = amount / people.length;
+    return Object.fromEntries(people.map((n) => [n, each]));
+  }
+  const weights = people.map((n) => Math.max(0, Number(split.values[n] ?? (split.mode === "percent" ? 100 / people.length : 1))));
+  const total = weights.reduce((s, w) => s + w, 0);
+  if (total === 0) return Object.fromEntries(people.map((n) => [n, 0]));
+  return Object.fromEntries(people.map((n, i) => [n, (amount * weights[i]!) / total]));
+}
+
+const splitLabel = (split: Split) => `${split.participants.length} ${split.participants.length === 1 ? "traveler" : "travelers"} · ${split.mode === "equal" ? "equally" : split.mode === "shares" ? "by number" : "by percentage"}`;
+
+function SplitPicker({ split, amount, onChange }: { split: Split; amount: number; onChange: (s: Split) => void }) {
+  const shares = splitShares(split, amount);
+  const toggle = (name: string) => {
+    const participants = split.participants.includes(name) ? split.participants.filter((n) => n !== name) : [...split.participants, name];
+    onChange({ ...split, participants });
+  };
+  const setValue = (name: string, v: number) => onChange({ ...split, values: { ...split.values, [name]: v } });
+  const percentTotal = split.participants.reduce((s, n) => s + Number(split.values[n] ?? 0), 0);
+  return <div className="split-picker">
+    <div className="split-modes" role="group" aria-label="Split type">
+      {([["equal", "Equally"], ["shares", "By number"], ["percent", "By percentage"]] as [SplitMode, string][]).map(([mode, label]) =>
+        <button key={mode} className={split.mode === mode ? "active" : ""} onClick={() => onChange({ ...split, mode, values: mode === "percent" ? Object.fromEntries(split.participants.map((n) => [n, Math.round((100 / Math.max(1, split.participants.length)) * 10) / 10])) : Object.fromEntries(split.participants.map((n) => [n, 1])) })}>{label}</button>)}
+    </div>
+    <div className="split-rows">
+      {members.map((m) => {
+        const on = split.participants.includes(m.name);
+        return <div key={m.name} className={on ? "split-row on" : "split-row"}>
+          <button className="split-person" onClick={() => toggle(m.name)} aria-pressed={on}><span className={m.tone}>{m.initials}</span>{m.name}<i>{on && <Check size={12} />}</i></button>
+          {on && split.mode !== "equal" && <div className="split-value"><input inputMode="decimal" aria-label={`${split.mode === "percent" ? "Percentage" : "Shares"} for ${m.name}`} value={String(split.values[m.name] ?? "")} onChange={(e) => setValue(m.name, Number(e.target.value.replace(",", ".")) || 0)} /><small>{split.mode === "percent" ? "%" : "×"}</small></div>}
+          {on && <strong>{euro(shares[m.name] ?? 0)}</strong>}
+        </div>;
+      })}
+    </div>
+    {split.participants.length === 0 && <p className="split-hint warn">Pick at least one traveler.</p>}
+    {split.mode === "percent" && split.participants.length > 0 && <p className={Math.abs(percentTotal - 100) > 0.5 ? "split-hint warn" : "split-hint"}>Percentages total {Math.round(percentTotal * 10) / 10}%{Math.abs(percentTotal - 100) > 0.5 ? " — we’ll scale it to the amount." : ""}</p>}
+  </div>;
+}
+
 
 const initialPhotos: Photo[] = [
   { id: "p1", src: lisbon, day: 0, time: "16:20", place: "Praça do Comércio" },
