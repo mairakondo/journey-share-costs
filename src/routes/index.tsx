@@ -464,6 +464,12 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
   const days = [...new Set(expenses.map((e) => e.day))].sort((a, b) => a - b);
 
   return <><div className="cost-hero"><div><p className="eyebrow">Group expenses</p><h2>Keep it easy,<br />keep it fair.</h2><p>Snap a receipt and we’ll help with the rest.</p></div><button onClick={onScan} className="scan-button"><span><Camera size={25} /></span><b>Scan receipt</b><small>Camera or photo library</small><ArrowRight size={19} /></button></div>
+    <article className="budget-progress">
+      <header><div><p className="eyebrow text-money">Planned vs actual</p><h3>{euro(total)} <span>of {euro(planned)} planned</span></h3></div><span className={over ? "settled-pill over" : "settled-pill"}>{pct}% used</span></header>
+      <div className="budget-bar" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Budget used"><span className={over ? "over" : ""} style={{ width: `${pct}%` }} /></div>
+      <footer>{over ? <strong className="text-destructive">{euro(total - planned)} over budget</strong> : <strong>{euro(planned - total)} left</strong>}<small>{expenses.length} expenses tracked</small></footer>
+    </article>
+
     <div className="cost-layout"><section><div className="section-heading"><div><p className="eyebrow">Settle up</p><h2>Running balance</h2></div><span className="settled-pill">¥32,200 total</span></div><div className="balance-list"><article><span className="bg-sky text-sky-foreground">JR</span><div><h3>Jon owes you</h3><p>3 shared expenses</p></div><strong className="positive">+ ¥4,820</strong></article><article><span className="bg-money text-money-foreground">AL</span><div><h3>You owe Ana</h3><p>Dinner at Omoide Yokocho</p></div><strong>− ¥2,400</strong></article><article><span className="bg-sun text-sun-foreground">LM</span><div><h3>Luis is settled</h3><p>All caught up</p></div><strong className="muted-amount">¥0</strong></article></div></section><aside className="future-space"><ReceiptText size={22} /><p className="eyebrow">Coming next</p><h3>Flexible splitting</h3><p>Equal, shares or percentages — with borrowed and lent tags.</p></aside></div>
     <div className="section-heading mt-8"><div><p className="eyebrow">When it happened</p><h2>Spending timeline</h2></div><span className="settled-pill">{euro(total)} tracked</span></div>
     <div className="spend-timeline">{days.map((d) => <section key={d}>
