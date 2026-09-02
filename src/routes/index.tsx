@@ -321,6 +321,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
   const [day, setDay] = useState(1);
   const [editing, setEditing] = useState<Stop | null>(null);
   const [editingCost, setEditingCost] = useState<Expense | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
 
   const dayStops = stops.filter((s) => s.day === day).sort((a, b) => a.time.localeCompare(b.time));
   const dayExpenses = expenses.filter((e) => e.day === day);
@@ -349,7 +350,16 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
     <div className="day-strip">{["Sun 18", "Mon 19", "Tue 20", "Wed 21", "Thu 22"].map((d, i) => <button key={d} onClick={() => setDay(i)} className={day === i ? "active" : ""}><span>Day {i + 1}</span>{d}</button>)}</div>
     <div className="content-grid">
       <section>
-        <div className="date-heading"><div><p className="eyebrow">Day {day + 1} · {euro(dayTotal)} spent</p><div className="day-title-row"><h2>{day === 0 ? "Konnichiwa, Tokyo!" : ["Asakusa & old town", "Shibuya slow day", "Hakone day trip", "Last bites"][day - 1]}</h2><div className="weather"><CloudSun size={23} /><span>24°</span><small>Sunny</small></div></div></div><button className="secondary-action" onClick={() => setEditing({ id: `s${Date.now()}`, day, time: "10:00", title: "", place: "", tag: "Explore" })}><Plus size={17} /> Add</button></div>
+        <div className="date-heading"><div><p className="eyebrow">Day {day + 1} · {euro(dayTotal)} spent</p><div className="day-title-row"><h2>{day === 0 ? "Konnichiwa, Tokyo!" : ["Asakusa & old town", "Shibuya slow day", "Hakone day trip", "Last bites"][day - 1]}</h2><div className="weather"><CloudSun size={23} /><span>24°</span><small>Sunny</small></div></div></div>
+          <div className="add-menu-wrap">
+            <button className="secondary-action" aria-haspopup="menu" aria-expanded={addOpen} onClick={() => setAddOpen((o) => !o)}><Plus size={17} /> Add</button>
+            {addOpen && <div className="add-menu" role="menu">
+              <button role="menuitem" onClick={() => { setAddOpen(false); setEditing({ id: `s${Date.now()}`, day, time: "10:00", title: "", place: "", tag: "Explore" }); }}><MapPin size={16} /><span>Activity<small>Plan a stop for this day</small></span></button>
+              <button role="menuitem" onClick={() => { setAddOpen(false); setEditingCost(newExpense()); }}><ReceiptText size={16} /><span>Cost<small>Scan a receipt or enter it manually</small></span></button>
+              <button role="menuitem" onClick={() => { setAddOpen(false); setView("photos"); }}><Image size={16} /><span>Photos<small>Add memories to the timeline</small></span></button>
+            </div>}
+          </div></div>
+
         <div className="timeline">{dayStops.map((stop) => <article className="stop-card" key={stop.id}><div className="time">{stop.time}</div><div className="timeline-dot"><span /></div><div className="stop-body"><div className="stop-icon"><MapPin size={16} /></div><div className="min-w-0 flex-1"><h3 className="stop-title-row"><span className="truncate">{stop.title}</span>{stop.tag && <span className="spot-badge">{stop.tag}</span>}</h3><p><MapPin size={14} /> {stop.place}</p>{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).length > 0 && <div className="stop-photos">{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).slice(0, 3).map((p) => <img key={p.id} src={p.src} alt={`${stop.title} photo`} width={80} height={80} loading="lazy" />)}<small>{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).length} photos matched</small></div>}
           <div className="stop-costs">{stopExpenses(stop.id).map(costRow)}<button className="add-cost" onClick={() => setEditingCost(newExpense(stop))}><Plus size={14} /> Add cost</button></div>
         </div><div className="stop-actions"><IconButton label={`Edit ${stop.title}`} onClick={() => setEditing(stop)}><Pencil size={16} /></IconButton><IconButton label={`Delete ${stop.title}`} onClick={() => deleteStop(stop.id)}><Trash2 size={16} /></IconButton></div></div></article>)}
