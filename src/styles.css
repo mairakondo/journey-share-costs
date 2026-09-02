@@ -225,9 +225,10 @@
   .timeline-dot span { @apply z-10 mt-6 size-3 rounded-full border-[3px] border-background bg-primary; }
   .stop-body { @apply mb-3 flex min-w-0 items-center gap-3 rounded-xl border border-border bg-surface p-4; }
   .stop-icon { @apply grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary; }
-  .stop-body h3 { @apply truncate font-display text-base font-extrabold; }
+  .stop-body h3 { @apply font-display text-base font-extrabold; }
   .stop-body p { @apply mt-1 flex items-center gap-1 text-xs text-muted-foreground; }
-  .spot-badge { @apply mt-2 inline-flex rounded-md bg-sun/25 px-2 py-1 text-[10px] font-extrabold text-sun-foreground; }
+  .stop-title-row { @apply flex items-center gap-2; }
+  .spot-badge { @apply ml-auto inline-flex shrink-0 rounded-md bg-sun/25 px-2 py-1 text-[10px] font-extrabold text-sun-foreground; }
   .stop-actions { @apply flex shrink-0 items-center gap-1; }
   .empty-day { @apply rounded-2xl border border-dashed border-border bg-surface p-8 text-center text-sm font-semibold text-muted-foreground; }
   .day-note { @apply h-fit rounded-2xl bg-primary p-6 text-primary-foreground; }
