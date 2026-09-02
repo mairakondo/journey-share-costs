@@ -19,7 +19,6 @@ import {
   ReceiptText,
   Search,
   ShieldCheck,
-  Sparkles,
   Trash2,
   Users,
   WalletCards,
@@ -216,7 +215,7 @@ function Itinerary({ setView }: { setView: (v: View) => void }) {
   </>;
 }
 
-function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: () => void; onSave: (s: Stop) => void; onDelete?: () => void }) {
+function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: () => void; onSave: (s: Stop) => void; onDelete?: (() => void) | undefined }) {
   const [draft, setDraft] = useState(stop);
   const isNew = !onDelete;
   return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label={isNew ? "Add activity" : "Edit activity"}>
