@@ -351,12 +351,20 @@
 @media (max-width: 639px) {
   .section-heading { @apply grid grid-cols-1 items-start gap-3; }
   .timeline-head-actions { @apply flex w-full flex-wrap justify-between; }
-  .spend-timeline > section { @apply rounded-2xl p-3; }
+  .spend-timeline { @apply min-w-0; }
+  .spend-timeline > section { @apply min-w-0 overflow-hidden rounded-2xl p-3; }
+  .spend-timeline header { @apply grid grid-cols-1 items-start gap-1; }
+  .spend-timeline header h3,
+  .spend-timeline header strong { @apply whitespace-normal; }
   .spend-timeline article { @apply py-3.5; }
-  .cost-line { @apply grid grid-cols-[auto_minmax(0,1fr)_auto] items-start gap-x-2; }
-  .cost-time { @apply w-auto pt-0.5; }
-  .cost-line strong { @apply pt-0.5; }
-  .cost-foot small { @apply leading-4; }
+  .cost-line { @apply flex min-w-0 flex-col items-start gap-1; }
+  .cost-time { @apply w-auto pt-0; }
+  .spend-timeline article h4 { @apply w-full; }
+  .cost-line strong { @apply whitespace-normal pt-0; }
+  .cost-place { @apply w-full pl-0; }
+  .cost-foot { @apply flex w-full flex-col items-start gap-1.5 pl-0; }
+  .cost-foot small { @apply w-full break-words leading-4; }
+  .split-tag { @apply w-full; }
   .balance-list article { @apply grid-cols-[auto_minmax(0,1fr)] items-start; }
   .balance-list article > strong { @apply col-start-2 justify-self-start; }
   .budget-progress header { @apply grid grid-cols-[minmax(0,1fr)_auto]; }
