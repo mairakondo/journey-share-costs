@@ -19,6 +19,7 @@ import {
   Plus,
   ReceiptText,
   Search,
+  Shuffle,
   ShieldCheck,
   Trash2,
   Users,
