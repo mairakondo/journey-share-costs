@@ -320,8 +320,8 @@ function Photos({ stops, photos, setPhotos }: { stops: Stop[]; photos: Photo[]; 
             <p className="cluster-label">{group.stop ? <><MapPin size={13} /> {group.stop.time} · {group.stop.title}</> : <><Image size={13} /> Not matched to an activity</>}</p>
             <div className="photo-grid">{group.photos.map((photo) => <button key={photo.id} className="photo-tile" onClick={() => setAssigning(photo)}>
               <img src={photo.src} alt={`${photo.place} memory`} width={1280} height={800} loading="lazy" />
-              <small>{photo.time} · {photo.place}</small>
-              {photo.stopId && <span><Check size={12} /></span>}
+              <small className="photo-meta">{photo.time}</small>
+              {photo.stopId && <i className="manual-badge"><Check size={12} /></i>}
             </button>)}</div>
           </div>)}
         </article>;
