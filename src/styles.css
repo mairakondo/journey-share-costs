@@ -311,3 +311,10 @@
   .split-hint.warn { @apply text-money-foreground; }
   .split-tag { @apply mt-1 flex items-center gap-1 text-xs font-semibold text-muted-foreground; }
 }
+
+.add-menu-wrap { @apply relative; }
+.add-menu { @apply absolute right-0 top-[calc(100%+0.5rem)] z-30 w-64 overflow-hidden rounded-2xl border border-border bg-card p-1.5 shadow-xl; }
+.add-menu button { @apply flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left text-foreground transition-colors hover:bg-secondary; }
+.add-menu button svg { @apply mt-0.5 text-primary; }
+.add-menu button span { @apply flex flex-col text-sm font-semibold; }
+.add-menu button small { @apply text-xs font-normal text-muted-foreground; }
