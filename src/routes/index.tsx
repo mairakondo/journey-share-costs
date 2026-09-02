@@ -321,6 +321,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
   const [day, setDay] = useState(1);
   const [editing, setEditing] = useState<Stop | null>(null);
   const [editingCost, setEditingCost] = useState<Expense | null>(null);
+  const [addOpen, setAddOpen] = useState(false);
 
   const dayStops = stops.filter((s) => s.day === day).sort((a, b) => a.time.localeCompare(b.time));
   const dayExpenses = expenses.filter((e) => e.day === day);
@@ -355,7 +356,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
             {addOpen && <div className="add-menu" role="menu">
               <button role="menuitem" onClick={() => { setAddOpen(false); setEditing({ id: `s${Date.now()}`, day, time: "10:00", title: "", place: "", tag: "Explore" }); }}><MapPin size={16} /><span>Activity<small>Plan a stop for this day</small></span></button>
               <button role="menuitem" onClick={() => { setAddOpen(false); setEditingCost(newExpense()); }}><ReceiptText size={16} /><span>Cost<small>Scan a receipt or enter it manually</small></span></button>
-              <button role="menuitem" onClick={() => { setAddOpen(false); setView("photos"); }}><ImageIcon size={16} /><span>Photos<small>Add memories to the timeline</small></span></button>
+              <button role="menuitem" onClick={() => { setAddOpen(false); setView("photos"); }}><Image size={16} /><span>Photos<small>Add memories to the timeline</small></span></button>
             </div>}
           </div></div>
 
