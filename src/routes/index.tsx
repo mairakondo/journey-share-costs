@@ -371,7 +371,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
               </div>
               <div className="stop-summary">
                 <div className="stop-place"><span className="stop-icon"><MapPin size={16} /></span><p>{stop.place}</p></div>
-                {matchedPhotos.length > 0 && <div className="stop-photo-preview"><img src={matchedPhotos[0]?.src} alt={`${stop.title} photo`} width={160} height={160} loading="lazy" />{matchedPhotos.length > 1 && <span>+{matchedPhotos.length - 1}</span>}<small>{matchedPhotos.length} {matchedPhotos.length === 1 ? "photo" : "photos"}</small></div>}
+                {matchedPhotos.length > 0 && <button type="button" className="stop-photo-preview" onClick={() => setView("photos")} aria-label={`View ${matchedPhotos.length} ${matchedPhotos.length === 1 ? "photo" : "photos"} for ${stop.title}`}><img src={matchedPhotos[0]?.src} alt={`${stop.title} photo`} width={160} height={160} loading="lazy" />{matchedPhotos.length > 1 && <span>+{matchedPhotos.length - 1}</span>}<small>{matchedPhotos.length} {matchedPhotos.length === 1 ? "photo" : "photos"}</small></button>}
               </div>
               <div className="stop-footer"><div className="stop-costs">{matchedExpenses.map(costRow)}{matchedExpenses.length === 0 && <span className="no-cost">No costs yet</span>}</div></div>
             </div>
