@@ -230,5 +230,25 @@ function ReceiptConfirm({ onClose }: { onClose: () => void }) {
 }
 
 function Summary({ setView }: { setView: (v: View) => void }) {
-  return <section className="summary-wrap"><div className="summary-photo"><img src={kyoto} alt="Cherry blossoms over a Kyoto lane" width={1280} height={800} /><div><span className="status-pill muted">Trip complete</span><p>March 24–31 · 8 days</p><h2>Kyoto,<br />together.</h2></div></div><div className="summary-content"><p className="eyebrow">After trip</p><h2>One for the books</h2><div className="summary-stats"><article><WalletCards /><strong>€2,846</strong><span>Total spent</span></article><article><Image /><strong>184</strong><span>Photos shared</span></article><article><MapPin /><strong>27</strong><span>Places visited</span></article></div><button className="primary-action wide"><Download size={19} /> Export highlights</button><button className="summary-back" onClick={() => setView("home")}><ArrowLeft size={17} /> Back to all trips</button></div></section>;
+  const days = [
+    { day: "Day 1", title: "Arrival & Gion lanterns", detail: "3 stops · €142 spent · 22 photos" },
+    { day: "Day 3", title: "Arashiyama bamboo grove", detail: "4 stops · €248 spent · 41 photos" },
+    { day: "Day 6", title: "Fushimi Inari at sunrise", detail: "2 stops · €68 spent · 38 photos" },
+    { day: "Day 8", title: "Last matcha & goodbyes", detail: "3 stops · €193 spent · 19 photos" },
+  ];
+  const spend = [
+    { label: "Stays", amount: "€1,180", pct: 41 },
+    { label: "Food & drinks", amount: "€742", pct: 26 },
+    { label: "Transport", amount: "€498", pct: 18 },
+    { label: "Activities", amount: "€426", pct: 15 },
+  ];
+  return <>
+    <section className="summary-wrap"><div className="summary-photo"><img src={kyoto} alt="Cherry blossoms over a Kyoto lane" width={1280} height={800} /><div><span className="status-pill muted">Trip complete</span><p>March 24–31 · 8 days</p><h2>Kyoto,<br />together.</h2></div></div><div className="summary-content"><p className="eyebrow">After trip</p><h2>One for the books</h2><div className="summary-stats"><article><WalletCards /><strong>€2,846</strong><span>Total spent</span></article><article><Image /><strong>184</strong><span>Photos shared</span></article><article><MapPin /><strong>27</strong><span>Places visited</span></article></div><button className="primary-action wide"><Download size={19} /> Export highlights</button><button className="summary-back" onClick={() => setView("home")}><ArrowLeft size={17} /> Back to all trips</button></div></section>
+    <div className="recap">
+      <article className="recap-card"><p className="eyebrow">Where you went</p><h3>Day-by-day recap</h3><div className="recap-days">{days.map((d) => <article key={d.day}><b>{d.day.replace("Day ", "D")}</b><div><h4>{d.title}</h4><p>{d.detail}</p></div><ChevronRight size={18} className="ml-auto text-muted-foreground" /></article>)}</div></article>
+      <article className="recap-card"><p className="eyebrow text-money">Planned €3,000 · actual €2,846</p><h3>Where the money went</h3><div className="recap-spend">{spend.map((s) => <article key={s.label}><header><span>{s.label}</span>{s.amount}</header><div className="recap-bar"><span style={{ width: `${s.pct}%` }} /></div></article>)}</div></article>
+      <article className="recap-card"><p className="eyebrow">Who settled up</p><h3>Final balances</h3><div className="recap-people">{[{ m: members[1], text: "Jon paid you back", amount: "+ €48.20" }, { m: members[2], text: "You paid Ana", amount: "− €23.75" }, { m: members[3], text: "Luis settled", amount: "€0" }].map((r) => <article key={r.m.name}><span className={r.m.tone}>{r.m.initials}</span>{r.text}<strong>{r.amount}</strong></article>)}</div></article>
+      <article className="recap-card"><p className="eyebrow">184 shared memories</p><h3>Photo highlights</h3><div className="recap-photos">{[kyoto, lisbon, copenhagen, lisbon, kyoto, copenhagen].map((p, i) => <img key={i} src={p} alt={`Kyoto trip memory ${i + 1}`} width={640} height={640} loading="lazy" />)}</div></article>
+    </div>
+  </>;
 }
