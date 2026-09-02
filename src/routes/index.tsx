@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
-import lisbon from "@/assets/lisbon.jpg";
+import tokyo from "@/assets/tokyo.jpg";
 import kyoto from "@/assets/kyoto.jpg";
 import copenhagen from "@/assets/copenhagen.jpg";
 
@@ -84,7 +84,7 @@ function TravelersApp() {
             <span>Travelers</span>
           </button>
           <div className="flex items-center gap-2">
-            {view !== "home" && <span className="hidden text-sm font-semibold text-muted-foreground sm:inline">Lisbon · May 18–23</span>}
+            {view !== "home" && <span className="hidden text-sm font-semibold text-muted-foreground sm:inline">Tokyo · Apr 6–11</span>}
             <IconButton label="Search"><Search size={20} /></IconButton>
             <button className="avatar">MK</button>
           </div>
@@ -125,12 +125,12 @@ function Dashboard({ onOpen, onCreate, onSummary }: { onOpen: () => void; onCrea
       {filter === "upcoming" ? (
         <section className="trip-grid">
           <button className="trip-card featured" onClick={onOpen}>
-            <img src={lisbon} alt="Yellow tram on a golden Lisbon street" width={1280} height={800} />
+            <img src={tokyo} alt="Neon-lit Tokyo street at golden hour" width={1280} height={800} />
             <div className="trip-overlay">
               <div className="status-pill"><span /> In 12 days</div>
               <div>
-                <p className="text-sm font-semibold">May 18–23 · 6 days</p>
-                <h2>Lisbon</h2>
+                <p className="text-sm font-semibold">Apr 6–11 · 6 days</p>
+                <h2>Tokyo</h2>
                 <div className="mt-3 flex items-center justify-between gap-3">
                   <div className="avatar-stack">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
                   <span className="open-label">Open trip <ArrowRight size={17} /></span>
@@ -147,9 +147,9 @@ function Dashboard({ onOpen, onCreate, onSummary }: { onOpen: () => void; onCrea
           </button>
           <article className="budget-card">
             <div className="flex items-center justify-between"><span className="money-icon"><WalletCards size={20} /></span><button aria-label="Budget options"><MoreHorizontal size={20} /></button></div>
-            <div><p className="eyebrow text-money">Trip budget</p><h3>€1,240 <span>of €1,800</span></h3></div>
+            <div><p className="eyebrow text-money">Trip budget</p><h3>¥182,000 <span>of ¥260,000</span></h3></div>
             <div className="progress"><span /></div>
-            <div className="flex justify-between text-xs font-semibold text-muted-foreground"><span>69% planned</span><span>€560 left</span></div>
+            <div className="flex justify-between text-xs font-semibold text-muted-foreground"><span>69% planned</span><span>¥78,000 left</span></div>
           </article>
         </section>
       ) : (
@@ -168,7 +168,7 @@ function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, 
   return (
     <div className="page-pad trip-page pb-28">
       <div className="trip-heading">
-        <div className="flex min-w-0 items-center gap-3"><IconButton label="Back to trips" onClick={() => setView("home")}><ArrowLeft size={20} /></IconButton><div className="min-w-0"><p className="eyebrow">May 18–23 · 4 travelers</p><h1 className="truncate text-3xl font-extrabold">Lisbon escape</h1></div></div>
+        <div className="flex min-w-0 items-center gap-3"><IconButton label="Back to trips" onClick={() => setView("home")}><ArrowLeft size={20} /></IconButton><div className="min-w-0"><p className="eyebrow">Apr 6–11 · 4 travelers</p><h1 className="truncate text-3xl font-extrabold">Tokyo escape</h1></div></div>
         <div className="avatar-stack hidden sm:flex">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
       </div>
       {view === "plan" && <Itinerary setView={setView} stops={stops} setStops={setStops} photos={photos} expenses={expenses} setExpenses={setExpenses} />}
@@ -183,10 +183,10 @@ function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, 
 type Stop = { id: string; day: number; time: string; title: string; place: string; tag: string };
 
 const initialStops: Stop[] = [
-  { id: "s1", day: 1, time: "09:30", title: "Pastéis de Belém", place: "Rua de Belém 84", tag: "Local favorite" },
-  { id: "s2", day: 1, time: "11:00", title: "Jerónimos Monastery", place: "Praça do Império", tag: "Must see" },
-  { id: "s3", day: 1, time: "14:30", title: "LX Factory", place: "Rua Rodrigues de Faria 103", tag: "Explore" },
-  { id: "s4", day: 0, time: "16:00", title: "Check in & Baixa stroll", place: "Praça do Comércio", tag: "Easy start" },
+  { id: "s1", day: 1, time: "09:30", title: "Tsukiji breakfast", place: "Tsukiji Outer Market", tag: "Local favorite" },
+  { id: "s2", day: 1, time: "11:00", title: "Senso-ji Temple", place: "Asakusa 2-3-1", tag: "Must see" },
+  { id: "s3", day: 1, time: "14:30", title: "teamLab Planets", place: "Toyosu 6-1-16", tag: "Explore" },
+  { id: "s4", day: 0, time: "16:00", title: "Check in & Shibuya stroll", place: "Shibuya Crossing", tag: "Easy start" },
 ];
 
 type Photo = { id: string; src: string; day: number; time: string; place: string; stopId?: string | null };
@@ -256,21 +256,21 @@ function SplitPicker({ split: rawSplit, amount, onChange }: { split: Split | und
 
 
 const initialPhotos: Photo[] = [
-  { id: "p1", src: lisbon, day: 0, time: "16:20", place: "Praça do Comércio" },
-  { id: "p2", src: lisbon, day: 0, time: "16:55", place: "Praça do Comércio, Baixa" },
-  { id: "p3", src: copenhagen, day: 0, time: "21:10", place: "Bairro Alto" },
-  { id: "p4", src: lisbon, day: 1, time: "09:40", place: "Rua de Belém 84" },
-  { id: "p5", src: kyoto, day: 1, time: "11:25", place: "Praça do Império" },
-  { id: "p6", src: copenhagen, day: 1, time: "14:50", place: "Rua Rodrigues de Faria 103" },
-  { id: "p7", src: lisbon, day: 1, time: "15:30", place: "LX Factory" },
+  { id: "p1", src: tokyo, day: 0, time: "16:20", place: "Shibuya Crossing" },
+  { id: "p2", src: tokyo, day: 0, time: "16:55", place: "Shibuya Crossing, Center Gai" },
+  { id: "p3", src: copenhagen, day: 0, time: "21:10", place: "Golden Gai" },
+  { id: "p4", src: tokyo, day: 1, time: "09:40", place: "Tsukiji Outer Market" },
+  { id: "p5", src: kyoto, day: 1, time: "11:25", place: "Asakusa 2-3-1" },
+  { id: "p6", src: copenhagen, day: 1, time: "14:50", place: "Toyosu 6-1-16" },
+  { id: "p7", src: tokyo, day: 1, time: "15:30", place: "teamLab Planets" },
 ];
 
 const initialExpenses: Expense[] = [
-  { id: "e1", day: 1, time: "09:45", place: "Rua de Belém 84", label: "Pastéis & coffee", amount: 18.6, payer: "Maira", source: "scan", split: equalSplit() },
-  { id: "e2", day: 1, time: "11:10", place: "Praça do Império", label: "Monastery tickets", amount: 40, payer: "Jon", source: "scan", split: equalSplit() },
-  { id: "e3", day: 1, time: "14:55", place: "LX Factory", label: "Lunch at Rio Maravilha", amount: 86.4, payer: "Ana", source: "scan", split: { mode: "shares", participants: ["You", "Jon", "Ana"], values: { You: 1, Jon: 2, Ana: 1 } } },
-  { id: "e4", day: 0, time: "16:15", place: "Praça do Comércio", label: "Airport taxi", amount: 32, payer: "Maira", source: "manual", split: equalSplit(["You", "Jon"]) },
-  { id: "e5", day: 1, time: "20:30", place: "Bairro Alto", label: "Late drinks", amount: 24.5, payer: "Luis", source: "manual", split: { mode: "percent", participants: ["You", "Luis"], values: { You: 40, Luis: 60 } } },
+  { id: "e1", day: 1, time: "09:45", place: "Tsukiji Outer Market", label: "Sushi breakfast", amount: 3200, payer: "Maira", source: "scan", split: equalSplit() },
+  { id: "e2", day: 1, time: "11:10", place: "Asakusa 2-3-1", label: "Temple omamori", amount: 1800, payer: "Jon", source: "scan", split: equalSplit() },
+  { id: "e3", day: 1, time: "14:55", place: "Toyosu 6-1-16", label: "teamLab tickets", amount: 15600, payer: "Ana", source: "scan", split: { mode: "shares", participants: ["You", "Jon", "Ana"], values: { You: 1, Jon: 2, Ana: 1 } } },
+  { id: "e4", day: 0, time: "16:15", place: "Shibuya Crossing", label: "Narita Express", amount: 6400, payer: "Maira", source: "manual", split: equalSplit(["You", "Jon"]) },
+  { id: "e5", day: 1, time: "20:30", place: "Golden Gai", label: "Late drinks", amount: 5200, payer: "Luis", source: "manual", split: { mode: "percent", participants: ["You", "Luis"], values: { You: 40, Luis: 60 } } },
 
 ];
 
@@ -302,7 +302,7 @@ function resolveStop(item: Taggable, stops: Stop[]): Stop | null {
   return best && best.score > 0.6 ? best.stop : null;
 }
 
-const euro = (n: number) => `€${n.toFixed(2)}`;
+const euro = (n: number) => `¥${Math.round(n).toLocaleString("en-US")}`;
 
 function groupPhotosByStop(dayPhotos: Photo[], stops: Stop[]) {
   const groups: { stop: Stop | null; photos: Photo[] }[] = [];
@@ -349,7 +349,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
     <div className="day-strip">{["Sun 18", "Mon 19", "Tue 20", "Wed 21", "Thu 22"].map((d, i) => <button key={d} onClick={() => setDay(i)} className={day === i ? "active" : ""}><span>Day {i + 1}</span>{d}</button>)}</div>
     <div className="content-grid">
       <section>
-        <div className="date-heading"><div><p className="eyebrow">Day {day + 1} · {euro(dayTotal)} spent</p><div className="day-title-row"><h2>{day === 0 ? "Olá, Lisboa!" : ["Belém & riverside", "Alfama slow day", "Sintra day trip", "Last tastes"][day - 1]}</h2><div className="weather"><CloudSun size={23} /><span>24°</span><small>Sunny</small></div></div></div><button className="secondary-action" onClick={() => setEditing({ id: `s${Date.now()}`, day, time: "10:00", title: "", place: "", tag: "Explore" })}><Plus size={17} /> Add</button></div>
+        <div className="date-heading"><div><p className="eyebrow">Day {day + 1} · {euro(dayTotal)} spent</p><div className="day-title-row"><h2>{day === 0 ? "Konnichiwa, Tokyo!" : ["Asakusa & old town", "Shibuya slow day", "Hakone day trip", "Last bites"][day - 1]}</h2><div className="weather"><CloudSun size={23} /><span>24°</span><small>Sunny</small></div></div></div><button className="secondary-action" onClick={() => setEditing({ id: `s${Date.now()}`, day, time: "10:00", title: "", place: "", tag: "Explore" })}><Plus size={17} /> Add</button></div>
         <div className="timeline">{dayStops.map((stop) => <article className="stop-card" key={stop.id}><div className="time">{stop.time}</div><div className="timeline-dot"><span /></div><div className="stop-body"><div className="stop-icon"><MapPin size={16} /></div><div className="min-w-0 flex-1"><h3 className="stop-title-row"><span className="truncate">{stop.title}</span>{stop.tag && <span className="spot-badge">{stop.tag}</span>}</h3><p><MapPin size={14} /> {stop.place}</p>{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).length > 0 && <div className="stop-photos">{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).slice(0, 3).map((p) => <img key={p.id} src={p.src} alt={`${stop.title} photo`} width={80} height={80} loading="lazy" />)}<small>{photos.filter((p) => resolveStop(p, stops)?.id === stop.id).length} photos matched</small></div>}
           <div className="stop-costs">{stopExpenses(stop.id).map(costRow)}<button className="add-cost" onClick={() => setEditingCost(newExpense(stop))}><Plus size={14} /> Add cost</button></div>
         </div><div className="stop-actions"><IconButton label={`Edit ${stop.title}`} onClick={() => setEditing(stop)}><Pencil size={16} /></IconButton><IconButton label={`Delete ${stop.title}`} onClick={() => deleteStop(stop.id)}><Trash2 size={16} /></IconButton></div></div></article>)}
@@ -365,9 +365,9 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
 }
 
 const sampleReceipts = [
-  { label: "Lunch at Rio Maravilha", place: "LX Factory", amount: 86.4, time: "14:55" },
-  { label: "Tram 28 tickets", place: "Praça Martim Moniz", amount: 12, time: "10:20" },
-  { label: "Dinner at Time Out Market", place: "Av. 24 de Julho 49", amount: 64.8, time: "20:10" },
+  { label: "teamLab tickets", place: "Toyosu 6-1-16", amount: 15600, time: "14:55" },
+  { label: "Suica top-up", place: "Shinjuku Station", amount: 3000, time: "10:20" },
+  { label: "Dinner at Omoide Yokocho", place: "Nishi-Shinjuku 1-2", amount: 11800, time: "20:10" },
 ];
 
 function ExpenseEditor({ expense, stops, onClose, onSave, onDelete }: { expense: Expense; stops: Stop[]; onClose: () => void; onSave: (e: Expense) => void; onDelete?: (() => void) | undefined }) {
@@ -395,10 +395,10 @@ function ExpenseEditor({ expense, stops, onClose, onSave, onDelete }: { expense:
       <div className="form-grid">
         <label>What was it?<input value={draft.label} placeholder="Lunch at Rio Maravilha" onChange={(e) => setDraft({ ...draft, label: e.target.value })} /></label>
         <div className="two-cols">
-          <label>Amount (€)<input inputMode="decimal" value={draft.amount ? String(draft.amount) : ""} placeholder="0.00" onChange={(e) => setDraft({ ...draft, amount: Number(e.target.value.replace(",", ".")) || 0 })} /></label>
+          <label>Amount (¥)<input inputMode="decimal" value={draft.amount ? String(draft.amount) : ""} placeholder="0.00" onChange={(e) => setDraft({ ...draft, amount: Number(e.target.value.replace(",", ".")) || 0 })} /></label>
           <label>Time<input type="time" value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} /></label>
         </div>
-        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Rua de Belém 84" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
+        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Tsukiji Outer Market" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
         <label>Paid by<input value={draft.payer} onChange={(e) => setDraft({ ...draft, payer: e.target.value })} /></label>
         <label>Attach to activity
           <select value={draft.stopId ?? ""} onChange={(e) => setDraft({ ...draft, stopId: e.target.value || null })}>
@@ -426,8 +426,8 @@ function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: 
     <div className="modal-sheet">
       <div className="modal-head"><div><p className="eyebrow">Day {draft.day + 1}</p><h2>{isNew ? "Add activity" : "Edit activity"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>
       <div className="form-grid">
-        <label>Activity<input value={draft.title} placeholder="Pastéis de Belém" onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></label>
-        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Rua de Belém 84" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
+        <label>Activity<input value={draft.title} placeholder="Tsukiji breakfast" onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></label>
+        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Tsukiji Outer Market" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
         <div className="two-cols">
           <label>Time<input type="time" value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} /></label>
           <label>Tag<input value={draft.tag} placeholder="Must see" onChange={(e) => setDraft({ ...draft, tag: e.target.value })} /></label>
@@ -441,7 +441,7 @@ function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: 
 
 function Emergency() {
   return <><div className="section-tabs"><button>Itinerary</button><button className="active">Emergency info</button></div><div className="emergency-intro"><span><ShieldCheck size={25} /></span><div><h2>Help, when you need it</h2><p>Saved on your device and available offline.</p></div></div><section className="emergency-grid">
-    {[{ icon: <HeartPulse />, label: "Nearest hospital", title: "Hospital de São José", detail: "Rua José António Serrano · 2.1 km", number: "+351 218 841 000" }, { icon: <Landmark />, label: "U.S. Embassy", title: "Embassy of the United States", detail: "Av. das Forças Armadas · 4.8 km", number: "+351 217 273 300" }, { icon: <Phone />, label: "National emergency", title: "Police · Fire · Ambulance", detail: "Available 24 hours", number: "112" }].map((x) => <article className="emergency-card" key={x.label}><span className="emergency-icon">{x.icon}</span><div className="flex-1"><p className="eyebrow">{x.label}</p><h3>{x.title}</h3><p>{x.detail}</p><a href={`tel:${x.number}`}><Phone size={16} /> {x.number}</a></div></article>)}
+    {[{ icon: <HeartPulse />, label: "Nearest hospital", title: "St. Luke's International Hospital", detail: "Akashi-cho 9-1 · 2.4 km", number: "+81 3 3541 5151" }, { icon: <Landmark />, label: "U.S. Embassy", title: "Embassy of the United States", detail: "Akasaka 1-10-5 · 4.1 km", number: "+81 3 3224 5000" }, { icon: <Phone />, label: "National emergency", title: "Police 110 · Fire & Ambulance 119", detail: "Available 24 hours", number: "110" }].map((x) => <article className="emergency-card" key={x.label}><span className="emergency-icon">{x.icon}</span><div className="flex-1"><p className="eyebrow">{x.label}</p><h3>{x.title}</h3><p>{x.detail}</p><a href={`tel:${x.number}`}><Phone size={16} /> {x.number}</a></div></article>)}
   </section></>;
 }
 
@@ -450,7 +450,7 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
   const days = [...new Set(expenses.map((e) => e.day))].sort((a, b) => a - b);
 
   return <><div className="cost-hero"><div><p className="eyebrow">Group expenses</p><h2>Keep it easy,<br />keep it fair.</h2><p>Snap a receipt and we’ll help with the rest.</p></div><button onClick={onScan} className="scan-button"><span><Camera size={25} /></span><b>Scan receipt</b><small>Camera or photo library</small><ArrowRight size={19} /></button></div>
-    <div className="cost-layout"><section><div className="section-heading"><div><p className="eyebrow">Settle up</p><h2>Running balance</h2></div><span className="settled-pill">€286.40 total</span></div><div className="balance-list"><article><span className="bg-sky text-sky-foreground">JR</span><div><h3>Jon owes you</h3><p>3 shared expenses</p></div><strong className="positive">+ €48.20</strong></article><article><span className="bg-money text-money-foreground">AL</span><div><h3>You owe Ana</h3><p>Dinner at Prado</p></div><strong>− €23.75</strong></article><article><span className="bg-sun text-sun-foreground">LM</span><div><h3>Luis is settled</h3><p>All caught up</p></div><strong className="muted-amount">€0</strong></article></div></section><aside className="future-space"><ReceiptText size={22} /><p className="eyebrow">Coming next</p><h3>Flexible splitting</h3><p>Equal, shares or percentages — with borrowed and lent tags.</p></aside></div>
+    <div className="cost-layout"><section><div className="section-heading"><div><p className="eyebrow">Settle up</p><h2>Running balance</h2></div><span className="settled-pill">¥32,200 total</span></div><div className="balance-list"><article><span className="bg-sky text-sky-foreground">JR</span><div><h3>Jon owes you</h3><p>3 shared expenses</p></div><strong className="positive">+ ¥4,820</strong></article><article><span className="bg-money text-money-foreground">AL</span><div><h3>You owe Ana</h3><p>Dinner at Omoide Yokocho</p></div><strong>− ¥2,400</strong></article><article><span className="bg-sun text-sun-foreground">LM</span><div><h3>Luis is settled</h3><p>All caught up</p></div><strong className="muted-amount">¥0</strong></article></div></section><aside className="future-space"><ReceiptText size={22} /><p className="eyebrow">Coming next</p><h3>Flexible splitting</h3><p>Equal, shares or percentages — with borrowed and lent tags.</p></aside></div>
     <div className="section-heading mt-8"><div><p className="eyebrow">When it happened</p><h2>Spending timeline</h2></div><span className="settled-pill">{euro(total)} tracked</span></div>
     <div className="spend-timeline">{days.map((d) => <section key={d}>
       <header><h3>Day {d + 1}</h3><strong>{euro(expenses.filter((e) => e.day === d).reduce((s, e) => s + e.amount, 0))}</strong></header>
@@ -520,20 +520,20 @@ function BottomNav({ view, setView }: { view: View; setView: (v: View) => void }
 }
 
 function CreateTrip({ onClose, onCreate }: { onClose: () => void; onCreate: () => void }) {
-  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Create a trip"><div className="modal-sheet"><div className="modal-head"><div><p className="eyebrow">New adventure</p><h2>Create a trip</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div><div className="form-grid"><label>Trip name<input defaultValue="Lisbon escape" /></label><label>Destination<div className="input-icon"><MapPin size={17} /><input defaultValue="Lisbon, Portugal" /></div></label><div className="two-cols"><label>Starts<input type="date" defaultValue="2026-05-18" /></label><label>Ends<input type="date" defaultValue="2026-05-23" /></label></div><label>Invite members<div className="invite-row"><div className="avatar-stack">{members.slice(0, 3).map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div><button className="invite-button"><Plus size={16} /> Add people</button></div></label></div><button className="primary-action wide" onClick={onCreate}>Create trip <ArrowRight size={19} /></button></div></div>;
+  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Create a trip"><div className="modal-sheet"><div className="modal-head"><div><p className="eyebrow">New adventure</p><h2>Create a trip</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div><div className="form-grid"><label>Trip name<input defaultValue="Tokyo escape" /></label><label>Destination<div className="input-icon"><MapPin size={17} /><input defaultValue="Tokyo, Japan" /></div></label><div className="two-cols"><label>Starts<input type="date" defaultValue="2026-04-06" /></label><label>Ends<input type="date" defaultValue="2026-04-11" /></label></div><label>Invite members<div className="invite-row"><div className="avatar-stack">{members.slice(0, 3).map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div><button className="invite-button"><Plus size={16} /> Add people</button></div></label></div><button className="primary-action wide" onClick={onCreate}>Create trip <ArrowRight size={19} /></button></div></div>;
 }
 
 function ReceiptConfirm({ onClose, stops, onSave }: { onClose: () => void; stops: Stop[]; onSave: (e: Expense) => void }) {
   const [confirmed, setConfirmed] = useState(false);
   const [split, setSplit] = useState<Split>(equalSplit(["You", "Jon", "Ana"]));
-  const [draft, setDraft] = useState({ amount: "86.40", label: "Lunch at Rio Maravilha", place: "LX Factory", time: "14:55", day: 1 });
+  const [draft, setDraft] = useState({ amount: "15600", label: "teamLab tickets", place: "Toyosu 6-1-16", time: "14:55", day: 1 });
   const amount = Number(draft.amount.replace(",", ".")) || 0;
   const match = resolveStop({ day: draft.day, time: draft.time, place: draft.place }, stops);
   const confirm = () => {
     onSave({ id: `e${Date.now()}`, day: draft.day, time: draft.time, place: draft.place, label: draft.label, amount, payer: "Maira", source: "scan", stopId: null, split });
     setConfirmed(true);
   };
-  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Confirm scanned receipt"><div className="modal-sheet receipt-sheet"><div className="scan-success"><span><ReceiptText size={26} /></span><div><p className="eyebrow">Receipt found</p><h2>{confirmed ? "Expense added!" : "Check the details"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>{confirmed ? <div className="confirmation"><span><Check size={34} /></span><p>{euro(amount)} split {splitLabel(split)}</p><p className="text-sm">{match ? `Added to your timeline at ${draft.time} · ${match.title}` : `Added to your Day ${draft.day + 1} timeline at ${draft.time}`}</p><button className="primary-action wide" onClick={onClose}>Done</button></div> : <><div className="amount-edit"><label>Amount</label><div><span>€</span><input value={draft.amount} inputMode="decimal" onChange={(e) => setDraft({ ...draft, amount: e.target.value })} /></div><input value={draft.label} aria-label="Expense name" onChange={(e) => setDraft({ ...draft, label: e.target.value })} /></div>
+  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Confirm scanned receipt"><div className="modal-sheet receipt-sheet"><div className="scan-success"><span><ReceiptText size={26} /></span><div><p className="eyebrow">Receipt found</p><h2>{confirmed ? "Expense added!" : "Check the details"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>{confirmed ? <div className="confirmation"><span><Check size={34} /></span><p>{euro(amount)} split {splitLabel(split)}</p><p className="text-sm">{match ? `Added to your timeline at ${draft.time} · ${match.title}` : `Added to your Day ${draft.day + 1} timeline at ${draft.time}`}</p><button className="primary-action wide" onClick={onClose}>Done</button></div> : <><div className="amount-edit"><label>Amount</label><div><span>¥</span><input value={draft.amount} inputMode="decimal" onChange={(e) => setDraft({ ...draft, amount: e.target.value })} /></div><input value={draft.label} aria-label="Expense name" onChange={(e) => setDraft({ ...draft, label: e.target.value })} /></div>
     <div className="two-cols"><label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label><label>Time<input type="time" value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} /></label></div>
     <p className="match-hint"><MapPin size={14} /> {match ? `Matches “${match.title}” on your timeline` : "No activity matched yet — it will sit on the day timeline"}</p>
     <div className="split-block"><p className="eyebrow">Split between travelers</p><SplitPicker split={split} amount={amount} onChange={setSplit} /></div><button className="money-action" disabled={split.participants.length === 0} onClick={confirm}><Check size={20} /> Confirm expense</button></>}</div></div>;
@@ -543,24 +543,24 @@ function ReceiptConfirm({ onClose, stops, onSave }: { onClose: () => void; stops
 
 function Summary({ setView }: { setView: (v: View) => void }) {
   const days = [
-    { day: "Day 1", title: "Arrival & Gion lanterns", detail: "3 stops · €142 spent · 22 photos" },
-    { day: "Day 3", title: "Arashiyama bamboo grove", detail: "4 stops · €248 spent · 41 photos" },
-    { day: "Day 6", title: "Fushimi Inari at sunrise", detail: "2 stops · €68 spent · 38 photos" },
-    { day: "Day 8", title: "Last matcha & goodbyes", detail: "3 stops · €193 spent · 19 photos" },
+    { day: "Day 1", title: "Arrival & Gion lanterns", detail: "3 stops · ¥19,800 spent · 22 photos" },
+    { day: "Day 3", title: "Arashiyama bamboo grove", detail: "4 stops · ¥34,600 spent · 41 photos" },
+    { day: "Day 6", title: "Fushimi Inari at sunrise", detail: "2 stops · ¥9,400 spent · 38 photos" },
+    { day: "Day 8", title: "Last matcha & goodbyes", detail: "3 stops · ¥26,900 spent · 19 photos" },
   ];
   const spend = [
-    { label: "Stays", amount: "€1,180", pct: 41 },
-    { label: "Food & drinks", amount: "€742", pct: 26 },
-    { label: "Transport", amount: "€498", pct: 18 },
-    { label: "Activities", amount: "€426", pct: 15 },
+    { label: "Stays", amount: "¥168,000", pct: 41 },
+    { label: "Food & drinks", amount: "¥106,000", pct: 26 },
+    { label: "Transport", amount: "¥74,000", pct: 18 },
+    { label: "Activities", amount: "¥62,000", pct: 15 },
   ];
   return <>
-    <section className="summary-wrap"><div className="summary-photo"><img src={kyoto} alt="Cherry blossoms over a Kyoto lane" width={1280} height={800} /><div><span className="status-pill muted">Trip complete</span><p>March 24–31 · 8 days</p><h2>Kyoto,<br />together.</h2></div></div><div className="summary-content"><p className="eyebrow">After trip</p><h2>One for the books</h2><div className="summary-stats"><article><WalletCards /><strong>€2,846</strong><span>Total spent</span></article><article><Image /><strong>184</strong><span>Photos shared</span></article><article><MapPin /><strong>27</strong><span>Places visited</span></article></div><button className="primary-action wide"><Download size={19} /> Export highlights</button><button className="summary-back" onClick={() => setView("home")}><ArrowLeft size={17} /> Back to all trips</button></div></section>
+    <section className="summary-wrap"><div className="summary-photo"><img src={kyoto} alt="Cherry blossoms over a Kyoto lane" width={1280} height={800} /><div><span className="status-pill muted">Trip complete</span><p>March 24–31 · 8 days</p><h2>Kyoto,<br />together.</h2></div></div><div className="summary-content"><p className="eyebrow">After trip</p><h2>One for the books</h2><div className="summary-stats"><article><WalletCards /><strong>¥410,000</strong><span>Total spent</span></article><article><Image /><strong>184</strong><span>Photos shared</span></article><article><MapPin /><strong>27</strong><span>Places visited</span></article></div><button className="primary-action wide"><Download size={19} /> Export highlights</button><button className="summary-back" onClick={() => setView("home")}><ArrowLeft size={17} /> Back to all trips</button></div></section>
     <div className="recap">
       <article className="recap-card"><p className="eyebrow">Where you went</p><h3>Day-by-day recap</h3><div className="recap-days">{days.map((d) => <article key={d.day}><b>{d.day.replace("Day ", "D")}</b><div><h4>{d.title}</h4><p>{d.detail}</p></div><ChevronRight size={18} className="ml-auto text-muted-foreground" /></article>)}</div></article>
-      <article className="recap-card"><p className="eyebrow text-money">Planned €3,000 · actual €2,846</p><h3>Where the money went</h3><div className="recap-spend">{spend.map((s) => <article key={s.label}><header><span>{s.label}</span>{s.amount}</header><div className="recap-bar"><span style={{ width: `${s.pct}%` }} /></div></article>)}</div></article>
-      <article className="recap-card"><p className="eyebrow">Who settled up</p><h3>Final balances</h3><div className="recap-people">{[{ m: members[1]!, text: "Jon paid you back", amount: "+ €48.20" }, { m: members[2]!, text: "You paid Ana", amount: "− €23.75" }, { m: members[3]!, text: "Luis settled", amount: "€0" }].map((r) => <article key={r.m.name}><span className={r.m.tone}>{r.m.initials}</span>{r.text}<strong>{r.amount}</strong></article>)}</div></article>
-      <article className="recap-card"><p className="eyebrow">184 shared memories</p><h3>Photo highlights</h3><div className="recap-photos">{[kyoto, lisbon, copenhagen, lisbon, kyoto, copenhagen].map((p, i) => <img key={i} src={p} alt={`Kyoto trip memory ${i + 1}`} width={640} height={640} loading="lazy" />)}</div></article>
+      <article className="recap-card"><p className="eyebrow text-money">Planned ¥440,000 · actual ¥410,000</p><h3>Where the money went</h3><div className="recap-spend">{spend.map((s) => <article key={s.label}><header><span>{s.label}</span>{s.amount}</header><div className="recap-bar"><span style={{ width: `${s.pct}%` }} /></div></article>)}</div></article>
+      <article className="recap-card"><p className="eyebrow">Who settled up</p><h3>Final balances</h3><div className="recap-people">{[{ m: members[1]!, text: "Jon paid you back", amount: "+ ¥4,820" }, { m: members[2]!, text: "You paid Ana", amount: "− ¥2,400" }, { m: members[3]!, text: "Luis settled", amount: "¥0" }].map((r) => <article key={r.m.name}><span className={r.m.tone}>{r.m.initials}</span>{r.text}<strong>{r.amount}</strong></article>)}</div></article>
+      <article className="recap-card"><p className="eyebrow">184 shared memories</p><h3>Photo highlights</h3><div className="recap-photos">{[kyoto, tokyo, copenhagen, tokyo, kyoto, copenhagen].map((p, i) => <img key={i} src={p} alt={`Kyoto trip memory ${i + 1}`} width={640} height={640} loading="lazy" />)}</div></article>
     </div>
   </>;
 }
