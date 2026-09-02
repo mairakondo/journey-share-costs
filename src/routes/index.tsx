@@ -198,6 +198,13 @@ type Expense = { id: string; day: number; time: string; place: string; label: st
 
 const equalSplit = (names: string[] = members.map((m) => m.name)): Split => ({ mode: "equal", participants: names, values: {} });
 
+const normalizeSplit = (split?: Split | null): Split => ({
+  mode: split?.mode ?? "equal",
+  participants: split?.participants ?? members.map((m) => m.name),
+  values: split?.values ?? {},
+});
+
+
 function splitShares(rawSplit: Split | undefined, amount: number): Record<string, number> {
   const split = normalizeSplit(rawSplit);
   const people = split.participants;
