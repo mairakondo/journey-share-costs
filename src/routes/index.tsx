@@ -190,6 +190,8 @@ const initialStops: Stop[] = [
 
 type Photo = { id: string; src: string; day: number; time: string; place: string; stopId?: string | null };
 
+type Expense = { id: string; day: number; time: string; place: string; label: string; amount: number; payer: string; source: "scan" | "manual"; stopId?: string | null };
+
 const initialPhotos: Photo[] = [
   { id: "p1", src: lisbon, day: 0, time: "16:20", place: "Praça do Comércio" },
   { id: "p2", src: lisbon, day: 0, time: "16:55", place: "Praça do Comércio, Baixa" },
@@ -198,6 +200,14 @@ const initialPhotos: Photo[] = [
   { id: "p5", src: kyoto, day: 1, time: "11:25", place: "Praça do Império" },
   { id: "p6", src: copenhagen, day: 1, time: "14:50", place: "Rua Rodrigues de Faria 103" },
   { id: "p7", src: lisbon, day: 1, time: "15:30", place: "LX Factory" },
+];
+
+const initialExpenses: Expense[] = [
+  { id: "e1", day: 1, time: "09:45", place: "Rua de Belém 84", label: "Pastéis & coffee", amount: 18.6, payer: "Maira", source: "scan" },
+  { id: "e2", day: 1, time: "11:10", place: "Praça do Império", label: "Monastery tickets", amount: 40, payer: "Jon", source: "scan" },
+  { id: "e3", day: 1, time: "14:55", place: "LX Factory", label: "Lunch at Rio Maravilha", amount: 86.4, payer: "Ana", source: "scan" },
+  { id: "e4", day: 0, time: "16:15", place: "Praça do Comércio", label: "Airport taxi", amount: 32, payer: "Maira", source: "manual" },
+  { id: "e5", day: 1, time: "20:30", place: "Bairro Alto", label: "Late drinks", amount: 24.5, payer: "Luis", source: "manual" },
 ];
 
 const minutes = (t: string) => {
@@ -213,18 +223,22 @@ const placeScore = (a: string, b: string) => {
   return wordsA.length ? hits / wordsA.length : 0;
 };
 
-function resolveStop(photo: Photo, stops: Stop[]): Stop | null {
-  if (photo.stopId) return stops.find((s) => s.id === photo.stopId) ?? null;
-  const sameDay = stops.filter((s) => s.day === photo.day);
+type Taggable = { day: number; time: string; place: string; stopId?: string | null };
+
+function resolveStop(item: Taggable, stops: Stop[]): Stop | null {
+  if (item.stopId) return stops.find((s) => s.id === item.stopId) ?? null;
+  const sameDay = stops.filter((s) => s.day === item.day);
   let best: { stop: Stop; score: number } | null = null;
   for (const stop of sameDay) {
-    const gap = Math.abs(minutes(photo.time) - minutes(stop.time));
+    const gap = Math.abs(minutes(item.time) - minutes(stop.time));
     if (gap > 120) continue;
-    const score = placeScore(photo.place, `${stop.place} ${stop.title}`) * 2 + (1 - gap / 120);
+    const score = placeScore(item.place, `${stop.place} ${stop.title}`) * 2 + (1 - gap / 120);
     if (!best || score > best.score) best = { stop, score };
   }
   return best && best.score > 0.6 ? best.stop : null;
 }
+
+const euro = (n: number) => `€${n.toFixed(2)}`;
 
 function groupPhotosByStop(dayPhotos: Photo[], stops: Stop[]) {
   const groups: { stop: Stop | null; photos: Photo[] }[] = [];
@@ -237,6 +251,7 @@ function groupPhotosByStop(dayPhotos: Photo[], stops: Stop[]) {
   for (const photo of dayPhotos) push(resolveStop(photo, stops), photo);
   return groups.sort((a, b) => (a.stop ? a.stop.time : "99:99").localeCompare(b.stop ? b.stop.time : "99:99"));
 }
+
 
 function Itinerary({ setView, stops, setStops, photos }: { setView: (v: View) => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[] }) {
   const [day, setDay] = useState(1);
