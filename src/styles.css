@@ -318,3 +318,14 @@
 .add-menu button svg { @apply mt-0.5 text-primary; }
 .add-menu button span { @apply flex flex-col text-sm font-semibold; }
 .add-menu button small { @apply text-xs font-normal text-muted-foreground; }
+
+.budget-progress { @apply mt-6 rounded-2xl border border-border bg-surface p-5; }
+.budget-progress header { @apply flex items-start justify-between gap-3; }
+.budget-progress h3 { @apply mt-1 font-display text-2xl font-extrabold; }
+.budget-progress h3 span { @apply text-sm font-semibold text-muted-foreground; }
+.budget-progress .settled-pill.over { @apply bg-destructive/10 text-destructive; }
+.budget-bar { @apply mt-4 h-3 w-full overflow-hidden rounded-full bg-secondary; }
+.budget-bar span { @apply block h-full rounded-full bg-money transition-[width] duration-500; }
+.budget-bar span.over { @apply bg-destructive; }
+.budget-progress footer { @apply mt-3 flex items-center justify-between text-sm font-semibold text-foreground; }
+.budget-progress footer small { @apply text-xs font-medium text-muted-foreground; }
