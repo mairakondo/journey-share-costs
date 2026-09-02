@@ -457,6 +457,10 @@ function Emergency() {
 
 function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops: Stop[]; expenses: Expense[]; setView: (v: View) => void }) {
   const total = expenses.reduce((s, e) => s + e.amount, 0);
+  const planned = 260000;
+  const pct = Math.min(100, Math.round((total / planned) * 100));
+  const over = total > planned;
+
   const days = [...new Set(expenses.map((e) => e.day))].sort((a, b) => a - b);
 
   return <><div className="cost-hero"><div><p className="eyebrow">Group expenses</p><h2>Keep it easy,<br />keep it fair.</h2><p>Snap a receipt and we’ll help with the rest.</p></div><button onClick={onScan} className="scan-button"><span><Camera size={25} /></span><b>Scan receipt</b><small>Camera or photo library</small><ArrowRight size={19} /></button></div>
