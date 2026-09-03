@@ -31,6 +31,10 @@ import { useState, type ReactNode } from "react";
 
 import tokyo from "@/assets/tokyo.jpg";
 import kyoto from "@/assets/kyoto.jpg";
+import tokyoGoldenGai from "@/assets/tokyo-goldengai.jpg";
+import tokyoAsakusa from "@/assets/tokyo-asakusa.jpg";
+import tokyoTeamlab from "@/assets/tokyo-teamlab.jpg";
+import tokyoTsukiji from "@/assets/tokyo-tsukiji.jpg";
 import copenhagen from "@/assets/copenhagen.jpg";
 
 type View = "home" | "plan" | "costs" | "photos" | "emergency" | "summary";
@@ -272,11 +276,11 @@ function SplitPicker({ split: rawSplit, amount, onChange }: { split: Split | und
 const initialPhotos: Photo[] = [
   { id: "p1", src: tokyo, day: 0, time: "16:20", place: "Shibuya Crossing" },
   { id: "p2", src: tokyo, day: 0, time: "16:55", place: "Shibuya Crossing, Center Gai" },
-  { id: "p3", src: copenhagen, day: 0, time: "21:10", place: "Golden Gai" },
-  { id: "p4", src: tokyo, day: 1, time: "09:40", place: "Tsukiji Outer Market" },
-  { id: "p5", src: kyoto, day: 1, time: "11:25", place: "Asakusa 2-3-1" },
-  { id: "p6", src: copenhagen, day: 1, time: "14:50", place: "Toyosu 6-1-16" },
-  { id: "p7", src: tokyo, day: 1, time: "15:30", place: "teamLab Planets" },
+  { id: "p3", src: tokyoGoldenGai, day: 0, time: "21:10", place: "Golden Gai" },
+  { id: "p4", src: tokyoTsukiji, day: 1, time: "09:40", place: "Tsukiji Outer Market" },
+  { id: "p5", src: tokyoAsakusa, day: 1, time: "11:25", place: "Asakusa 2-3-1" },
+  { id: "p6", src: tokyoTeamlab, day: 1, time: "14:50", place: "Toyosu 6-1-16" },
+  { id: "p7", src: tokyoTeamlab, day: 1, time: "15:30", place: "teamLab Planets" },
 ];
 
 const initialExpenses: Expense[] = [
@@ -638,7 +642,7 @@ function Summary({ setView }: { setView: (v: View) => void }) {
       <article className="recap-card"><p className="eyebrow">Where you went</p><h3>Day-by-day recap</h3><div className="recap-days">{days.map((d) => <article key={d.day}><b>{d.day.replace("Day ", "D")}</b><div><h4>{d.title}</h4><p>{d.detail}</p></div><ChevronRight size={18} className="ml-auto text-muted-foreground" /></article>)}</div></article>
       <article className="recap-card"><p className="eyebrow text-money">Planned ¥440,000 · actual ¥410,000</p><h3>Where the money went</h3><div className="recap-spend">{spend.map((s) => <article key={s.label}><header><span>{s.label}</span>{s.amount}</header><div className="recap-bar"><span style={{ width: `${s.pct}%` }} /></div></article>)}</div></article>
       <article className="recap-card"><p className="eyebrow">Who settled up</p><h3>Final balances</h3><div className="recap-people">{[{ m: members[1]!, text: "Jon paid you back", amount: "+ ¥4,820" }, { m: members[2]!, text: "You paid Ana", amount: "− ¥2,400" }, { m: members[3]!, text: "Luis settled", amount: "¥0" }].map((r) => <article key={r.m.name}><span className={r.m.tone}>{r.m.initials}</span>{r.text}<strong>{r.amount}</strong></article>)}</div></article>
-      <article className="recap-card"><p className="eyebrow">184 shared memories</p><h3>Photo highlights</h3><div className="recap-photos">{[kyoto, tokyo, copenhagen, tokyo, kyoto, copenhagen].map((p, i) => <img key={i} src={p} alt={`Kyoto trip memory ${i + 1}`} width={640} height={640} loading="lazy" />)}</div></article>
+      <article className="recap-card"><p className="eyebrow">184 shared memories</p><h3>Photo highlights</h3><div className="recap-photos">{[tokyo, tokyoTsukiji, tokyoAsakusa, tokyoGoldenGai, tokyoTeamlab, kyoto].map((p, i) => <img key={i} src={p} alt={`Kyoto trip memory ${i + 1}`} width={640} height={640} loading="lazy" />)}</div></article>
     </div>
   </>;
 }
