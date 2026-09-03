@@ -297,8 +297,9 @@
   .spend-timeline header h3 { @apply whitespace-nowrap text-sm font-extrabold uppercase tracking-wide text-muted-foreground; }
   .spend-timeline header strong { @apply whitespace-nowrap text-base font-extrabold text-money-foreground; }
   .spend-timeline article { @apply border-t border-border/60 py-3 first-of-type:border-t-0; }
-  .cost-card-head { @apply flex min-w-0 items-center justify-between gap-3; }
-  .cost-card-head strong { @apply shrink-0 text-sm font-extrabold text-money-foreground; }
+  .cost-card-head { @apply flex min-w-0 items-center gap-3; }
+  .cost-title-row { @apply flex min-w-0 items-start justify-between gap-3; }
+  .cost-title-row strong { @apply shrink-0 text-sm font-extrabold text-money-foreground; }
   .spend-timeline article h4 { @apply mt-1 min-w-0 break-words text-sm font-extrabold leading-5; }
   .cost-details { @apply mt-3 grid w-full min-w-0 grid-cols-2 gap-x-3 gap-y-2 border-t border-border/60 pt-3; }
   .cost-detail-full { @apply col-span-2; }
@@ -375,6 +376,7 @@
   .spend-timeline article { @apply block w-full min-w-0 py-3.5; }
   .cost-card-head { @apply w-full; }
   .cost-time { @apply w-auto; }
+  .cost-title-row { @apply w-full items-start; }
   .spend-timeline article h4 { @apply w-full; }
   .cost-details > div { @apply gap-0.5; }
   .cost-details dd { @apply w-full; }

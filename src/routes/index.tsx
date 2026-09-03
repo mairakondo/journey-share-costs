@@ -504,8 +504,8 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
       {expenses.filter((e) => e.day === d).sort((a, b) => a.time.localeCompare(b.time)).map((e) => {
         const stop = resolveStop(e, stops);
         return <article key={e.id}>
-          <div className="cost-card-head"><span className="cost-time">{e.time}</span><strong>{euro(e.amount)}</strong></div>
-          <h4>{e.label}</h4>
+          <div className="cost-card-head"><span className="cost-time">{e.time}</span></div>
+          <div className="cost-title-row"><h4>{e.label}</h4><strong>{euro(e.amount)}</strong></div>
           <dl className="cost-details">
             <div className="cost-detail-full"><dt><MapPin size={13} /> Activity</dt><dd>{stop ? `${stop.title} · ${stop.place}` : e.place || "No activity matched"}</dd></div>
             <div><dt><Users size={13} /> Split</dt><dd>{splitLabel(e.split)}</dd></div>
