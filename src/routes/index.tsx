@@ -23,6 +23,7 @@ import {
   ShieldCheck,
   Trash2,
   Users,
+  Wallet,
   WalletCards,
   WifiOff,
   X,
