@@ -380,8 +380,7 @@
   .spend-timeline article h4 { @apply w-full; }
   .cost-details > div { @apply gap-0.5; }
   .cost-details dd { @apply w-full; }
-  .balance-list article { @apply grid-cols-[auto_minmax(0,1fr)] items-start; }
-  .balance-list article > strong { @apply col-start-2 justify-self-start; }
+  .balance-list article { @apply items-start; }
   .budget-progress header { @apply grid grid-cols-[minmax(0,1fr)_auto]; }
   .budget-progress h3 span { @apply mt-1 block; }
   .budget-progress footer { @apply items-start gap-3; }
