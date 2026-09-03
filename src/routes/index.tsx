@@ -151,12 +151,6 @@ function Dashboard({ onOpen, onCreate, onSummary }: { onOpen: () => void; onCrea
               <div><p className="text-xs font-semibold">Jul 13–17</p><h2>Copenhagen</h2><p className="mt-1 text-sm">3 travelers</p></div>
             </div>
           </button>
-          <article className="budget-card">
-            <div className="flex items-center justify-between"><span className="money-icon"><WalletCards size={20} /></span><button aria-label="Budget options"><MoreHorizontal size={20} /></button></div>
-            <div><p className="eyebrow text-money">Trip budget</p><h3>¥182,000 <span>of ¥260,000</span></h3></div>
-            <div className="progress"><span /></div>
-            <div className="flex justify-between text-xs font-semibold text-muted-foreground"><span>69% planned</span><span>¥78,000 left</span></div>
-          </article>
         </section>
       ) : (
         <section className="trip-grid">
