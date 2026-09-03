@@ -23,6 +23,7 @@ import {
   ShieldCheck,
   Trash2,
   Users,
+  Wallet,
   WalletCards,
   WifiOff,
   X,
@@ -506,10 +507,9 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
           <div className="cost-card-head"><span className="cost-time">{e.time}</span><strong>{euro(e.amount)}</strong></div>
           <h4>{e.label}</h4>
           <dl className="cost-details">
-            <div><dt><MapPin size={13} /> Activity</dt><dd>{stop ? `${stop.title} · ${stop.place}` : e.place || "No activity matched"}</dd></div>
+            <div className="cost-detail-full"><dt><MapPin size={13} /> Activity</dt><dd>{stop ? `${stop.title} · ${stop.place}` : e.place || "No activity matched"}</dd></div>
             <div><dt><Users size={13} /> Split</dt><dd>{splitLabel(e.split)}</dd></div>
-            <div><dt>Added</dt><dd>{e.source === "scan" ? "Scanned receipt" : "Manually"}</dd></div>
-            <div><dt>Paid by</dt><dd>{e.payer}</dd></div>
+            <div><dt><Wallet size={13} /> Paid by</dt><dd>{e.payer}</dd></div>
           </dl>
         </article>;
       })}

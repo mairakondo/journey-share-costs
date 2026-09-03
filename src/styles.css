@@ -300,8 +300,9 @@
   .cost-card-head { @apply flex min-w-0 items-center justify-between gap-3; }
   .cost-card-head strong { @apply shrink-0 text-sm font-extrabold text-money-foreground; }
   .spend-timeline article h4 { @apply mt-1 min-w-0 break-words text-sm font-extrabold leading-5; }
-  .cost-details { @apply mt-3 grid w-full min-w-0 gap-2 border-t border-border/60 pt-3; }
-  .cost-details > div { @apply grid min-w-0 grid-cols-[5rem_minmax(0,1fr)] items-start gap-2; }
+  .cost-details { @apply mt-3 grid w-full min-w-0 grid-cols-2 gap-x-3 gap-y-2 border-t border-border/60 pt-3; }
+  .cost-detail-full { @apply col-span-2; }
+  .cost-details > div { @apply flex min-w-0 flex-col gap-0.5; }
   .cost-details dt { @apply flex items-center gap-1 text-xs font-bold text-muted-foreground; }
   .cost-details dt svg { @apply shrink-0; }
   .cost-details dd { @apply min-w-0 break-words text-xs font-semibold leading-5 text-foreground; }
@@ -375,8 +376,7 @@
   .cost-card-head { @apply w-full; }
   .cost-time { @apply w-auto; }
   .spend-timeline article h4 { @apply w-full; }
-  .cost-details > div { @apply grid-cols-1 gap-0.5; }
-  .cost-details dt,
+  .cost-details > div { @apply gap-0.5; }
   .cost-details dd { @apply w-full; }
   .balance-list article { @apply grid-cols-[auto_minmax(0,1fr)] items-start; }
   .balance-list article > strong { @apply col-start-2 justify-self-start; }
