@@ -364,8 +364,8 @@
 .budget-progress footer small { @apply text-xs font-medium text-muted-foreground; }
 
 @media (max-width: 639px) {
-  .section-heading { @apply grid grid-cols-1 items-start gap-3; }
-  .timeline-head-actions { @apply flex w-full flex-wrap justify-between; }
+  .section-heading { @apply flex items-center justify-between gap-3; }
+  .timeline-head-actions { @apply flex items-center gap-2; }
   .spend-timeline { @apply min-w-0; }
   .spend-timeline > section { @apply min-w-0 overflow-hidden rounded-2xl p-3; }
   .spend-timeline header { @apply grid grid-cols-1 items-start gap-1; }
