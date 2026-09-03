@@ -376,6 +376,7 @@
   .spend-timeline article { @apply block w-full min-w-0 py-3.5; }
   .cost-card-head { @apply w-full; }
   .cost-time { @apply w-auto; }
+  .cost-title-row { @apply w-full items-start; }
   .spend-timeline article h4 { @apply w-full; }
   .cost-details > div { @apply gap-0.5; }
   .cost-details dd { @apply w-full; }
