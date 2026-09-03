@@ -376,8 +376,7 @@
   .cost-card-head { @apply w-full; }
   .cost-time { @apply w-auto; }
   .spend-timeline article h4 { @apply w-full; }
-  .cost-details > div { @apply grid-cols-1 gap-0.5; }
-  .cost-details dt,
+  .cost-details > div { @apply gap-0.5; }
   .cost-details dd { @apply w-full; }
   .balance-list article { @apply grid-cols-[auto_minmax(0,1fr)] items-start; }
   .balance-list article > strong { @apply col-start-2 justify-self-start; }
