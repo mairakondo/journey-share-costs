@@ -74,8 +74,6 @@ function TravelersApp() {
   const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
 
-  const openTrip = () => setView("plan");
-
   return (
     <main className="min-h-screen bg-background text-foreground">
       <div className="app-frame">
