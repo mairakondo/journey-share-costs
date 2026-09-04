@@ -43,9 +43,9 @@ type View = "home" | "plan" | "costs" | "photos" | "emergency" | "summary";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Roamly — Plan trips together" },
-      { name: "description", content: "Plan group trips, split costs, and keep every memory together with Roamly." },
-      { property: "og:title", content: "Roamly — Plan trips together" },
+      { title: "Travelers — Plan trips together" },
+      { name: "description", content: "Plan group trips, split costs, and keep every memory together with Travelers." },
+      { property: "og:title", content: "Travelers — Plan trips together" },
       { property: "og:description", content: "A warm, simple home for group itineraries, expenses, and travel photos." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -86,7 +86,7 @@ function TravelersApp() {
         )}
 
         <header className="topbar">
-          <button onClick={() => setView("home")} className="brand" aria-label="Roamly home">
+          <button onClick={() => setView("home")} className="brand" aria-label="Travelers home">
             <span className="brand-mark"><Plane size={19} /></span>
             <span>Travelers</span>
           </button>
@@ -98,7 +98,7 @@ function TravelersApp() {
         </header>
 
         {view === "home" ? (
-          <Dashboard onOpen={openTrip} onCreate={() => setCreateOpen(true)} onSummary={() => setView("summary")} />
+          <Dashboard onNavigate={setView} onCreate={() => setCreateOpen(true)} onSummary={() => setView("summary")} />
         ) : (
           <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} stops={stops} setStops={setStops} photos={photos} setPhotos={setPhotos} expenses={expenses} setExpenses={setExpenses} />
         )}
@@ -111,33 +111,29 @@ function TravelersApp() {
   );
 }
 
-function Dashboard({ onOpen, onCreate, onSummary }: { onOpen: () => void; onCreate: () => void; onSummary: () => void }) {
+function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: View) => void; onCreate: () => void; onSummary: () => void }) {
   const [filter, setFilter] = useState<"upcoming" | "past">("upcoming");
   return (
-    <div className="page-pad pb-28">
-      <section className="hero-row">
+    <div className="page-pad dashboard-page pb-28">
+      <section className="hero-row dashboard-intro">
         <div>
-          <p className="eyebrow">Wednesday, September 2</p>
-          <h1 className="page-title">Where to next?</h1>
-          <p className="mt-2 max-w-md text-muted-foreground">Keep every plan, payment and memory in one happy place.</p>
+          <p className="eyebrow">Welcome back, Maira</p>
+          <h1 className="page-title">Your next story<br />starts here.</h1>
         </div>
         <button onClick={onCreate} className="primary-action"><Plus size={20} /> Create trip</button>
       </section>
 
-      <div className="segmented" aria-label="Trip filter">
-        <button className={filter === "upcoming" ? "active" : ""} onClick={() => setFilter("upcoming")}>Upcoming <span>2</span></button>
-        <button className={filter === "past" ? "active" : ""} onClick={() => setFilter("past")}>Past <span>4</span></button>
-      </div>
-
       {filter === "upcoming" ? (
-        <section className="trip-grid">
-          <button className="trip-card featured" onClick={onOpen}>
+        <>
+        <section className="trip-grid home-trip-grid">
+          <button className="trip-card featured" onClick={() => onNavigate("plan")}>
             <img src={tokyo} alt="Neon-lit Tokyo street at golden hour" width={1280} height={800} />
             <div className="trip-overlay">
-              <div className="status-pill"><span /> In 12 days</div>
+              <div className="status-pill"><span /> Next adventure · in 12 days</div>
               <div>
-                <p className="text-sm font-semibold">Apr 6–11 · 6 days</p>
-                <h2>Tokyo</h2>
+                <p className="eyebrow trip-country">Japan</p>
+                <h2>Tokyo escape</h2>
+                <p className="trip-dates">Apr 6–11 · 6 days</p>
                 <div className="mt-3 flex items-center justify-between gap-3">
                   <div className="avatar-stack">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
                   <span className="open-label">Open trip <ArrowRight size={17} /></span>
@@ -145,14 +141,27 @@ function Dashboard({ onOpen, onCreate, onSummary }: { onOpen: () => void; onCrea
               </div>
             </div>
           </button>
-          <button className="trip-card" onClick={onOpen}>
+          <div className="home-side-stack">
+          <article className="quick-panel" aria-label="Tokyo trip shortcuts">
+            <button onClick={() => onNavigate("plan")}><span><MapPin size={18} /></span><b>Itinerary</b><small>4 stops planned</small></button>
+            <button onClick={() => onNavigate("costs")}><span><WalletCards size={18} /></span><b>Costs</b><small>¥32,200 tracked</small></button>
+            <button onClick={() => onNavigate("photos")}><span><Image size={18} /></span><b>Photos</b><small>7 memories</small></button>
+            <button className="emergency-shortcut" onClick={() => onNavigate("emergency")}><span><ShieldCheck size={18} /></span><b>Emergency</b><small>Saved offline</small></button>
+          </article>
+          <button className="trip-card compact-card" onClick={() => onNavigate("plan")}>
             <img src={copenhagen} alt="Colorful Copenhagen harbor" width={1280} height={800} loading="lazy" />
             <div className="trip-overlay compact">
               <div className="status-pill"><span /> In 68 days</div>
               <div><p className="text-xs font-semibold">Jul 13–17</p><h2>Copenhagen</h2><p className="mt-1 text-sm">3 travelers</p></div>
             </div>
           </button>
+          </div>
         </section>
+        <section className="memory-preview">
+          <div><p className="eyebrow">Last journey</p><h2>Kyoto memories</h2><p>8 days · 184 photos · 27 places</p></div>
+          <button onClick={onSummary}>View trip <ArrowRight size={17} /></button>
+        </section>
+        </>
       ) : (
         <section className="trip-grid">
           <button className="trip-card featured" onClick={onSummary}>
@@ -161,6 +170,10 @@ function Dashboard({ onOpen, onCreate, onSummary }: { onOpen: () => void; onCrea
           </button>
         </section>
       )}
+      <div className="segmented home-filter" aria-label="Trip filter">
+        <button className={filter === "upcoming" ? "active" : ""} onClick={() => setFilter("upcoming")}>Upcoming <span>2</span></button>
+        <button className={filter === "past" ? "active" : ""} onClick={() => setFilter("past")}>Past <span>4</span></button>
+      </div>
     </div>
   );
 }

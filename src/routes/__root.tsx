@@ -77,11 +77,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Roamly" },
-      { name: "description", content: "Group travel planning made simple." },
+      { title: "Travelers" },
+      { name: "description", content: "Plan trips, split costs, and keep shared travel memories together." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Roamly" },
-      { property: "og:description", content: "Group travel planning made simple." },
+      { property: "og:title", content: "Travelers" },
+      { property: "og:description", content: "Plan trips, split costs, and keep shared travel memories together." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
@@ -98,7 +98,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Nunito+Sans:wght@400;600;700;800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap",
       },
       {
         rel: "stylesheet",
