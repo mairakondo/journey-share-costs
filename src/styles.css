@@ -179,7 +179,7 @@
   .avatar { @apply grid size-10 shrink-0 place-items-center rounded-xl bg-primary text-xs font-extrabold text-primary-foreground shadow-lg; }
   .icon-button { @apply grid size-10 shrink-0 place-items-center rounded-xl border border-primary/15 bg-surface/85 text-foreground shadow-sm backdrop-blur-xl transition hover:border-primary hover:text-primary; }
   .eyebrow { @apply text-[11px] font-extrabold uppercase text-muted-foreground; letter-spacing: .12em; }
-  .page-title { @apply mt-2 max-w-3xl font-display text-4xl font-extrabold leading-[.96] sm:text-6xl; }
+  .page-title { @apply mt-2 max-w-3xl font-display text-4xl font-bold leading-none sm:text-6xl; }
   .hero-row { @apply flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between; }
   .dashboard-page { @apply pt-5 lg:pt-8; }
   .dashboard-intro { @apply items-start sm:items-end; }
