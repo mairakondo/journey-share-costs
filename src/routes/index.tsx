@@ -89,7 +89,7 @@ function TravelersApp() {
             <span>Travelers</span>
           </button>
           <div className="flex items-center gap-2">
-            {view !== "home" && <span className="hidden text-sm font-semibold text-muted-foreground sm:inline">Tokyo · Apr 6–11</span>}
+            {view !== "home" && <span className="hidden text-sm font-semibold text-primary-foreground/70 sm:inline">Tokyo · Apr 6–11</span>}
             <IconButton label="Search"><Search size={20} /></IconButton>
             <button className="avatar">MK</button>
           </div>
