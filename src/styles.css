@@ -179,7 +179,9 @@
   .brand { @apply flex min-w-0 items-center gap-2 font-display text-xl font-bold leading-none text-primary-foreground; }
   .brand-mark { @apply grid size-9 shrink-0 rotate-3 place-items-center rounded-xl bg-accent text-accent-foreground shadow-lg; }
   .avatar { @apply grid size-10 shrink-0 place-items-center rounded-xl bg-primary-foreground text-xs font-extrabold text-primary shadow-lg; }
-  .icon-button { @apply grid size-10 shrink-0 place-items-center rounded-xl border border-primary-foreground/15 bg-primary-foreground/10 text-primary-foreground shadow-sm backdrop-blur-xl transition hover:bg-primary-foreground/20; }
+  .icon-button { @apply grid size-10 shrink-0 place-items-center rounded-xl border border-primary/20 bg-surface text-primary shadow-sm transition hover:border-primary/40 hover:bg-secondary; }
+  .topbar .icon-button, .lightbox-stage .icon-button, .memory-preview .icon-button { @apply border-primary-foreground/25 bg-primary-foreground/15 text-primary-foreground backdrop-blur-xl hover:bg-primary-foreground/25; }
+  .lightbox-bar .icon-button { @apply border-primary/20 bg-surface text-primary; }
   .eyebrow { @apply text-[11px] font-extrabold uppercase text-muted-foreground; letter-spacing: .12em; }
   .page-title { @apply mt-2 max-w-3xl font-display text-4xl font-bold leading-none sm:text-6xl; }
   .hero-row { @apply flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between; }
