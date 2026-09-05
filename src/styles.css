@@ -63,6 +63,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
   --color-money: var(--money);
   --color-money-foreground: var(--money-foreground);
+  --color-money-ink: var(--money-ink);
   --color-sky: var(--sky);
   --color-sky-foreground: var(--sky-foreground);
   --color-sun: var(--sun);
@@ -86,7 +87,7 @@
   --secondary: oklch(0.91 0.055 282);
   --secondary-foreground: oklch(0.31 0.12 280);
   --muted: oklch(0.94 0.025 278);
-  --muted-foreground: oklch(0.51 0.055 279);
+  --muted-foreground: oklch(0.435 0.06 279);
   --accent: oklch(0.72 0.2 30);
   --accent-foreground: oklch(0.985 0.008 280);
   --destructive: oklch(0.577 0.245 27.325);
@@ -109,6 +110,7 @@
   --sidebar-ring: oklch(0.704 0.04 256.788);
   --money: oklch(0.72 0.2 30);
   --money-foreground: oklch(0.985 0.008 280);
+  --money-ink: oklch(0.47 0.17 29);
   --sky: oklch(0.84 0.1 198);
   --sky-foreground: oklch(0.27 0.08 245);
   --sun: oklch(0.84 0.1 198);
@@ -195,43 +197,43 @@
   .trip-grid { @apply mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-[1.45fr_.9fr]; }
   .home-trip-grid { @apply mt-7 lg:grid-cols-[1.35fr_.8fr]; }
   .home-side-stack { @apply grid gap-4; }
-  .trip-country { @apply mb-1 text-primary-foreground/75; }
-  .trip-dates { @apply mt-2 text-sm font-semibold text-primary-foreground/80; }
+  .trip-country { @apply mb-1 text-primary-foreground/90; }
+  .trip-dates { @apply mt-2 text-sm font-semibold text-primary-foreground/90; }
   .compact-card { @apply min-h-64; }
   .quick-panel { @apply grid grid-cols-2 gap-2 rounded-[2rem] border border-primary/10 bg-surface/45 p-3 shadow-xl backdrop-blur-xl; }
   .quick-panel button { @apply grid min-h-28 grid-cols-[auto_1fr] content-center items-center gap-x-2 rounded-2xl border border-primary/10 bg-surface/80 p-3 text-left shadow-sm backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg; }
   .quick-panel button > span { @apply row-span-2 grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-md; }
   .quick-panel button b { @apply self-end text-sm font-extrabold; }
-  .quick-panel button small { @apply self-start text-[10px] font-semibold text-muted-foreground; }
-  .quick-panel .emergency-shortcut { @apply bg-cyan/65; }
+  .quick-panel button small { @apply self-start text-[10px] font-bold text-muted-foreground; }
+  .quick-panel .emergency-shortcut { @apply bg-cyan/80; }
   .quick-panel button:nth-child(2) > span { @apply bg-accent; }
   .quick-panel button:nth-child(3) > span { @apply bg-cyan text-sky-foreground; }
   .memory-preview { @apply relative mt-5 flex min-h-36 items-end justify-between gap-4 overflow-hidden rounded-[2rem] bg-primary p-6 text-primary-foreground shadow-xl; background-image: linear-gradient(90deg, var(--primary) 20%, color-mix(in oklab, var(--primary) 78%, transparent)), url("/src/assets/kyoto.jpg"); background-position: center; background-size: cover; }
   .memory-preview h2 { @apply mt-1 font-display text-2xl font-bold; }
-  .memory-preview p:not(.eyebrow) { @apply mt-1 text-xs text-primary-foreground/70; }
+  .memory-preview p:not(.eyebrow) { @apply mt-1 text-xs text-primary-foreground/85; }
   .memory-preview .eyebrow { @apply text-cyan; }
   .memory-preview button { @apply inline-flex shrink-0 items-center gap-2 rounded-xl bg-surface px-4 py-2 text-xs font-extrabold text-primary; }
   .home-filter { @apply sticky bottom-5 left-1/2 z-30 mt-7 -translate-x-1/2 bg-primary/90 p-1.5 shadow-xl backdrop-blur-xl; }
-  .home-filter button { @apply text-primary-foreground/55; }
+  .home-filter button { @apply text-primary-foreground/80; }
   .home-filter button.active { @apply bg-surface text-primary; }
   .trip-card { @apply relative min-h-72 overflow-hidden rounded-[2rem] border border-primary-foreground/15 text-left text-primary-foreground shadow-2xl; }
   .trip-card.featured { @apply md:row-span-2 md:min-h-[540px]; }
   .trip-card img { @apply absolute inset-0 h-full w-full object-cover transition duration-500; }
   .trip-card:hover img { @apply scale-[1.03]; }
-  .trip-overlay { @apply absolute inset-0 flex flex-col justify-between bg-gradient-to-t from-primary via-primary/10 to-primary/20 p-5 sm:p-7; }
+  .trip-overlay { @apply absolute inset-0 flex flex-col justify-between bg-gradient-to-t from-primary via-primary/35 to-primary/45 p-5 sm:p-7; }
   .trip-overlay.compact { @apply p-5; }
   .trip-overlay h2 { @apply font-display text-4xl font-bold leading-none sm:text-5xl; }
   .compact h2 { @apply text-2xl; }
   .status-pill { @apply flex w-fit items-center gap-2 rounded-xl border border-primary-foreground/20 bg-surface/20 px-3 py-1.5 text-[10px] font-extrabold uppercase text-primary-foreground shadow-sm backdrop-blur-xl; }
   .status-pill span { @apply size-2 rounded-full bg-cyan; }
-  .status-pill.muted { @apply text-muted-foreground; }
+  .status-pill.muted { @apply text-primary-foreground/85; }
   .avatar-stack { @apply flex items-center; }
   .avatar-stack > span { @apply -ml-1 grid size-8 place-items-center rounded-full border-2 border-surface text-[10px] font-black first:ml-0; }
   .open-label { @apply inline-flex items-center gap-2 text-sm font-extrabold; }
   .budget-card { @apply flex min-h-48 flex-col justify-between rounded-2xl border border-border bg-surface p-5; }
   .budget-card h3 { @apply mt-1 font-display text-2xl font-bold leading-none; }
   .budget-card h3 span { @apply text-sm font-semibold text-muted-foreground; }
-  .money-icon { @apply grid size-10 place-items-center rounded-xl bg-money/20 text-money-foreground; }
+  .money-icon { @apply grid size-10 place-items-center rounded-xl bg-money/20 text-money-ink; }
   .progress { @apply h-2 overflow-hidden rounded-full bg-muted; }
   .progress span { @apply block h-full w-[69%] rounded-full bg-money; }
   .offline-banner { @apply sticky top-0 z-50 flex w-full items-center gap-2 bg-foreground px-5 py-2 text-left text-xs font-bold text-background; }
@@ -277,14 +279,14 @@
   .empty-day { @apply rounded-2xl border border-dashed border-border bg-surface p-8 text-center text-sm font-semibold text-muted-foreground; }
   .day-note { @apply relative h-fit overflow-hidden rounded-[2rem] bg-primary p-6 text-primary-foreground shadow-xl; }
   .day-note::after { content: ""; position: absolute; width: 8rem; height: 8rem; right: -3rem; top: -3rem; border-radius: 2rem; transform: rotate(35deg); background: linear-gradient(135deg, color-mix(in oklab, var(--cyan) 75%, transparent), color-mix(in oklab, var(--accent) 65%, transparent)); opacity: .7; }
-  .day-note .eyebrow { @apply text-primary-foreground/70; }.day-note h3 { @apply mt-2 font-display text-2xl font-bold leading-none; }.day-note > p:not(.eyebrow) { @apply mt-2 text-sm leading-6 text-primary-foreground/80; }
+  .day-note .eyebrow { @apply text-primary-foreground/85; }.day-note h3 { @apply mt-2 font-display text-2xl font-bold leading-none; }.day-note > p:not(.eyebrow) { @apply mt-2 text-sm leading-6 text-primary-foreground/90; }
   .mini-map { @apply mt-7 flex h-32 flex-col items-center justify-center gap-2 rounded-xl bg-primary-foreground/10 text-sm font-bold; }
   .bottom-nav { @apply fixed inset-x-4 bottom-4 z-40 mx-auto grid max-w-lg grid-cols-4 rounded-[1.5rem] border border-primary-foreground/10 bg-primary/90 px-3 pb-[max(10px,env(safe-area-inset-bottom))] pt-2 shadow-2xl backdrop-blur-xl; }
-  .bottom-nav button { @apply flex flex-col items-center gap-1 rounded-xl py-2 text-[11px] font-bold text-primary-foreground/50 transition; }.bottom-nav svg { @apply size-5; }.bottom-nav button.active { @apply bg-surface/15 text-cyan; }
+  .bottom-nav button { @apply flex flex-col items-center gap-1 rounded-xl py-2 text-[11px] font-bold text-primary-foreground/75 transition; }.bottom-nav svg { @apply size-5; }.bottom-nav button.active { @apply bg-surface/15 text-cyan; }
   .emergency-intro { @apply mt-8 flex items-center gap-4; }.emergency-intro > span { @apply grid size-12 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary; }.emergency-intro h2 { @apply font-display text-2xl font-bold leading-none; }.emergency-intro p { @apply text-sm text-muted-foreground; }
   .emergency-grid { @apply mt-6 grid gap-3 md:grid-cols-2; }.emergency-card { @apply flex gap-4 rounded-[2rem] border border-primary/10 bg-surface p-5 shadow-sm; }.emergency-icon { @apply grid size-11 shrink-0 place-items-center rounded-full bg-accent text-accent-foreground; }.emergency-card h3 { @apply mt-1 font-display text-lg font-bold leading-none; }.emergency-card p:not(.eyebrow) { @apply mt-1 text-sm text-muted-foreground; }.emergency-card a { @apply mt-4 inline-flex items-center gap-2 font-bold leading-none text-primary; }
   .cost-hero { @apply mt-8 grid gap-6 rounded-2xl bg-money/20 p-6 md:grid-cols-[1fr_1.2fr] md:items-center md:p-9; }.cost-hero h2 { @apply mt-2 font-display text-4xl font-bold leading-none; }.cost-hero > div > p:last-child { @apply mt-3 text-sm text-muted-foreground; }
-  .scan-button { @apply grid min-h-28 grid-cols-[auto_1fr_auto] items-center gap-x-4 rounded-2xl bg-money p-5 text-left text-money-foreground transition hover:brightness-95; }.scan-button > span { @apply row-span-2 grid size-14 place-items-center rounded-xl bg-surface/40; }.scan-button b { @apply self-end text-lg; }.scan-button small { @apply self-start opacity-75; }.scan-button > svg { @apply row-span-2; }
+  .scan-button { @apply grid min-h-28 grid-cols-[auto_1fr_auto] items-center gap-x-4 rounded-2xl bg-money p-5 text-left text-money-foreground transition hover:brightness-95; }.scan-button > span { @apply row-span-2 grid size-14 place-items-center rounded-xl bg-surface/40; }.scan-button b { @apply self-end text-lg; }.scan-button small { @apply self-start opacity-90; }.scan-button > svg { @apply row-span-2; }
   .timeline-head-actions { @apply flex items-center gap-2; }.scan-chip { @apply inline-flex items-center gap-2 rounded-full bg-money px-4 py-2 text-sm font-bold text-money-foreground transition hover:brightness-95; }
   .cost-layout { @apply mt-9 grid gap-8 lg:grid-cols-[1fr_280px]; }.settled-pill { @apply rounded-full bg-money/15 px-3 py-1 text-xs font-bold text-money-foreground; }.balance-list { @apply mt-4 overflow-hidden rounded-[2rem] border border-primary/10 bg-surface shadow-sm; }.balance-list article { @apply grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border p-4 last:border-0; }.balance-list article > span { @apply grid size-10 place-items-center rounded-full text-xs font-black; }.balance-list h3 { @apply font-extrabold; }.balance-list p { @apply text-xs text-muted-foreground; }.balance-list strong { @apply text-sm; }.balance-list .positive { @apply text-primary; }.muted-amount { @apply text-muted-foreground; }
   .future-space { @apply rounded-2xl border border-dashed border-money/50 p-6; }.future-space > svg { @apply mb-8 text-money; }.future-space h3 { @apply mt-1 font-display text-xl font-bold leading-none; }.future-space > p:last-child { @apply mt-2 text-sm text-muted-foreground; }
@@ -319,19 +321,19 @@
   .cost-chip > span { @apply min-w-0; }
   .cost-chip b { @apply block truncate text-xs font-extrabold text-foreground; }
   .cost-chip small { @apply block truncate text-[10px] font-bold text-muted-foreground; }
-  .cost-chip strong { @apply text-xs font-extrabold text-money-foreground; }
+  .cost-chip strong { @apply text-xs font-extrabold text-money-ink; }
   .no-cost { @apply self-center text-[10px] font-bold text-muted-foreground; }
-  .add-cost { @apply flex min-h-9 shrink-0 items-center gap-1 rounded-xl border border-dashed border-money/50 px-3 py-2 text-xs font-extrabold text-money-foreground transition hover:bg-money/12; }
+  .add-cost { @apply flex min-h-9 shrink-0 items-center gap-1 rounded-xl border border-dashed border-money/50 px-3 py-2 text-xs font-extrabold text-money-ink transition hover:bg-money/12; }
   .match-hint { @apply mt-3 flex items-center gap-2 rounded-xl bg-muted px-3 py-2 text-xs font-bold text-muted-foreground; }
   .spend-timeline { @apply mt-4 grid gap-4; }
   .spend-timeline > section { @apply rounded-3xl bg-card p-4 shadow-sm; }
   .spend-timeline header { @apply mb-3 flex items-center justify-between gap-2; }
   .spend-timeline header h3 { @apply whitespace-nowrap text-sm font-extrabold uppercase tracking-wide text-muted-foreground; }
-  .spend-timeline header strong { @apply whitespace-nowrap text-base font-extrabold text-money-foreground; }
+  .spend-timeline header strong { @apply whitespace-nowrap text-base font-extrabold text-money-ink; }
   .spend-timeline article { @apply border-t border-border/60 py-3 first-of-type:border-t-0; }
   .cost-card-head { @apply flex min-w-0 items-center gap-3; }
   .cost-title-row { @apply flex min-w-0 items-start justify-between gap-3; }
-  .cost-title-row strong { @apply shrink-0 text-sm font-extrabold text-money-foreground; }
+  .cost-title-row strong { @apply shrink-0 text-sm font-extrabold text-money-ink; }
   .spend-timeline article h4 { @apply mt-1 min-w-0 break-words text-sm font-extrabold leading-5; }
   .cost-details { @apply mt-3 grid w-full min-w-0 grid-cols-2 gap-x-3 gap-y-2 rounded-lg border-t border-border/60 bg-muted/40 p-3 pt-3; }
   .cost-detail-full { @apply col-span-2; }
@@ -374,7 +376,7 @@
   .split-value small { @apply text-xs font-bold text-muted-foreground; }
   .split-row strong { @apply w-16 shrink-0 text-right text-sm font-extrabold; }
   .split-hint { @apply mt-3 text-xs font-semibold text-muted-foreground; }
-  .split-hint.warn { @apply text-money-foreground; }
+  .split-hint.warn { @apply text-money-ink; }
   .split-tag { @apply flex min-w-0 items-start gap-1 text-xs font-semibold leading-5 text-muted-foreground; }
   .split-tag svg { @apply mt-0.5 shrink-0; }
 }
