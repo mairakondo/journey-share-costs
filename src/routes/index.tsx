@@ -54,7 +54,7 @@ import importAsakusaTemple from "@/assets/import-asakusa-temple.jpg";
 import importTeamlabArt from "@/assets/import-teamlab-art.jpg";
 import importGoldenGaiNight from "@/assets/import-golden-gai-night.jpg";
 
-type View = "home" | "plan" | "costs" | "photos" | "emergency" | "summary";
+type View = "home" | "plan" | "costs" | "photos" | "support" | "summary";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -196,7 +196,7 @@ function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, 
         <div className="avatar-stack hidden sm:flex">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
       </div>
       {view === "plan" && <Itinerary setView={setView} stops={stops} setStops={setStops} photos={photos} expenses={expenses} setExpenses={setExpenses} newPhotoIds={newPhotoIds} dismissPhotos={dismissPhotos} />}
-      {view === "emergency" && <Emergency />}
+      {view === "support" && <Support />}
       {view === "costs" && <Costs onScan={onScan} stops={stops} expenses={expenses} setView={setView} />}
       {view === "photos" && <Photos stops={stops} photos={photos} setPhotos={setPhotos} onImported={onImported} />}
       {view === "summary" && <Summary setView={setView} />}
