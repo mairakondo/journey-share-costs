@@ -585,7 +585,7 @@ function PhotoImport({ stops, onClose, onImport }: { stops: Stop[]; onClose: () 
       <div className="modal-head">
         <div>
           <p className="eyebrow">{step === "pick" ? "From your phone" : step === "matching" ? "Reading place, date & time" : `${matchedCount} of ${chosen.length} matched`}</p>
-          <h2>{step === "pick" ? "Add photos" : step === "matching" ? "Matching photos" : "Review matches"}</h2>
+          <h2>{step === "pick" ? "Your memories" : step === "matching" ? "Matching photos" : "Review matches"}</h2>
         </div>
         <IconButton label="Close" onClick={onClose}><X size={20} /></IconButton>
       </div>
