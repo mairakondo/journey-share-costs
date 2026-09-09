@@ -33,7 +33,6 @@ import { useState, type ReactNode } from "react";
 
 import tokyo from "@/assets/tokyo.jpg";
 import kyoto from "@/assets/kyoto.jpg";
-import tokyoGoldenGai from "@/assets/tokyo-goldengai.jpg";
 import tokyoAsakusa from "@/assets/tokyo-asakusa.jpg";
 import tokyoTeamlab from "@/assets/tokyo-teamlab.jpg";
 import tokyoTsukiji from "@/assets/tokyo-tsukiji.jpg";
