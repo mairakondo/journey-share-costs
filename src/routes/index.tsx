@@ -365,6 +365,9 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
   const [editingCost, setEditingCost] = useState<Expense | null>(null);
   const [addOpen, setAddOpen] = useState(false);
 
+  useEffect(() => { clearNewPhotos?.(); }, []);
+
+
   const dayStops = stops.filter((s) => s.day === day).sort((a, b) => a.time.localeCompare(b.time));
   const dayExpenses = expenses.filter((e) => e.day === day);
   const stopExpenses = (id: string) => dayExpenses.filter((e) => resolveStop(e, stops)?.id === id).sort((a, b) => a.time.localeCompare(b.time));
