@@ -448,12 +448,6 @@ function ExpenseEditor({ expense, stops, onClose, onSave, onDelete }: { expense:
         </div>
         <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Tsukiji Outer Market" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
         <label>Paid by<input value={draft.payer} onChange={(e) => setDraft({ ...draft, payer: e.target.value })} /></label>
-        <label>Attach to activity
-          <select value={draft.stopId ?? ""} onChange={(e) => setDraft({ ...draft, stopId: e.target.value || null })}>
-            <option value="">Auto-match{auto ? ` · ${auto.title}` : " · no match yet"}</option>
-            {[...stops].sort((a, b) => a.day - b.day || a.time.localeCompare(b.time)).map((s) => <option key={s.id} value={s.id}>Day {s.day + 1} · {s.time} · {s.title}</option>)}
-          </select>
-        </label>
       </div>
       <div className="split-block">
         <p className="eyebrow">Split between travelers</p>
