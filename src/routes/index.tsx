@@ -29,7 +29,7 @@ import {
   WifiOff,
   X,
 } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 
 import tokyo from "@/assets/tokyo.jpg";
 import kyoto from "@/assets/kyoto.jpg";
@@ -364,6 +364,9 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
   const [editing, setEditing] = useState<Stop | null>(null);
   const [editingCost, setEditingCost] = useState<Expense | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+
+  useEffect(() => { clearNewPhotos?.(); }, []);
+
 
   const dayStops = stops.filter((s) => s.day === day).sort((a, b) => a.time.localeCompare(b.time));
   const dayExpenses = expenses.filter((e) => e.day === day);
