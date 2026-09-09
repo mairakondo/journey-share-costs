@@ -305,7 +305,7 @@
   .bottom-nav button { @apply flex flex-col items-center gap-1 rounded-[1.5rem] py-2 text-[11px] font-bold text-primary-foreground/75 transition; }.bottom-nav svg { @apply size-5; }.bottom-nav button.active { @apply bg-surface/15 text-cyan; }
   .support-intro { @apply mt-8 flex items-center gap-4; }.support-intro > span { @apply grid size-12 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary; }.support-intro h2 { @apply font-display text-2xl font-bold leading-none; }.support-intro p { @apply text-sm text-muted-foreground; }
   .support-grid { @apply mt-6 grid gap-3 md:grid-cols-2; }.support-card { @apply flex gap-4 rounded-[2rem] border border-primary/10 bg-surface p-5 shadow-sm; }.support-icon { @apply grid size-11 shrink-0 place-items-center rounded-full bg-accent text-accent-foreground; }.support-card h3 { @apply mt-1 font-display text-lg font-bold leading-none; }.support-card p:not(.eyebrow) { @apply mt-1 text-sm text-muted-foreground; }.support-card a { @apply mt-4 inline-flex items-center gap-2 font-bold leading-none text-primary; }
-  .support-section-title { @apply font-display text-lg font-bold leading-none; }
+  .support-section-title { @apply mt-6 font-display text-lg font-bold leading-none; }
   .tool-grid { @apply mt-6 grid gap-3 md:grid-cols-2; }
   .tool-card { @apply flex w-full items-center gap-4 rounded-[2rem] border border-primary/10 bg-surface p-5 text-left shadow-sm transition active:scale-[.99]; }
   .tool-card strong { @apply block font-display text-base font-bold leading-tight; }.tool-card small { @apply mt-1 block text-sm text-muted-foreground; }
