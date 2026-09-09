@@ -29,6 +29,7 @@ import {
   ShieldCheck,
   Toilet,
   Languages,
+  Loader2,
   Accessibility,
   Locate,
   Navigation,
@@ -982,6 +983,20 @@ function ReceiptConfirm({ onClose, stops, onSave }: { onClose: () => void; stops
   const [draft, setDraft] = useState({ amount: "15600", label: "teamLab tickets", place: "Toyosu 6-1-16", time: "14:55", day: 1 });
   const amount = Number(draft.amount.replace(",", ".")) || 0;
   const match = resolveStop({ day: draft.day, time: draft.time, place: draft.place }, stops);
+  const SCAN_STEPS = ["Capturing the receipt", "Reading the text", "Finding the total", "Matching place and time"];
+  const [step, setStep] = useState(0);
+  const scanning = step < SCAN_STEPS.length;
+  useEffect(() => {
+    if (!scanning) return;
+    const t = setTimeout(() => setStep((s) => s + 1), step === 0 ? 700 : 850);
+    return () => clearTimeout(t);
+  }, [step, scanning]);
+  if (scanning) return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Scanning receipt"><div className="modal-sheet receipt-sheet"><div className="modal-head"><div><p className="eyebrow">Receipt</p><h2>Scanning…</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>
+    <div className="scan-stage"><div className="scan-frame"><ReceiptText size={44} /><span className="scan-beam" /></div>
+      <div className="scan-progress"><i style={{ width: `${((step + 1) / (SCAN_STEPS.length + 1)) * 100}%` }} /></div>
+      <ul className="scan-steps">{SCAN_STEPS.map((s, i) => <li key={s} className={i < step ? "done" : i === step ? "active" : ""}>{i < step ? <Check size={15} /> : <Loader2 size={15} className={i === step ? "spin" : "idle"} />}<span>{s}</span></li>)}</ul>
+    </div></div></div>;
+
   const confirm = () => {
     onSave({ id: `e${Date.now()}`, day: draft.day, time: draft.time, place: draft.place, label: draft.label, amount, payer: "Maira", source: "scan", stopId: null, split });
     setConfirmed(true);
