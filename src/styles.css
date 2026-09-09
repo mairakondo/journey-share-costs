@@ -408,7 +408,7 @@
 @media (max-width: 639px) {
   .dashboard-intro { @apply flex-row items-end justify-between gap-3; }
   .dashboard-intro .page-title { @apply text-[2.15rem]; }
-  .dashboard-intro .primary-action { @apply size-12 shrink-0 p-0 text-[0px]; }
+  .dashboard-intro .primary-action { @apply size-12 shrink-0 gap-0 p-0 text-[0px]; }
   .dashboard-intro .primary-action svg { @apply size-5; }
   .home-trip-grid { @apply mt-5; }
   .home-trip-grid .trip-card.featured { @apply min-h-[440px]; }
