@@ -119,10 +119,10 @@ function TravelersApp() {
         {view === "home" ? (
           <Dashboard onNavigate={setView} onCreate={() => setCreateOpen(true)} onSummary={() => setView("summary")} />
         ) : (
-          <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} stops={stops} setStops={setStops} photos={photos} setPhotos={setPhotos} expenses={expenses} setExpenses={setExpenses} newPhotoIds={newPhotoIds} setNewPhotoIds={setNewPhotoIds} />
+          <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} stops={stops} setStops={setStops} photos={photos} setPhotos={setPhotos} expenses={expenses} setExpenses={setExpenses} newPhotoIds={newPhotoIds} dismissPhotos={dismissPhotos} onImported={markImported} />
         )}
 
-        {view !== "home" && view !== "summary" && <BottomNav view={view} setView={setView} planBadge={newPhotoIds.length} />}
+        {view !== "home" && view !== "summary" && <BottomNav view={view} setView={setView} planBadge={navBadgeSeen ? 0 : newPhotoIds.length} onPlanSeen={() => setNavBadgeSeen(true)} />}
       </div>
       {createOpen && <CreateTrip onClose={() => setCreateOpen(false)} onCreate={() => { setCreateOpen(false); setView("plan"); }} />}
       {scanOpen && <ReceiptConfirm onClose={() => setScanOpen(false)} stops={stops} onSave={(e) => setExpenses((prev) => [...prev, e])} />}
