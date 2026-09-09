@@ -362,7 +362,7 @@
   .assign-list button b { @apply shrink-0 text-xs font-black text-primary; }
   .assign-list button span { @apply min-w-0 flex-1; }
   .assign-list button small { @apply block truncate text-xs font-semibold text-muted-foreground; }
-  .scan-inline { @apply mb-5 flex w-full items-center gap-3 rounded-2xl border border-money/40 bg-money/10 p-4 text-left disabled:opacity-70; }
+  .scan-inline { @apply mb-5 mt-3 flex w-full items-center gap-3 rounded-2xl border border-money/40 bg-money/10 p-4 text-left disabled:opacity-70; }
   .scan-inline > span { @apply grid size-10 shrink-0 place-items-center rounded-xl bg-money text-money-foreground; }
   .scan-inline b { @apply block text-sm font-extrabold; }
   .scan-inline small { @apply block text-xs font-semibold text-muted-foreground; }
