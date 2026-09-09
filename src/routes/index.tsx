@@ -26,6 +26,20 @@ import {
   Search,
   Shuffle,
   ShieldCheck,
+  Toilet,
+  Languages,
+  Accessibility,
+  Locate,
+  Navigation,
+  Baby,
+  Footprints,
+  Volume2,
+  Copy,
+  Sparkles,
+  Train,
+  TramFront,
+  Signal,
+  Timer,
   Trash2,
   Users,
   Wallet,
@@ -506,11 +520,121 @@ function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: 
   </div>;
 }
 
-function Support() {
-  return <><div className="support-intro"><span><ShieldCheck size={25} /></span><div><h2>Help, when you need it</h2><p>Saved on your device and available offline.</p></div></div><section className="support-grid">
-    {[{ icon: <HeartPulse />, label: "Nearest hospital", title: "St. Luke's International Hospital", detail: "Akashi-cho 9-1 · 2.4 km", number: "+81 3 3541 5151" }, { icon: <Landmark />, label: "U.S. Embassy", title: "Embassy of the United States", detail: "Akasaka 1-10-5 · 4.1 km", number: "+81 3 3224 5000" }, { icon: <Phone />, label: "National emergency", title: "Police 110 · Fire & Ambulance 119", detail: "Available 24 hours", number: "110" }].map((x) => <article className="support-card" key={x.label}><span className="support-icon">{x.icon}</span><div className="flex-1"><p className="eyebrow">{x.label}</p><h3>{x.title}</h3><p>{x.detail}</p><a href={`tel:${x.number}`}><Phone size={16} /> {x.number}</a></div></article>)}
+type Tool = "restroom" | "translate" | "access" | "locate";
 
-  </section></>;
+const RESTROOMS = [
+  { name: "Senso-ji temple grounds", detail: "Asakusa 2-3-1 · 3 min walk", tags: ["Accessible", "Baby change"], clean: "Very clean" },
+  { name: "Asakusa station · exit 4", detail: "Inside gates · 6 min walk", tags: ["Accessible"], clean: "Clean" },
+  { name: "Family Mart Kaminarimon", detail: "Ask at counter · 8 min walk", tags: ["Free"], clean: "Clean" },
+  { name: "Sumida park north gate", detail: "Riverside path · 11 min walk", tags: ["Accessible", "Baby change"], clean: "Basic" },
+];
+
+const PHRASES = [
+  { en: "Where is the nearest restroom?", jp: "一番近いトイレはどこですか？", ro: "Ichiban chikai toire wa doko desu ka?" },
+  { en: "A table for four, please.", jp: "4名でお願いします。", ro: "Yonmei de onegaishimasu." },
+  { en: "Does this have meat or fish?", jp: "これに肉や魚は入っていますか？", ro: "Kore ni niku ya sakana wa haitte imasu ka?" },
+  { en: "Can you help me, please?", jp: "手伝っていただけますか？", ro: "Tetsudatte itadakemasu ka?" },
+  { en: "How much does it cost?", jp: "いくらですか？", ro: "Ikura desu ka?" },
+];
+
+const ACCESSIBLE = [
+  { name: "Asakusa station (Ginza line)", detail: "Elevator to platform · step-free exit 4", tags: ["Step-free", "Tactile paving"] },
+  { name: "Toei bus 東42", detail: "Low-floor bus with ramp · every 12 min", tags: ["Ramp", "Wheelchair space"] },
+  { name: "Senso-ji main hall", detail: "Ramp on west side, staff assistance", tags: ["Ramp", "Accessible restroom"] },
+  { name: "teamLab Planets", detail: "Wheelchair route available · book ahead", tags: ["Step-free", "Lift"] },
+  { name: "Tokyo Skytree deck", detail: "Lifts to all floors · priority queue", tags: ["Lift", "Accessible restroom"] },
+];
+
+const TRAVELERS = [
+  { name: "Maira", place: "Senso-ji main hall", when: "now", initials: "M" },
+  { name: "Yuki", place: "Nakamise shopping street", when: "2 min ago", initials: "Y" },
+  { name: "Tom", place: "Asakusa station · exit 4", when: "5 min ago", initials: "T" },
+  { name: "Lena", place: "Sumida park riverside", when: "9 min ago", initials: "L" },
+];
+
+function Support() {
+  const [tool, setTool] = useState<Tool | null>(null);
+  return <><div className="support-intro"><span><ShieldCheck size={25} /></span><div><h2>Help, when you need it</h2><p>Saved on your device and available offline.</p></div></div>
+  <h3 className="support-section-title">Everyday help</h3>
+  <section className="tool-grid">
+    {[{ id: "restroom" as Tool, icon: <Toilet />, title: "Find restrooms", detail: "4 nearby, 2 accessible" }, { id: "translate" as Tool, icon: <Languages />, title: "Translator", detail: "Type, speak or scan a menu" }, { id: "access" as Tool, icon: <Accessibility />, title: "Accessible routes", detail: "Step-free stations & places" }, { id: "locate" as Tool, icon: <Locate />, title: "Share live location", detail: "4 travelers in the group" }].map((t) => <button className="tool-card" key={t.id} onClick={() => setTool(t.id)}><span className="support-icon">{t.icon}</span><span className="flex-1 text-left"><strong>{t.title}</strong><small>{t.detail}</small></span><ChevronRight size={18} /></button>)}
+  </section>
+  <h3 className="support-section-title">Emergency contacts</h3>
+  <section className="support-grid">
+    {[{ icon: <HeartPulse />, label: "Nearest hospital", title: "St. Luke's International Hospital", detail: "Akashi-cho 9-1 · 2.4 km", number: "+81 3 3541 5151" }, { icon: <Landmark />, label: "U.S. Embassy", title: "Embassy of the United States", detail: "Akasaka 1-10-5 · 4.1 km", number: "+81 3 3224 5000" }, { icon: <Phone />, label: "National emergency", title: "Police 110 · Fire & Ambulance 119", detail: "Available 24 hours", number: "110" }].map((x) => <article className="support-card" key={x.label}><span className="support-icon">{x.icon}</span><div className="flex-1"><p className="eyebrow">{x.label}</p><h3>{x.title}</h3><p>{x.detail}</p><a href={`tel:${x.number}`}><Phone size={16} /> {x.number}</a></div></article>)}
+  </section>
+  {tool === "restroom" && <RestroomFlow onClose={() => setTool(null)} />}
+  {tool === "translate" && <TranslateFlow onClose={() => setTool(null)} />}
+  {tool === "access" && <AccessFlow onClose={() => setTool(null)} />}
+  {tool === "locate" && <LocateFlow onClose={() => setTool(null)} />}
+  </>;
+}
+
+function ToolSheet({ title, subtitle, onClose, children }: { title: string; subtitle: string; onClose: () => void; children: ReactNode }) {
+  return <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={onClose}>
+    <div className="modal-sheet" onClick={(e) => e.stopPropagation()}>
+      <div className="modal-head"><div><h2>{title}</h2><p className="text-sm text-muted-foreground">{subtitle}</p></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>
+      {children}
+    </div>
+  </div>;
+}
+
+function RestroomFlow({ onClose }: { onClose: () => void }) {
+  const [locating, setLocating] = useState(true);
+  const [only, setOnly] = useState(false);
+  const [going, setGoing] = useState<string | null>(null);
+  useEffect(() => { const t = setTimeout(() => setLocating(false), 1200); return () => clearTimeout(t); }, []);
+  const list = only ? RESTROOMS.filter((r) => r.tags.includes("Accessible")) : RESTROOMS;
+  return <ToolSheet title="Find restrooms" subtitle="Around Senso-ji, Asakusa" onClose={onClose}>
+    {locating ? <div className="tool-loading"><Locate size={20} /> Finding restrooms near you…</div> : going ? <div className="tool-done"><span><Navigation size={22} /></span><h3>Walking to {going}</h3><p>Follow the blue route · arrive in about 3 min</p><button className="secondary-action wide" onClick={() => setGoing(null)}>Back to list</button></div> : <>
+      <div className="tool-filter mt-4"><button className={only ? "" : "on"} onClick={() => setOnly(false)}>All</button><button className={only ? "on" : ""} onClick={() => setOnly(true)}>Accessible only</button></div>
+      <ul className="tool-list">{list.map((r) => <li key={r.name}><span className="tool-list-icon"><Toilet size={18} /></span><div className="flex-1"><strong>{r.name}</strong><small>{r.detail} · {r.clean}</small><span className="tool-tags">{r.tags.map((t) => <i key={t}>{t === "Baby change" ? <Baby size={12} /> : t === "Accessible" ? <Accessibility size={12} /> : null}{t}</i>)}</span></div><button className="scan-chip" onClick={() => setGoing(r.name)}><Footprints size={15} /> Go</button></li>)}</ul>
+    </>}
+  </ToolSheet>;
+}
+
+function TranslateFlow({ onClose }: { onClose: () => void }) {
+  const [text, setText] = useState("");
+  const [result, setResult] = useState<{ jp: string; ro: string } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [spoke, setSpoke] = useState(false);
+  const run = (en: string) => {
+    setText(en); setBusy(true); setResult(null); setSpoke(false);
+    const hit = PHRASES.find((p) => p.en.toLowerCase() === en.trim().toLowerCase());
+    setTimeout(() => { setBusy(false); setResult(hit ? { jp: hit.jp, ro: hit.ro } : { jp: "すみません、これをお願いできますか？", ro: "Sumimasen, kore o onegai dekimasu ka?" }); }, 900);
+  };
+  return <ToolSheet title="Translator" subtitle="English → Japanese, works offline" onClose={onClose}>
+    <label className="tool-field mt-4">Say something<textarea rows={2} value={text} placeholder="Type what you want to say" onChange={(e) => setText(e.target.value)} /></label>
+    <div className="tool-actions"><button className="primary-action" disabled={!text.trim()} onClick={() => run(text)}><Languages size={17} /> Translate</button><button className="secondary-action" onClick={() => run("Does this have meat or fish?")}><Camera size={17} /> Scan menu</button></div>
+    {busy && <div className="tool-loading mt-4"><Sparkles size={18} /> Translating…</div>}
+    {result && <div className="tool-result"><p className="eyebrow">Japanese</p><h3>{result.jp}</h3><small>{result.ro}</small><div className="tool-actions"><button className="scan-chip" onClick={() => setSpoke(true)}><Volume2 size={15} /> Speak out loud</button><button className="secondary-action" onClick={() => setSpoke(false)}><Copy size={16} /> Copy</button></div>{spoke && <p className="tool-hint"><Volume2 size={14} /> Playing at full volume — show your phone to help.</p>}</div>}
+    <h3 className="support-section-title">Quick phrases</h3>
+    <ul className="tool-chips">{PHRASES.map((p) => <li key={p.en}><button onClick={() => run(p.en)}>{p.en}</button></li>)}</ul>
+  </ToolSheet>;
+}
+
+function AccessFlow({ onClose }: { onClose: () => void }) {
+  const [filter, setFilter] = useState<"all" | "Step-free" | "Ramp" | "Lift">("all");
+  const [picked, setPicked] = useState<string | null>(null);
+  const list = filter === "all" ? ACCESSIBLE : ACCESSIBLE.filter((a) => a.tags.includes(filter));
+  return <ToolSheet title="Accessible routes" subtitle="Step-free stations, transport and places" onClose={onClose}>
+    {picked ? <div className="tool-done"><span><Accessibility size={22} /></span><h3>{picked}</h3><p>Step-free route saved for today. We'll route the group around stairs and long transfers.</p><button className="secondary-action wide" onClick={() => setPicked(null)}>Back to list</button></div> : <>
+      <div className="tool-filter mt-4">{(["all", "Step-free", "Ramp", "Lift"] as const).map((f) => <button key={f} className={filter === f ? "on" : ""} onClick={() => setFilter(f)}>{f === "all" ? "All" : f}</button>)}</div>
+      <ul className="tool-list">{list.map((a) => <li key={a.name}><span className="tool-list-icon">{a.name.includes("bus") ? <TramFront size={18} /> : a.name.includes("station") ? <Train size={18} /> : <MapPin size={18} />}</span><div className="flex-1"><strong>{a.name}</strong><small>{a.detail}</small><span className="tool-tags">{a.tags.map((t) => <i key={t}><Accessibility size={12} />{t}</i>)}</span></div><button className="scan-chip" onClick={() => setPicked(a.name)}><Navigation size={15} /> Use</button></li>)}</ul>
+    </>}
+  </ToolSheet>;
+}
+
+function LocateFlow({ onClose }: { onClose: () => void }) {
+  const [on, setOn] = useState(false);
+  const [minutes, setMinutes] = useState(60);
+  return <ToolSheet title="Share live location" subtitle="Only with the four travelers on this trip" onClose={onClose}>
+    <div className={on ? "locate-toggle on" : "locate-toggle"}><span className="support-icon">{on ? <Signal /> : <Locate />}</span><div className="flex-1"><strong>{on ? "You're sharing your location" : "Location sharing is off"}</strong><small>{on ? `Visible to the group for ${minutes} min` : "Turn on so the group can find you"}</small></div><button className={on ? "secondary-action" : "primary-action"} onClick={() => setOn(!on)}>{on ? "Stop" : "Share"}</button></div>
+    <div className="tool-filter mt-4">{[30, 60, 240].map((m) => <button key={m} className={minutes === m ? "on" : ""} onClick={() => setMinutes(m)}><Timer size={14} /> {m >= 240 ? "4 h" : `${m} min`}</button>)}</div>
+    <h3 className="support-section-title">Group right now</h3>
+    <ul className="tool-list">{TRAVELERS.map((t) => <li key={t.name}><span className="traveler-dot">{t.initials}</span><div className="flex-1"><strong>{t.name}</strong><small>{t.place} · {t.when}</small></div><button className="scan-chip"><Navigation size={15} /> Meet</button></li>)}</ul>
+    {on && <p className="tool-hint"><Signal size={14} /> Sharing pauses automatically when the timer ends.</p>}
+  </ToolSheet>;
 }
 
 function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops: Stop[]; expenses: Expense[]; setView: (v: View) => void }) {
