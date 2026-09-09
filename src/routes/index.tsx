@@ -176,10 +176,6 @@ function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: Vie
           </button>
         </section>
       )}
-      <div className="segmented home-filter" aria-label="Trip filter">
-        <button className={filter === "upcoming" ? "active" : ""} onClick={() => setFilter("upcoming")}>Upcoming <span>2</span></button>
-        <button className={filter === "past" ? "active" : ""} onClick={() => setFilter("past")}>Past <span>4</span></button>
-      </div>
     </div>
   );
 }
