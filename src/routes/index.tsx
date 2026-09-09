@@ -637,7 +637,6 @@ function PhotoImport({ stops, onClose, onImport }: { stops: Stop[]; onClose: () 
 }
 
 function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void; onImported?: (ids: string[]) => void }) {
-  const [openDay, setOpenDay] = useState<number | null>(0);
   const [assigning, setAssigning] = useState<Photo | null>(null);
   const [viewing, setViewing] = useState<Photo | null>(null);
   const [importing, setImporting] = useState(false);
@@ -651,21 +650,18 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
     {importing && <PhotoImport stops={stops} onClose={() => setImporting(false)} onImport={(added) => {
       setPhotos((prev) => [...prev, ...added].sort((a, b) => a.day - b.day || a.time.localeCompare(b.time)));
       setImporting(false);
-      setOpenDay(added[0]?.day ?? 0);
       onImported?.(added.map((p) => p.id));
 
     }} />}
     <section className="photo-days">
       {days.map((day) => {
         const dayPhotos = photos.filter((p) => p.day === day);
-        const expanded = openDay === day;
         const groups = groupPhotosByStop(dayPhotos, stops);
         return <article key={day}>
-          <button className="photo-day-title" onClick={() => setOpenDay(expanded ? null : day)}>
+          <div className="photo-day-title static">
             <span><b>Day {day + 1}</b><small>{groups.filter((g) => g.stop).length} activities · {dayPhotos.length} photos</small></span>
-            <ChevronRight size={19} className={expanded ? "rotate-90" : ""} />
-          </button>
-          {expanded && groups.map((group) => <div className="activity-cluster" key={group.stop?.id ?? "unmatched"}>
+          </div>
+          {groups.map((group) => <div className="activity-cluster" key={group.stop?.id ?? "unmatched"}>
             <p className="cluster-label">{group.stop ? <><MapPin size={13} /> {group.stop.time} · {group.stop.title}</> : <><Image size={13} /> Not matched to an activity</>}</p>
             <div className="photo-grid">{group.photos.map((photo) => <button key={photo.id} className="photo-tile" onClick={() => setViewing(photo)}>
               <img src={photo.src} alt={`${photo.place} memory`} width={1280} height={800} loading="lazy" />
