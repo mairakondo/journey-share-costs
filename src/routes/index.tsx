@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Instagram,
-  LayoutGrid,
+  GalleryHorizontal,
   Film,
   Play,
   ArrowLeft,
