@@ -685,12 +685,12 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
 }
 
 function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => void }) {
-  const [format, setFormat] = useState<"grid" | "story">("grid");
+  const [format, setFormat] = useState<"carousel" | "story">("carousel");
   const [step, setStep] = useState<"pick" | "building" | "preview" | "done">("pick");
   const [progress, setProgress] = useState(0);
   const [slide, setSlide] = useState(0);
 
-  const gridPhotos = photos.slice(0, 9);
+  const carouselPhotos = photos.slice(0, 9);
   const storyPhotos = photos.slice(0, 6);
 
   const build = () => {
@@ -715,8 +715,8 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
 
   const headings = {
     pick: "Share to Instagram",
-    building: format === "grid" ? "Building your grid" : "Cutting your story",
-    preview: format === "grid" ? "Your Tokyo grid" : "Your Tokyo story",
+    building: format === "carousel" ? "Building your carousel" : "Cutting your story",
+    preview: format === "carousel" ? "Your Tokyo carousel" : "Your Tokyo story",
     done: "Shared to Instagram",
   } as const;
 
