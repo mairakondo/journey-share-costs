@@ -684,6 +684,101 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
   </>;
 }
 
+function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => void }) {
+  const [format, setFormat] = useState<"grid" | "story">("grid");
+  const [step, setStep] = useState<"pick" | "building" | "preview" | "done">("pick");
+  const [progress, setProgress] = useState(0);
+  const [slide, setSlide] = useState(0);
+
+  const gridPhotos = photos.slice(0, 9);
+  const storyPhotos = photos.slice(0, 6);
+
+  const build = () => {
+    setStep("building");
+    setProgress(0);
+    let i = 0;
+    const tick = setInterval(() => {
+      i += 8;
+      setProgress(Math.min(i, 100));
+      if (i >= 100) {
+        clearInterval(tick);
+        setTimeout(() => { setSlide(0); setStep("preview"); }, 350);
+      }
+    }, 90);
+  };
+
+  useEffect(() => {
+    if (step !== "preview" || format !== "story" || storyPhotos.length === 0) return;
+    const tick = setInterval(() => setSlide((s) => (s + 1) % storyPhotos.length), 1400);
+    return () => clearInterval(tick);
+  }, [step, format, storyPhotos.length]);
+
+  const headings = {
+    pick: "Share to Instagram",
+    building: format === "grid" ? "Building your grid" : "Cutting your story",
+    preview: format === "grid" ? "Your Tokyo grid" : "Your Tokyo story",
+    done: "Shared to Instagram",
+  } as const;
+
+  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Share to Instagram">
+    <div className="modal-sheet">
+      <div className="modal-head">
+        <div>
+          <p className="eyebrow">{step === "done" ? "Opened in Instagram" : `${photos.length} shared memories`}</p>
+          <h2>{headings[step]}</h2>
+        </div>
+        <IconButton label="Close" onClick={onClose}><X size={20} /></IconButton>
+      </div>
+
+      {step === "pick" && <>
+        <p className="gesture-hint">We pre-build the post from the photos everyone added to this trip. Pick a format.</p>
+        <div className="share-formats">
+          <button type="button" className={format === "grid" ? "share-format on" : "share-format"} aria-pressed={format === "grid"} onClick={() => setFormat("grid")}>
+            <LayoutGrid size={18} />
+            <b>Photo grid</b>
+            <small>9 photos, one carousel post</small>
+          </button>
+          <button type="button" className={format === "story" ? "share-format on" : "share-format"} aria-pressed={format === "story"} onClick={() => setFormat("story")}>
+            <Film size={18} />
+            <b>Story video</b>
+            <small>6s recap for your stories</small>
+          </button>
+        </div>
+        <button className="money-action mt-4" onClick={build}><Instagram size={17} /> Build my {format === "grid" ? "grid" : "story"}</button>
+      </>}
+
+      {step === "building" && <div className="match-progress">
+        <div className="match-bar"><span style={{ width: `${progress}%` }} /></div>
+        <p className="gesture-hint">{format === "grid" ? "Laying out your best 9 photos in trip order…" : "Sequencing clips, adding captions and music…"} {progress}%</p>
+      </div>}
+
+      {step === "preview" && <>
+        {format === "grid" ? <div className="ig-grid">
+          {gridPhotos.map((p) => <img key={p.id} src={p.src} alt={`${p.place} memory`} loading="lazy" />)}
+        </div> : <div className="ig-story">
+          <div className="ig-story-bars">{storyPhotos.map((p, i) => <i key={p.id} className={i <= slide ? "on" : ""} />)}</div>
+          {storyPhotos[slide] && <img src={storyPhotos[slide].src} alt={`${storyPhotos[slide].place} memory`} />}
+          <div className="ig-story-caption">
+            <p className="eyebrow">Tokyo escape</p>
+            <b>{storyPhotos[slide]?.place}</b>
+            <small><Play size={12} /> Day {(storyPhotos[slide]?.day ?? 0) + 1} · {storyPhotos[slide]?.time}</small>
+          </div>
+        </div>}
+        <p className="gesture-hint">Tokyo escape · 5 travelers · {photos.length} photos. Caption and location tag are filled in for you.</p>
+        <button className="money-action mt-4" onClick={() => setStep("done")}><Instagram size={17} /> {format === "grid" ? "Share as post" : "Share to stories"}</button>
+      </>}
+
+      {step === "done" && <>
+        <div className="share-done"><Check size={26} /></div>
+        <p className="gesture-hint">Your {format === "grid" ? "photo grid" : "story video"} was handed to Instagram with the caption “Tokyo escape · 5 days, 5 friends”. Everyone on the trip gets a copy in the shared album.</p>
+        <button className="money-action mt-4" onClick={onClose}><Check size={17} /> Done</button>
+      </>}
+    </div>
+  </div>;
+}
+
+
+
 function PhotoLightbox({ photo, photos, stops, onClose, onPrev, onNext, onMove }: { photo: Photo; photos: Photo[]; stops: Stop[]; onClose: () => void; onPrev: (p: Photo) => void; onNext: (p: Photo) => void; onMove: () => void }) {
   const idx = photos.findIndex((p) => p.id === photo.id);
   const prev = photos[idx - 1];
