@@ -375,7 +375,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: 
       <section>
         <div className="date-heading"><div><div className="weather -mt-2"><CloudSun size={23} /><span>24°</span></div><p className="eyebrow">{["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"][day]}</p><div className="day-title-row mt-2"><h2>{day === 0 ? "Konnichiwa, Tokyo!" : ["Asakusa & old town", "Shibuya slow day", "Hakone day trip", "Last bites"][day - 1]}</h2></div></div>
           <div className="add-menu-wrap">
-            <button className="secondary-action" aria-haspopup="menu" aria-expanded={addOpen} onClick={() => setAddOpen((o) => !o)}><Plus size={17} /> Add</button>
+            <button className="scan-chip" aria-haspopup="menu" aria-expanded={addOpen} onClick={() => setAddOpen((o) => !o)}><Plus size={16} /> Add</button>
             {addOpen && <div className="add-menu" role="menu">
               <button role="menuitem" onClick={() => { setAddOpen(false); setEditing({ id: `s${Date.now()}`, day, time: "10:00", title: "", place: "", tag: "Explore" }); }}><MapPin size={16} /><span>Activity<small>Plan a stop for this day</small></span></button>
               <button role="menuitem" onClick={() => { setAddOpen(false); setEditingCost(newExpense()); }}><ReceiptText size={16} /><span>Cost<small>Scan a receipt or enter it manually</small></span></button>
