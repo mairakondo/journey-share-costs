@@ -90,6 +90,9 @@ function TravelersApp() {
   const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
   const [newPhotoIds, setNewPhotoIds] = useState<string[]>([]);
+  const [navBadgeSeen, setNavBadgeSeen] = useState(false);
+  const dismissPhotos = (ids: string[]) => setNewPhotoIds((prev) => prev.filter((id) => !ids.includes(id)));
+  const markImported = (ids: string[]) => { setNewPhotoIds(ids); setNavBadgeSeen(false); };
 
 
   return (
@@ -116,10 +119,10 @@ function TravelersApp() {
         {view === "home" ? (
           <Dashboard onNavigate={setView} onCreate={() => setCreateOpen(true)} onSummary={() => setView("summary")} />
         ) : (
-          <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} stops={stops} setStops={setStops} photos={photos} setPhotos={setPhotos} expenses={expenses} setExpenses={setExpenses} newPhotoIds={newPhotoIds} setNewPhotoIds={setNewPhotoIds} />
+          <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} stops={stops} setStops={setStops} photos={photos} setPhotos={setPhotos} expenses={expenses} setExpenses={setExpenses} newPhotoIds={newPhotoIds} dismissPhotos={dismissPhotos} onImported={markImported} />
         )}
 
-        {view !== "home" && view !== "summary" && <BottomNav view={view} setView={setView} planBadge={newPhotoIds.length} />}
+        {view !== "home" && view !== "summary" && <BottomNav view={view} setView={setView} planBadge={navBadgeSeen ? 0 : newPhotoIds.length} onPlanSeen={() => setNavBadgeSeen(true)} />}
       </div>
       {createOpen && <CreateTrip onClose={() => setCreateOpen(false)} onCreate={() => { setCreateOpen(false); setView("plan"); }} />}
       {scanOpen && <ReceiptConfirm onClose={() => setScanOpen(false)} stops={stops} onSave={(e) => setExpenses((prev) => [...prev, e])} />}
@@ -184,7 +187,7 @@ function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: Vie
   );
 }
 
-function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, expenses, setExpenses, newPhotoIds, setNewPhotoIds }: { view: View; setView: (v: View) => void; onScan: () => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void; expenses: Expense[]; setExpenses: (fn: (p: Expense[]) => Expense[]) => void; newPhotoIds: string[]; setNewPhotoIds: (ids: string[]) => void }) {
+function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, expenses, setExpenses, newPhotoIds, dismissPhotos, onImported }: { view: View; setView: (v: View) => void; onScan: () => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void; expenses: Expense[]; setExpenses: (fn: (p: Expense[]) => Expense[]) => void; newPhotoIds: string[]; dismissPhotos: (ids: string[]) => void; onImported: (ids: string[]) => void }) {
   return (
 
     <div className="page-pad trip-page pb-28">
@@ -192,10 +195,10 @@ function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, 
         <div className="flex min-w-0 items-center gap-3"><IconButton label="Back to trips" onClick={() => setView("home")}><ArrowLeft size={20} /></IconButton><div className="min-w-0"><p className="eyebrow">Apr 6–11 · 4 travelers</p><h1 className="truncate text-3xl font-extrabold">Tokyo escape</h1></div></div>
         <div className="avatar-stack hidden sm:flex">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
       </div>
-      {view === "plan" && <Itinerary setView={setView} stops={stops} setStops={setStops} photos={photos} expenses={expenses} setExpenses={setExpenses} newPhotoIds={newPhotoIds} clearNewPhotos={() => setNewPhotoIds([])} />}
+      {view === "plan" && <Itinerary setView={setView} stops={stops} setStops={setStops} photos={photos} expenses={expenses} setExpenses={setExpenses} newPhotoIds={newPhotoIds} dismissPhotos={dismissPhotos} />}
       {view === "emergency" && <Emergency />}
       {view === "costs" && <Costs onScan={onScan} stops={stops} expenses={expenses} setView={setView} />}
-      {view === "photos" && <Photos stops={stops} photos={photos} setPhotos={setPhotos} onImported={(ids) => setNewPhotoIds(ids)} />}
+      {view === "photos" && <Photos stops={stops} photos={photos} setPhotos={setPhotos} onImported={onImported} />}
       {view === "summary" && <Summary setView={setView} />}
     </div>
   );
@@ -353,13 +356,12 @@ function groupPhotosByStop(dayPhotos: Photo[], stops: Stop[]) {
 }
 
 
-function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, newPhotoIds = [], clearNewPhotos }: { setView: (v: View) => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; expenses: Expense[]; setExpenses: (fn: (p: Expense[]) => Expense[]) => void; newPhotoIds?: string[]; clearNewPhotos?: () => void }) {
+function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, newPhotoIds = [], dismissPhotos }: { setView: (v: View) => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; expenses: Expense[]; setExpenses: (fn: (p: Expense[]) => Expense[]) => void; newPhotoIds?: string[]; dismissPhotos?: (ids: string[]) => void }) {
   const [day, setDay] = useState(1);
   const [editing, setEditing] = useState<Stop | null>(null);
   const [editingCost, setEditingCost] = useState<Expense | null>(null);
   const [addOpen, setAddOpen] = useState(false);
 
-  useEffect(() => { clearNewPhotos?.(); }, []);
 
 
   const dayStops = stops.filter((s) => s.day === day).sort((a, b) => a.time.localeCompare(b.time));
@@ -417,7 +419,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
               </div>
               <div className="stop-summary">
                 <div className="stop-place"><span className="stop-icon"><MapPin size={16} /></span><p>{stop.place}</p></div>
-                {matchedPhotos.length > 0 && <button type="button" className={freshPhotos.length > 0 ? "stop-photo-preview fresh" : "stop-photo-preview"} onClick={() => setView("photos")} aria-label={`View ${matchedPhotos.length} ${matchedPhotos.length === 1 ? "photo" : "photos"} for ${stop.title}`}><img src={cover?.src} alt={`${stop.title} photo`} width={160} height={160} loading="lazy" />{matchedPhotos.length > 1 && <span>+{matchedPhotos.length - 1}</span>}<small>{matchedPhotos.length} {matchedPhotos.length === 1 ? "photo" : "photos"}</small></button>}
+                {matchedPhotos.length > 0 && <button type="button" className={freshPhotos.length > 0 ? "stop-photo-preview fresh" : "stop-photo-preview"} onClick={() => { if (freshPhotos.length > 0) dismissPhotos?.(freshPhotos.map((p) => p.id)); setView("photos"); }} aria-label={`View ${matchedPhotos.length} ${matchedPhotos.length === 1 ? "photo" : "photos"} for ${stop.title}`}><img src={cover?.src} alt={`${stop.title} photo`} width={160} height={160} loading="lazy" />{matchedPhotos.length > 1 && <span>+{matchedPhotos.length - 1}</span>}<small>{matchedPhotos.length} {matchedPhotos.length === 1 ? "photo" : "photos"}</small></button>}
               </div>
 
               <div className="stop-footer"><div className="stop-costs">{matchedExpenses.map(costRow)}{matchedExpenses.length === 0 && <span className="no-cost">No costs yet</span>}</div></div>
@@ -856,8 +858,8 @@ function PhotoAssign({ photo, stops, onClose, onAssign }: { photo: Photo; stops:
   </div>;
 }
 
-function BottomNav({ view, setView, planBadge = 0 }: { view: View; setView: (v: View) => void; planBadge?: number }) {
-  return <nav className="bottom-nav" aria-label="Trip navigation">{[{ id: "plan", label: "Plan", icon: <MapPin /> }, { id: "costs", label: "Costs", icon: <WalletCards /> }, { id: "photos", label: "Photos", icon: <Image /> }, { id: "emergency", label: "Emergency", icon: <ShieldCheck /> }].map((item) => <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => setView(item.id as View)}>{item.icon}<span>{item.label}</span>{item.id === "plan" && planBadge > 0 && <i className="nav-badge" aria-label={`${planBadge} new photos in the plan`}>{planBadge}</i>}</button>)}</nav>;
+function BottomNav({ view, setView, planBadge = 0, onPlanSeen }: { view: View; setView: (v: View) => void; planBadge?: number; onPlanSeen?: () => void }) {
+  return <nav className="bottom-nav" aria-label="Trip navigation">{[{ id: "plan", label: "Plan", icon: <MapPin /> }, { id: "costs", label: "Costs", icon: <WalletCards /> }, { id: "photos", label: "Photos", icon: <Image /> }, { id: "emergency", label: "Emergency", icon: <ShieldCheck /> }].map((item) => <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => { if (item.id === "plan") onPlanSeen?.(); setView(item.id as View); }}>{item.icon}<span>{item.label}</span>{item.id === "plan" && planBadge > 0 && <i className="nav-badge" aria-label={`${planBadge} new photos in the plan`}>{planBadge}</i>}</button>)}</nav>;
 }
 
 
