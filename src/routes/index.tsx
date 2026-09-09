@@ -10,6 +10,7 @@ import {
   Clock,
   Check,
   ChevronLeft,
+  Bell,
   ChevronRight,
   CloudSun,
   Download,
@@ -111,11 +112,6 @@ function TravelersApp() {
   const [meetOpen, setMeetOpen] = useState(false);
   const dismissPhotos = (ids: string[]) => setNewPhotoIds((prev) => prev.filter((id) => !ids.includes(id)));
   const markImported = (ids: string[]) => { setNewPhotoIds(ids); setNavBadgeSeen(false); };
-  useEffect(() => {
-    if (view === "home" || view === "summary") return;
-    const t = setTimeout(() => setMeetAlert(true), 3000);
-    return () => clearTimeout(t);
-  }, [view]);
 
 
 
@@ -136,6 +132,7 @@ function TravelersApp() {
           </button>
           <div className="flex items-center gap-2">
             {view !== "home" && <span className="hidden text-sm font-semibold text-primary-foreground/70 sm:inline">Tokyo · Apr 6–11</span>}
+            <IconButton label="Meet request from Yuki" onClick={() => { setMeetOpen(false); setMeetAlert(true); }}><Bell size={20} /></IconButton>
             <IconButton label="Search"><Search size={20} /></IconButton>
             <button className="avatar">MK</button>
           </div>
