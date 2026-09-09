@@ -451,9 +451,9 @@
   .timeline-head-actions { @apply flex items-center gap-2; }
   .spend-timeline { @apply min-w-0; }
   .spend-timeline > section { @apply min-w-0 overflow-hidden rounded-2xl p-4; }
-  .spend-timeline header { @apply grid grid-cols-1 items-start gap-1; }
+  .spend-timeline header { @apply flex items-center justify-between gap-2; }
   .spend-timeline header h3,
-  .spend-timeline header strong { @apply whitespace-normal; }
+  .spend-timeline header strong { @apply whitespace-nowrap; }
   .spend-timeline article { @apply block w-full min-w-0 py-3.5; }
   .cost-card-head { @apply w-full; }
   .cost-time { @apply w-auto; }
