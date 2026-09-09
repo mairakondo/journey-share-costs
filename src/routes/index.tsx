@@ -36,6 +36,7 @@ import kyoto from "@/assets/kyoto.jpg";
 import tokyoAsakusa from "@/assets/tokyo-asakusa.jpg";
 import tokyoTeamlab from "@/assets/tokyo-teamlab.jpg";
 import tokyoTsukiji from "@/assets/tokyo-tsukiji.jpg";
+import copenhagen from "@/assets/copenhagen.jpg";
 import tokyoGoldenGai from "@/assets/tokyo-goldengai.jpg";
 import lisbon from "@/assets/lisbon.jpg";
 import galTakoyaki from "@/assets/gal-takoyaki.jpg";
