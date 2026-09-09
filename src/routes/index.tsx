@@ -641,24 +641,13 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
   const [assigning, setAssigning] = useState<Photo | null>(null);
   const [viewing, setViewing] = useState<Photo | null>(null);
   const [importing, setImporting] = useState(false);
-  const [selectMode, setSelectMode] = useState(false);
-  const [shareIds, setShareIds] = useState<string[]>([]);
   const [sharing, setSharing] = useState(false);
   const days = Array.from(new Set(photos.map((p) => p.day))).sort((a, b) => a - b);
-  const sharePhotos = photos.filter((p) => shareIds.includes(p.id));
-
-  const startSelecting = () => {
-    setShareIds(photos.slice(0, 9).map((p) => p.id));
-    setOpenDay(null);
-    setSelectMode(true);
-  };
-  const cancelSelecting = () => { setSelectMode(false); setShareIds([]); };
-  const toggleShare = (id: string) => setShareIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
 
   return <>
-    <div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><div className="heading-actions"><button className="scan-chip" onClick={() => setImporting(true)}><Plus size={16} /> Add</button><button className="scan-chip" onClick={selectMode ? cancelSelecting : startSelecting}>{selectMode ? <><X size={16} /> Cancel</> : <><Share2 size={16} /> Share</>}</button></div></div>
-    {sharing && <InstagramShare photos={sharePhotos} onClose={() => { setSharing(false); cancelSelecting(); }} />}
-    <p className="gesture-hint">{selectMode ? "Tap the photos you want to share, right here in your timeline. Open any day to pick from it." : "Photos are matched to itinerary activities by place, date and time. Tap a photo to view it, or move it to another activity."}</p>
+    <div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><div className="heading-actions"><button className="scan-chip" onClick={() => setImporting(true)}><Plus size={16} /> Add</button><button className="scan-chip" onClick={() => setSharing(true)}><Share2 size={16} /> Share</button></div></div>
+    {sharing && <InstagramShare photos={photos} onClose={() => setSharing(false)} />}
+    <p className="gesture-hint">Photos are matched to itinerary activities by place, date and time. Tap a photo to view it, or move it to another activity.</p>
     {importing && <PhotoImport stops={stops} onClose={() => setImporting(false)} onImport={(added) => {
       setPhotos((prev) => [...prev, ...added].sort((a, b) => a.day - b.day || a.time.localeCompare(b.time)));
       setImporting(false);
@@ -666,39 +655,27 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
       onImported?.(added.map((p) => p.id));
 
     }} />}
-    <section className={selectMode ? "photo-days selecting" : "photo-days"}>
+    <section className="photo-days">
       {days.map((day) => {
         const dayPhotos = photos.filter((p) => p.day === day);
         const expanded = openDay === day;
         const groups = groupPhotosByStop(dayPhotos, stops);
-        const daySelected = dayPhotos.filter((p) => shareIds.includes(p.id)).length;
         return <article key={day}>
           <button className="photo-day-title" onClick={() => setOpenDay(expanded ? null : day)}>
-            <span><b>Day {day + 1}</b><small>{selectMode ? `${daySelected} of ${dayPhotos.length} selected` : `${groups.filter((g) => g.stop).length} activities · ${dayPhotos.length} photos`}</small></span>
+            <span><b>Day {day + 1}</b><small>{groups.filter((g) => g.stop).length} activities · {dayPhotos.length} photos</small></span>
             <ChevronRight size={19} className={expanded ? "rotate-90" : ""} />
           </button>
           {expanded && groups.map((group) => <div className="activity-cluster" key={group.stop?.id ?? "unmatched"}>
             <p className="cluster-label">{group.stop ? <><MapPin size={13} /> {group.stop.time} · {group.stop.title}</> : <><Image size={13} /> Not matched to an activity</>}</p>
-            <div className="photo-grid">{group.photos.map((photo) => {
-              const on = shareIds.includes(photo.id);
-              return <button key={photo.id} className={selectMode ? (on ? "photo-tile picking on" : "photo-tile picking") : "photo-tile"} aria-pressed={selectMode ? on : undefined} onClick={() => (selectMode ? toggleShare(photo.id) : setViewing(photo))}>
-                <img src={photo.src} alt={`${photo.place} memory`} width={1280} height={800} loading="lazy" />
-                <small className="photo-meta">{photo.time}</small>
-                {selectMode ? on && <i className="share-photo-check"><Check size={13} /></i> : photo.stopId && <i className="manual-badge"><Check size={12} /></i>}
-              </button>;
-            })}</div>
+            <div className="photo-grid">{group.photos.map((photo) => <button key={photo.id} className="photo-tile" onClick={() => setViewing(photo)}>
+              <img src={photo.src} alt={`${photo.place} memory`} width={1280} height={800} loading="lazy" />
+              <small className="photo-meta">{photo.time}</small>
+              {photo.stopId && <i className="manual-badge"><Check size={12} /></i>}
+            </button>)}</div>
           </div>)}
         </article>;
       })}
     </section>
-    {selectMode && <div className="share-select-tray">
-      <span>{shareIds.length} photo{shareIds.length === 1 ? "" : "s"} selected</span>
-      <div>
-        <button type="button" className="text-link" onClick={() => setShareIds(photos.map((p) => p.id))}>Select all</button>
-        <button type="button" className="text-link" onClick={() => setShareIds([])}>Clear</button>
-      </div>
-      <button className="money-action" disabled={shareIds.length === 0} onClick={() => setSharing(true)}><Share2 size={16} /> Continue</button>
-    </div>}
     {viewing && <PhotoLightbox photo={viewing} photos={photos} stops={stops} onClose={() => setViewing(null)} onPrev={(p) => setViewing(p)} onNext={(p) => setViewing(p)} onMove={() => { setAssigning(viewing); setViewing(null); }} />}
     {assigning && <PhotoAssign photo={assigning} stops={stops} onClose={() => setAssigning(null)} onAssign={(stopId) => {
       setPhotos((prev) => prev.map((p) => (p.id === assigning.id ? { ...p, stopId, day: stopId ? (stops.find((s) => s.id === stopId)?.day ?? p.day) : p.day } : p)));
@@ -707,17 +684,28 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
   </>;
 }
 
-
 function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => void }) {
   const [format, setFormat] = useState<"carousel" | "story">("carousel");
   const [step, setStep] = useState<"pick" | "building" | "preview" | "done">("pick");
   const [progress, setProgress] = useState(0);
   const [slide, setSlide] = useState(0);
+  const [selected, setSelected] = useState<string[]>(photos.map((p) => p.id));
 
+  const selectedPhotos = photos.filter((p) => selected.includes(p.id));
   const maxPhotos = format === "carousel" ? 9 : 6;
-  const selectedPhotos = photos.slice(0, maxPhotos);
-  const carouselPhotos = photos.slice(0, 9);
-  const storyPhotos = photos.slice(0, 6);
+  const carouselPhotos = selectedPhotos.slice(0, 9);
+  const storyPhotos = selectedPhotos.slice(0, 6);
+
+  const togglePhoto = (id: string) => {
+    setSelected((prev) => {
+      if (prev.includes(id)) return prev.filter((x) => x !== id);
+      if (prev.length >= maxPhotos) return prev;
+      return [...prev, id];
+    });
+  };
+
+  const selectAll = () => setSelected(photos.slice(0, maxPhotos).map((p) => p.id));
+  const clearAll = () => setSelected([]);
 
   const build = () => {
     setStep("building");
@@ -739,6 +727,14 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
     return () => clearInterval(tick);
   }, [step, format, storyPhotos.length]);
 
+  useEffect(() => {
+    if (step !== "pick") return;
+    setSelected((prev) => {
+      const kept = prev.filter((id) => photos.some((p) => p.id === id));
+      return kept.slice(0, maxPhotos);
+    });
+  }, [format]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const headings = {
     pick: "Share to Instagram",
     building: format === "carousel" ? "Building your carousel" : "Cutting your story",
@@ -750,14 +746,28 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
     <div className="modal-sheet">
       <div className="modal-head">
         <div>
-          <p className="eyebrow">{step === "done" ? "Opened in Instagram" : `${selectedPhotos.length} photo${selectedPhotos.length === 1 ? "" : "s"} chosen`}</p>
+          <p className="eyebrow">{step === "done" ? "Opened in Instagram" : `${selectedPhotos.length} of ${photos.length} photos selected`}</p>
           <h2>{headings[step]}</h2>
         </div>
         <IconButton label="Close" onClick={onClose}><X size={20} /></IconButton>
       </div>
 
       {step === "pick" && <>
-        <p className="gesture-hint">Choose a format for the {selectedPhotos.length} photo{selectedPhotos.length === 1 ? "" : "s"} you picked. {format === "carousel" ? "Up to 9 photos" : "Up to 6 photos"} per post.</p>
+        <p className="gesture-hint">Pick the photos to include, then choose a format. {format === "carousel" ? "Up to 9 photos" : "Up to 6 photos"} per post.</p>
+        <div className="share-photo-grid">
+          {photos.map((p) => {
+            const on = selected.includes(p.id);
+            const disabled = !on && selected.length >= maxPhotos;
+            return <button type="button" key={p.id} className={on ? "share-photo on" : "share-photo"} disabled={disabled} onClick={() => togglePhoto(p.id)} aria-pressed={on}>
+              <img src={p.src} alt={`${p.place} memory`} loading="lazy" />
+              {on && <span className="share-photo-check"><Check size={13} /></span>}
+            </button>;
+          })}
+        </div>
+        <div className="share-select-bar">
+          <button type="button" className="text-link" onClick={selectAll}>Select all</button>
+          <button type="button" className="text-link" onClick={clearAll}>Clear</button>
+        </div>
         <div className="share-formats">
           <button type="button" className={format === "carousel" ? "share-format on" : "share-format"} aria-pressed={format === "carousel"} onClick={() => setFormat("carousel")}>
             <GalleryHorizontal size={18} />
@@ -772,7 +782,6 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
         </div>
         <button className="money-action mt-4" onClick={build} disabled={selectedPhotos.length === 0}><Instagram size={17} /> Build my {format === "carousel" ? "carousel" : "story"}</button>
       </>}
-
 
       {step === "building" && <div className="match-progress">
         <div className="match-bar"><span style={{ width: `${progress}%` }} /></div>
