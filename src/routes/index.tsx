@@ -645,7 +645,7 @@ function PhotoImport({ stops, onClose, onImport }: { stops: Stop[]; onClose: () 
   </div>;
 }
 
-function Photos({ stops, photos, setPhotos }: { stops: Stop[]; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void }) {
+function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void; onImported?: (ids: string[]) => void }) {
   const [openDay, setOpenDay] = useState<number | null>(0);
   const [assigning, setAssigning] = useState<Photo | null>(null);
   const [viewing, setViewing] = useState<Photo | null>(null);
