@@ -282,6 +282,7 @@
   .stop-photo-preview > span { @apply absolute right-1 top-1 rounded-md bg-foreground/75 px-1.5 py-0.5 text-[9px] font-black text-background; }
   .stop-photo-preview > small { @apply absolute inset-x-1 bottom-1 rounded-md bg-surface/90 px-1 py-0.5 text-center text-[9px] font-extrabold text-foreground backdrop-blur; }
   .stop-photo-preview.fresh { @apply ring-2 ring-money; }
+  .stop-photo-preview.fresh > span { @apply bg-money text-white; }
   .stop-card.has-new { }
   .new-badge { @apply inline-flex shrink-0 rounded-md bg-money px-2 py-1 text-[10px] font-extrabold text-white; }
   .new-photos-note { @apply mt-4 flex items-center gap-3 rounded-2xl border border-money/30 bg-money/10 px-3 py-3; }
