@@ -414,18 +414,21 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
 
         <div className="timeline">{dayStops.map((stop) => {
           const matchedPhotos = photos.filter((p) => resolveStop(p, stops)?.id === stop.id);
+          const freshPhotos = matchedPhotos.filter((p) => newPhotoIds.includes(p.id));
+          const cover = freshPhotos[0] ?? matchedPhotos[0];
           const matchedExpenses = stopExpenses(stop.id);
-          return <article className="stop-card" key={stop.id}>
+          return <article className={freshPhotos.length > 0 ? "stop-card has-new" : "stop-card"} key={stop.id}>
             <div className="time">{stop.time}</div><div className="timeline-dot"><span /></div>
             <div className="stop-body">
               <div className="stop-card-head">
-                <div className="stop-title-row"><h3>{stop.title}</h3>{stop.tag && <span className="spot-badge">{stop.tag}</span>}</div>
+                <div className="stop-title-row"><h3>{stop.title}</h3>{stop.tag && <span className="spot-badge">{stop.tag}</span>}{freshPhotos.length > 0 && <span className="new-badge">{freshPhotos.length} new {freshPhotos.length === 1 ? "photo" : "photos"}</span>}</div>
                 <div className="stop-actions"><IconButton label={`Edit ${stop.title}`} onClick={() => setEditing(stop)}><Pencil size={16} /></IconButton><IconButton label={`Delete ${stop.title}`} onClick={() => deleteStop(stop.id)}><Trash2 size={16} /></IconButton></div>
               </div>
               <div className="stop-summary">
                 <div className="stop-place"><span className="stop-icon"><MapPin size={16} /></span><p>{stop.place}</p></div>
-                {matchedPhotos.length > 0 && <button type="button" className="stop-photo-preview" onClick={() => setView("photos")} aria-label={`View ${matchedPhotos.length} ${matchedPhotos.length === 1 ? "photo" : "photos"} for ${stop.title}`}><img src={matchedPhotos[0]?.src} alt={`${stop.title} photo`} width={160} height={160} loading="lazy" />{matchedPhotos.length > 1 && <span>+{matchedPhotos.length - 1}</span>}<small>{matchedPhotos.length} {matchedPhotos.length === 1 ? "photo" : "photos"}</small></button>}
+                {matchedPhotos.length > 0 && <button type="button" className={freshPhotos.length > 0 ? "stop-photo-preview fresh" : "stop-photo-preview"} onClick={() => setView("photos")} aria-label={`View ${matchedPhotos.length} ${matchedPhotos.length === 1 ? "photo" : "photos"} for ${stop.title}`}><img src={cover?.src} alt={`${stop.title} photo`} width={160} height={160} loading="lazy" />{matchedPhotos.length > 1 && <span>+{matchedPhotos.length - 1}</span>}<small>{matchedPhotos.length} {matchedPhotos.length === 1 ? "photo" : "photos"}</small></button>}
               </div>
+
               <div className="stop-footer"><div className="stop-costs">{matchedExpenses.map(costRow)}{matchedExpenses.length === 0 && <span className="no-cost">No costs yet</span>}</div></div>
             </div>
           </article>;
