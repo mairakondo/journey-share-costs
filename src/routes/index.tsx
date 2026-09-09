@@ -7,6 +7,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Camera,
+  Clock,
   Check,
   ChevronLeft,
   ChevronRight,
@@ -510,7 +511,7 @@ function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: 
         <label>Activity<input value={draft.title} placeholder="Tsukiji breakfast" onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></label>
         <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Tsukiji Outer Market" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
         <div className="two-cols">
-          <label>Time<input type="time" value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} /></label>
+<label>Time<div className="input-icon"><Clock size={17} /><input type="time" value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} /></div></label>
           <label>Tag<input value={draft.tag} placeholder="Must see" onChange={(e) => setDraft({ ...draft, tag: e.target.value })} /></label>
         </div>
       </div>
