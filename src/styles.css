@@ -276,7 +276,7 @@
   .stop-summary { @apply mt-3 grid min-h-20 grid-cols-[minmax(0,1fr)_80px] gap-3; }
   .stop-place { @apply flex min-w-0 items-start gap-2; }
   .stop-place p { @apply mt-1 break-words leading-5; }
-  .stop-photo-preview { @apply relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-muted text-left cursor-pointer border-0 p-0 transition hover:opacity-90 active:scale-[0.98]; }
+  .stop-photo-preview { @apply relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-muted text-left cursor-pointer border-0 p-0 transition hover:opacity-90 active:scale-[0.98]; }
   .stop-photo-preview img { @apply h-full w-full object-cover; }
   .stop-photo-preview > span { @apply absolute right-1 top-1 rounded-md bg-foreground/75 px-1.5 py-0.5 text-[9px] font-black text-background; }
   .stop-photo-preview > small { @apply absolute inset-x-1 bottom-1 rounded-md bg-surface/90 px-1 py-0.5 text-center text-[9px] font-extrabold text-foreground backdrop-blur; }
