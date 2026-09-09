@@ -506,9 +506,10 @@ function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: 
   </div>;
 }
 
-function Emergency() {
-  return <><div className="emergency-intro"><span><ShieldCheck size={25} /></span><div><h2>Help, when you need it</h2><p>Saved on your device and available offline.</p></div></div><section className="emergency-grid">
-    {[{ icon: <HeartPulse />, label: "Nearest hospital", title: "St. Luke's International Hospital", detail: "Akashi-cho 9-1 · 2.4 km", number: "+81 3 3541 5151" }, { icon: <Landmark />, label: "U.S. Embassy", title: "Embassy of the United States", detail: "Akasaka 1-10-5 · 4.1 km", number: "+81 3 3224 5000" }, { icon: <Phone />, label: "National emergency", title: "Police 110 · Fire & Ambulance 119", detail: "Available 24 hours", number: "110" }].map((x) => <article className="emergency-card" key={x.label}><span className="emergency-icon">{x.icon}</span><div className="flex-1"><p className="eyebrow">{x.label}</p><h3>{x.title}</h3><p>{x.detail}</p><a href={`tel:${x.number}`}><Phone size={16} /> {x.number}</a></div></article>)}
+function Support() {
+  return <><div className="support-intro"><span><ShieldCheck size={25} /></span><div><h2>Help, when you need it</h2><p>Saved on your device and available offline.</p></div></div><section className="support-grid">
+    {[{ icon: <HeartPulse />, label: "Nearest hospital", title: "St. Luke's International Hospital", detail: "Akashi-cho 9-1 · 2.4 km", number: "+81 3 3541 5151" }, { icon: <Landmark />, label: "U.S. Embassy", title: "Embassy of the United States", detail: "Akasaka 1-10-5 · 4.1 km", number: "+81 3 3224 5000" }, { icon: <Phone />, label: "National emergency", title: "Police 110 · Fire & Ambulance 119", detail: "Available 24 hours", number: "110" }].map((x) => <article className="support-card" key={x.label}><span className="support-icon">{x.icon}</span><div className="flex-1"><p className="eyebrow">{x.label}</p><h3>{x.title}</h3><p>{x.detail}</p><a href={`tel:${x.number}`}><Phone size={16} /> {x.number}</a></div></article>)}
+
   </section></>;
 }
 
@@ -859,7 +860,7 @@ function PhotoAssign({ photo, stops, onClose, onAssign }: { photo: Photo; stops:
 }
 
 function BottomNav({ view, setView, planBadge = 0, onPlanSeen }: { view: View; setView: (v: View) => void; planBadge?: number; onPlanSeen?: () => void }) {
-  return <nav className="bottom-nav" aria-label="Trip navigation">{[{ id: "plan", label: "Plan", icon: <MapPin /> }, { id: "costs", label: "Costs", icon: <WalletCards /> }, { id: "photos", label: "Photos", icon: <Image /> }, { id: "emergency", label: "Emergency", icon: <ShieldCheck /> }].map((item) => <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => { if (item.id === "plan") onPlanSeen?.(); setView(item.id as View); }}>{item.icon}<span>{item.label}</span>{item.id === "plan" && planBadge > 0 && <i className="nav-badge" aria-label={`${planBadge} new photos in the plan`}>{planBadge}</i>}</button>)}</nav>;
+  return <nav className="bottom-nav" aria-label="Trip navigation">{[{ id: "plan", label: "Plan", icon: <MapPin /> }, { id: "costs", label: "Costs", icon: <WalletCards /> }, { id: "photos", label: "Photos", icon: <Image /> }, { id: "support", label: "Support", icon: <ShieldCheck /> }].map((item) => <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => { if (item.id === "plan") onPlanSeen?.(); setView(item.id as View); }}>{item.icon}<span>{item.label}</span>{item.id === "plan" && planBadge > 0 && <i className="nav-badge" aria-label={`${planBadge} new photos in the plan`}>{planBadge}</i>}</button>)}</nav>;
 }
 
 
