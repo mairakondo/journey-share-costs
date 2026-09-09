@@ -159,7 +159,7 @@ function TravelersApp() {
           <IconButton label="Dismiss notification" onClick={() => setMeetAlert(false)}><X size={17} /></IconButton>
         </div>
       )}
-      {meetOpen && <MeetFlow traveler={TRAVELERS[1]} onClose={() => setMeetOpen(false)} />}
+      {meetOpen && <MeetFlow traveler={TRAVELERS[1]!} onClose={() => setMeetOpen(false)} />}
       {createOpen && <CreateTrip onClose={() => setCreateOpen(false)} onCreate={() => { setCreateOpen(false); setView("plan"); }} />}
       {scanOpen && <ReceiptConfirm onClose={() => setScanOpen(false)} stops={stops} onSave={(e) => setExpenses((prev) => [...prev, e])} />}
 
