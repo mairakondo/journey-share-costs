@@ -149,7 +149,7 @@ function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: Vie
           <article className="quick-panel" aria-label="Tokyo trip shortcuts">
             <button onClick={() => onNavigate("plan")}><span><MapPin size={18} /></span><b>Itinerary</b><small>4 stops planned</small></button>
             <button onClick={() => onNavigate("costs")}><span><WalletCards size={18} /></span><b>Costs</b><small>¥32,200 tracked</small></button>
-            <button onClick={() => onNavigate("photos")}><span><Image size={18} /></span><b>Photos</b><small>7 memories</small></button>
+            <button onClick={() => onNavigate("photos")}><span><Image size={18} /></span><b>Photos</b><small>9 memories</small></button>
             <button className="emergency-shortcut" onClick={() => onNavigate("emergency")}><span><ShieldCheck size={18} /></span><b>Emergency</b><small>Saved offline</small></button>
           </article>
           <button className="trip-card compact-card" onClick={() => onNavigate("plan")}>
@@ -287,12 +287,14 @@ function SplitPicker({ split: rawSplit, amount, onChange }: { split: Split | und
 
 const initialPhotos: Photo[] = [
   { id: "p1", src: tokyo, day: 0, time: "16:20", place: "Shibuya Crossing" },
-  { id: "p2", src: tokyo, day: 0, time: "16:55", place: "Shibuya Crossing, Center Gai" },
-  { id: "p3", src: tokyoGoldenGai, day: 0, time: "21:10", place: "Golden Gai" },
+  { id: "p2", src: importShibuyaFriends, day: 0, time: "16:55", place: "Shibuya Crossing, Center Gai" },
+  { id: "p3", src: importGoldenGaiNight, day: 0, time: "21:10", place: "Golden Gai" },
   { id: "p4", src: tokyoTsukiji, day: 1, time: "09:40", place: "Tsukiji Outer Market" },
-  { id: "p5", src: tokyoAsakusa, day: 1, time: "11:25", place: "Asakusa 2-3-1" },
-  { id: "p6", src: tokyoTeamlab, day: 1, time: "14:50", place: "Toyosu 6-1-16" },
-  { id: "p7", src: tokyoTeamlab, day: 1, time: "15:30", place: "teamLab Planets" },
+  { id: "p5", src: importTsukijiFood, day: 1, time: "10:05", place: "Tsukiji Outer Market" },
+  { id: "p6", src: tokyoAsakusa, day: 1, time: "11:25", place: "Asakusa 2-3-1" },
+  { id: "p7", src: importAsakusaTemple, day: 1, time: "11:50", place: "Senso-ji, Asakusa 2-3-1" },
+  { id: "p8", src: tokyoTeamlab, day: 1, time: "14:50", place: "Toyosu 6-1-16" },
+  { id: "p9", src: importTeamlabArt, day: 1, time: "15:30", place: "teamLab Planets" },
 ];
 
 const initialExpenses: Expense[] = [
@@ -742,7 +744,7 @@ function Summary({ setView }: { setView: (v: View) => void }) {
       <article className="recap-card"><p className="eyebrow">Where you went</p><h3>Day-by-day recap</h3><div className="recap-days">{days.map((d) => <article key={d.day}><b>{d.day.replace("Day ", "D")}</b><div><h4>{d.title}</h4><p>{d.detail}</p></div><ChevronRight size={18} className="ml-auto text-muted-foreground" /></article>)}</div></article>
       <article className="recap-card"><p className="eyebrow text-money-ink">Planned ¥440,000 · actual ¥410,000</p><h3>Where the money went</h3><div className="recap-spend">{spend.map((s) => <article key={s.label}><header><span>{s.label}</span>{s.amount}</header><div className="recap-bar"><span style={{ width: `${s.pct}%` }} /></div></article>)}</div></article>
       <article className="recap-card"><p className="eyebrow">Who settled up</p><h3>Final balances</h3><div className="recap-people">{[{ m: members[1]!, text: "Jon paid you back", amount: "+ ¥4,820" }, { m: members[2]!, text: "You paid Ana", amount: "− ¥2,400" }, { m: members[3]!, text: "Luis settled", amount: "¥0" }].map((r) => <article key={r.m.name}><span className={r.m.tone}>{r.m.initials}</span>{r.text}<strong>{r.amount}</strong></article>)}</div></article>
-      <article className="recap-card"><p className="eyebrow">184 shared memories</p><h3>Photo highlights</h3><div className="recap-photos">{[tokyo, tokyoTsukiji, tokyoAsakusa, tokyoGoldenGai, tokyoTeamlab, kyoto].map((p, i) => <img key={i} src={p} alt={`Kyoto trip memory ${i + 1}`} width={640} height={640} loading="lazy" />)}</div></article>
+      <article className="recap-card"><p className="eyebrow">184 shared memories</p><h3>Photo highlights</h3><div className="recap-photos">{[importShibuyaFriends, importTsukijiFood, importAsakusaTemple, importTeamlabArt, importGoldenGaiNight, kyoto].map((p, i) => <img key={i} src={p} alt={`Kyoto trip memory ${i + 1}`} width={640} height={640} loading="lazy" />)}</div></article>
     </div>
   </>;
 }
