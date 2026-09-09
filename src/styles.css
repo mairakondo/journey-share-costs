@@ -218,7 +218,7 @@
   .memory-preview p:not(.eyebrow) { @apply mt-1 text-xs text-primary-foreground/85; }
   .memory-preview .eyebrow { @apply text-cyan; }
   .memory-preview button { @apply inline-flex shrink-0 items-center gap-2 rounded-xl bg-surface px-4 py-2 text-xs font-extrabold text-primary; }
-  .home-filter { @apply sticky bottom-5 left-1/2 z-30 mt-7 -translate-x-1/2 bg-primary/90 p-1.5 shadow-xl backdrop-blur-xl; }
+  .home-filter { @apply sticky bottom-5 left-1/2 z-30 mt-7 -translate-x-1/2 bg-primary/90 p-1.5 shadow-xl backdrop-blur-xl flex items-center; }
   .home-filter button { @apply text-primary-foreground/80; }
   .home-filter button.active { @apply bg-surface text-primary; }
   .trip-card { @apply relative min-h-72 overflow-hidden rounded-[2rem] border border-primary-foreground/15 text-left text-primary-foreground shadow-2xl; }
