@@ -469,4 +469,23 @@
   .match-list li em { @apply ml-auto inline-flex shrink-0 items-center gap-1 rounded-full bg-muted px-2 py-1 text-[11px] font-bold not-italic text-muted-foreground; }
   .match-list li em.ok { @apply bg-money/15 text-money-ink; }
   .match-list li.pending { @apply opacity-60; }
+
+  .share-formats { @apply mt-4 grid grid-cols-2 gap-3; }
+  .share-format { @apply flex flex-col items-start gap-1 rounded-2xl border-2 border-border bg-surface p-3 text-left; }
+  .share-format b { @apply text-sm font-bold; }
+  .share-format small { @apply text-xs text-muted-foreground; }
+  .share-format.on { @apply border-money bg-money/10; }
+  .share-format.on svg { @apply text-money-ink; }
+  .ig-grid { @apply mt-4 grid grid-cols-3 gap-1 overflow-hidden rounded-xl; }
+  .ig-grid img { @apply aspect-square w-full object-cover; }
+  .ig-story { @apply relative mx-auto mt-4 w-full max-w-[240px] overflow-hidden rounded-2xl bg-primary; aspect-ratio: 9 / 16; }
+  .ig-story img { @apply absolute inset-0 h-full w-full object-cover; }
+  .ig-story-bars { @apply absolute inset-x-2 top-2 z-10 flex gap-1; }
+  .ig-story-bars i { @apply h-1 flex-1 rounded-full bg-white/40; }
+  .ig-story-bars i.on { @apply bg-white; }
+  .ig-story-caption { @apply absolute inset-x-0 bottom-0 z-10 flex flex-col gap-0.5 bg-gradient-to-t from-black/75 to-transparent p-3 text-white; }
+  .ig-story-caption .eyebrow { @apply text-white/80; }
+  .ig-story-caption b { @apply text-base font-bold leading-tight; }
+  .ig-story-caption small { @apply inline-flex items-center gap-1 text-[11px] text-white/85; }
+  .share-done { @apply mx-auto mt-5 grid size-14 place-items-center rounded-full bg-money/15 text-money-ink; }
 }
