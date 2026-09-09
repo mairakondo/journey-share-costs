@@ -149,8 +149,20 @@ function TravelersApp() {
 
         {view !== "home" && view !== "summary" && <BottomNav view={view} setView={setView} planBadge={navBadgeSeen ? 0 : newPhotoIds.length} onPlanSeen={() => setNavBadgeSeen(true)} />}
       </div>
+      {meetAlert && !meetOpen && (
+        <div className="meet-toast" role="status">
+          <button className="meet-toast-main" onClick={() => { setMeetOpen(true); setMeetAlert(false); }}>
+            <span className="traveler-dot">Y</span>
+            <span className="flex-1 text-left"><strong>Yuki wants to meet you</strong><small>Nakamise shopping street · 8 min walk</small></span>
+            <ChevronRight size={18} />
+          </button>
+          <IconButton label="Dismiss notification" onClick={() => setMeetAlert(false)}><X size={17} /></IconButton>
+        </div>
+      )}
+      {meetOpen && <MeetFlow traveler={TRAVELERS[1]} onClose={() => setMeetOpen(false)} />}
       {createOpen && <CreateTrip onClose={() => setCreateOpen(false)} onCreate={() => { setCreateOpen(false); setView("plan"); }} />}
       {scanOpen && <ReceiptConfirm onClose={() => setScanOpen(false)} stops={stops} onSave={(e) => setExpenses((prev) => [...prev, e])} />}
+
     </main>
   );
 }
