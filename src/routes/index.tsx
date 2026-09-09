@@ -115,7 +115,7 @@ function TravelersApp() {
           <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} stops={stops} setStops={setStops} photos={photos} setPhotos={setPhotos} expenses={expenses} setExpenses={setExpenses} newPhotoIds={newPhotoIds} setNewPhotoIds={setNewPhotoIds} />
         )}
 
-        {view !== "home" && view !== "summary" && <BottomNav view={view} setView={setView} />}
+        {view !== "home" && view !== "summary" && <BottomNav view={view} setView={setView} planBadge={newPhotoIds.length} />}
       </div>
       {createOpen && <CreateTrip onClose={() => setCreateOpen(false)} onCreate={() => { setCreateOpen(false); setView("plan"); }} />}
       {scanOpen && <ReceiptConfirm onClose={() => setScanOpen(false)} stops={stops} onSave={(e) => setExpenses((prev) => [...prev, e])} />}
