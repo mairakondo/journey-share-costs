@@ -107,8 +107,17 @@ function TravelersApp() {
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
   const [newPhotoIds, setNewPhotoIds] = useState<string[]>([]);
   const [navBadgeSeen, setNavBadgeSeen] = useState(false);
+  const [meetAlert, setMeetAlert] = useState(false);
+  const [meetOpen, setMeetOpen] = useState(false);
   const dismissPhotos = (ids: string[]) => setNewPhotoIds((prev) => prev.filter((id) => !ids.includes(id)));
   const markImported = (ids: string[]) => { setNewPhotoIds(ids); setNavBadgeSeen(false); };
+  useEffect(() => {
+    if (view === "home" || view === "summary") return;
+    const t = setTimeout(() => setMeetAlert(true), 3000);
+    return () => clearTimeout(t);
+  }, [view]);
+
+
 
 
   return (
