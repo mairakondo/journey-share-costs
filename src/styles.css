@@ -364,7 +364,7 @@
   .add-cost { @apply flex min-h-9 shrink-0 items-center gap-1 rounded-xl border border-dashed border-money/50 px-3 py-2 text-xs font-extrabold text-money-ink transition hover:bg-money/12; }
   .match-hint { @apply mt-3 flex items-center gap-2 rounded-xl bg-muted px-3 py-2 text-xs font-bold text-muted-foreground; }
   .spend-timeline { @apply mt-4 grid gap-4; }
-  .spend-timeline > section { @apply rounded-3xl bg-card p-4 shadow-sm; }
+  .spend-timeline > section { @apply rounded-3xl bg-card p-6 shadow-sm; }
   .spend-timeline header { @apply mb-3 flex items-center justify-between gap-2; }
   .spend-timeline header h3 { @apply whitespace-nowrap text-sm font-extrabold uppercase tracking-wide text-muted-foreground; }
   .spend-timeline header strong { @apply whitespace-nowrap text-base font-extrabold text-money-ink; }
@@ -450,7 +450,7 @@
   .section-heading { @apply flex items-center justify-between gap-3; }.heading-actions { @apply flex items-center gap-2; }.photo-heading .heading-actions { @apply mt-6; }
   .timeline-head-actions { @apply flex items-center gap-2; }
   .spend-timeline { @apply min-w-0; }
-  .spend-timeline > section { @apply min-w-0 overflow-hidden rounded-2xl p-3; }
+  .spend-timeline > section { @apply min-w-0 overflow-hidden rounded-2xl p-4; }
   .spend-timeline header { @apply grid grid-cols-1 items-start gap-1; }
   .spend-timeline header h3,
   .spend-timeline header strong { @apply whitespace-normal; }
