@@ -422,7 +422,7 @@ function ExpenseEditor({ expense, stops, onClose, onSave, onDelete }: { expense:
   const [draft, setDraft] = useState(expense);
   const [scanState, setScanState] = useState<"idle" | "scanning" | "done">(expense.source === "scan" ? "done" : "idle");
   const isNew = !onDelete;
-  const auto = resolveStop({ ...draft, stopId: null }, stops);
+  
   const scan = () => {
     setScanState("scanning");
     const r = sampleReceipts[Math.floor(Math.random() * sampleReceipts.length)]!;
