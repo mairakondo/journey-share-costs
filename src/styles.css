@@ -544,4 +544,26 @@
   .scan-steps li.done { @apply text-money-ink; }
   .scan-steps .spin { @apply animate-spin; }
   .scan-steps .idle { @apply opacity-40; }
+  .meet-toast { @apply fixed inset-x-3 bottom-28 z-50 mx-auto flex max-w-md items-center gap-2 rounded-2xl border border-border bg-surface/95 p-3 shadow-xl backdrop-blur; animation: meet-in .35s ease-out; }
+  .meet-toast-main { @apply flex flex-1 items-center gap-3 text-left; }
+  .meet-toast-main strong { @apply block text-sm font-extrabold; }
+  .meet-toast-main small { @apply block text-xs text-muted-foreground; }
+  @keyframes meet-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .meet-map { @apply relative h-52 w-full overflow-hidden rounded-2xl border border-border bg-sky; }
+  .meet-map svg { @apply absolute inset-0 h-full w-full; }
+  .meet-streets path { @apply stroke-white; stroke-width: 7; fill: none; opacity: .85; }
+  .meet-river { @apply stroke-primary/25; stroke-width: 14; fill: none; }
+  .meet-route { @apply stroke-money; stroke-width: 5; fill: none; stroke-linecap: round; stroke-dasharray: 10 8; animation: meet-dash 1.2s linear infinite; }
+  .meet-route.metro { @apply stroke-primary; }
+  .meet-route.taxi { @apply stroke-foreground; }
+  @keyframes meet-dash { to { stroke-dashoffset: -18; } }
+  .meet-pin { @apply absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1; }
+  .meet-pin > span, .meet-pin > b { @apply grid size-8 place-items-center rounded-full text-xs font-extrabold shadow-md; }
+  .meet-pin.me > svg { @apply size-8 rounded-full bg-foreground p-2 text-white shadow-md; }
+  .meet-pin.them > b { @apply bg-money text-white; }
+  .meet-pin i { @apply rounded-full bg-surface/95 px-2 py-0.5 text-[11px] font-bold not-italic text-foreground shadow; }
+  .meet-eta { @apply absolute right-2 top-2 inline-flex items-center gap-1 rounded-full bg-surface/95 px-2.5 py-1 text-[11px] font-bold shadow; }
+  .meet-steps { @apply mt-3 flex flex-col gap-3; }
+  .meet-steps li { @apply flex items-start gap-3 text-sm font-semibold; }
+  .meet-steps li span { @apply grid size-6 shrink-0 place-items-center rounded-full bg-money/15 text-xs font-extrabold text-money-ink; }
 }
