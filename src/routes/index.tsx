@@ -421,7 +421,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
             <div className="time">{stop.time}</div><div className="timeline-dot"><span /></div>
             <div className="stop-body">
               <div className="stop-card-head">
-                <div className="stop-title-row"><h3>{stop.title}</h3>{stop.tag && <span className="spot-badge">{stop.tag}</span>}{freshPhotos.length > 0 && <span className="new-badge">{freshPhotos.length} new {freshPhotos.length === 1 ? "photo" : "photos"}</span>}</div>
+                <div className="stop-title-row"><h3>{stop.title}</h3>{stop.tag && <span className="spot-badge">{stop.tag}</span>}</div>
                 <div className="stop-actions"><IconButton label={`Edit ${stop.title}`} onClick={() => setEditing(stop)}><Pencil size={16} /></IconButton><IconButton label={`Delete ${stop.title}`} onClick={() => deleteStop(stop.id)}><Trash2 size={16} /></IconButton></div>
               </div>
               <div className="stop-summary">
