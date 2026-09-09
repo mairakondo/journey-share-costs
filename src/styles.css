@@ -210,7 +210,7 @@
   .quick-panel button > span { @apply row-span-2 grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-md; }
   .quick-panel button b { @apply self-end text-sm font-extrabold; }
   .quick-panel button small { @apply self-start text-[10px] font-bold text-muted-foreground; }
-  .quick-panel .emergency-shortcut { @apply bg-cyan/80; }
+  .quick-panel .support-shortcut { @apply bg-cyan/80; }
   .quick-panel button:nth-child(2) > span { @apply bg-accent; }
   .quick-panel button:nth-child(3) > span { @apply bg-cyan text-sky-foreground; }
   .memory-preview { @apply relative mt-5 flex min-h-36 items-end justify-between gap-4 overflow-hidden rounded-[2rem] bg-primary p-6 text-primary-foreground shadow-xl; background-image: linear-gradient(90deg, var(--primary) 20%, color-mix(in oklab, var(--primary) 78%, transparent)), url("/src/assets/kyoto.jpg"); background-position: center; background-size: cover; }
