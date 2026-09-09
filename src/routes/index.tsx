@@ -532,7 +532,7 @@ function Photos({ stops, photos, setPhotos }: { stops: Stop[]; photos: Photo[]; 
   const days = Array.from(new Set(photos.map((p) => p.day))).sort((a, b) => a - b);
 
   return <>
-    <div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><button className="secondary-action"><Plus size={18} /> Add photos</button></div>
+    <div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><div className="heading-actions"><button className="secondary-action"><Plus size={18} /> Add photos</button><button className="secondary-action"><Share2 size={18} /> Share</button></div></div>
     <p className="gesture-hint">Photos are matched to itinerary activities by place, date and time. Tap a photo to view it, or move it to another activity.</p>
     <section className="photo-days">
       {days.map((day) => {
