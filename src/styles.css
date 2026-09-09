@@ -281,6 +281,19 @@
   .stop-photo-preview img { @apply h-full w-full object-cover; }
   .stop-photo-preview > span { @apply absolute right-1 top-1 rounded-md bg-foreground/75 px-1.5 py-0.5 text-[9px] font-black text-background; }
   .stop-photo-preview > small { @apply absolute inset-x-1 bottom-1 rounded-md bg-surface/90 px-1 py-0.5 text-center text-[9px] font-extrabold text-foreground backdrop-blur; }
+  .stop-photo-preview.fresh { @apply ring-2 ring-money; }
+  .stop-card.has-new { @apply ring-1 ring-money/40; }
+  .new-badge { @apply inline-flex shrink-0 rounded-md bg-money px-2 py-1 text-[10px] font-extrabold text-white; }
+  .new-photos-note { @apply mt-4 flex items-center gap-3 rounded-2xl border border-money/30 bg-money/10 px-3 py-3; }
+  .new-photos-note p { @apply min-w-0 flex-1; }
+  .new-photos-note b { @apply block text-sm font-extrabold text-foreground; }
+  .new-photos-note small { @apply block text-xs text-muted-foreground; }
+  .new-photos-note > button:not(.icon-button) { @apply shrink-0 rounded-full bg-money px-3 py-1.5 text-xs font-extrabold text-white; }
+  .day-strip button { @apply relative; }
+  .day-dot { @apply absolute right-2 top-2 size-2 rounded-full bg-money; }
+  .nav-badge { @apply absolute right-3 top-1 min-w-4 rounded-full bg-money px-1 text-[10px] font-black not-italic leading-4 text-white; }
+  .bottom-nav button { @apply relative; }
+
   .stop-footer { @apply mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-2 border-t border-border/60 pt-3; }
   .empty-day { @apply rounded-2xl border border-dashed border-border bg-surface p-8 text-center text-sm font-semibold text-muted-foreground; }
   .day-note { @apply relative h-fit overflow-hidden rounded-[2rem] bg-primary p-6 text-primary-foreground shadow-xl; }
