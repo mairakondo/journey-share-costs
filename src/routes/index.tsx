@@ -38,6 +38,11 @@ import tokyoAsakusa from "@/assets/tokyo-asakusa.jpg";
 import tokyoTeamlab from "@/assets/tokyo-teamlab.jpg";
 import tokyoTsukiji from "@/assets/tokyo-tsukiji.jpg";
 import copenhagen from "@/assets/copenhagen.jpg";
+import importShibuyaFriends from "@/assets/import-shibuya-friends.jpg";
+import importTsukijiFood from "@/assets/import-tsukiji-food.jpg";
+import importAsakusaTemple from "@/assets/import-asakusa-temple.jpg";
+import importTeamlabArt from "@/assets/import-teamlab-art.jpg";
+import importGoldenGaiNight from "@/assets/import-golden-gai-night.jpg";
 
 type View = "home" | "plan" | "costs" | "photos" | "emergency" | "summary";
 
