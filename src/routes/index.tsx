@@ -633,7 +633,7 @@ function PhotoImport({ stops, onClose, onImport }: { stops: Stop[]; onClose: () 
           })}
         </ul>
         <p className="gesture-hint">Anything unmatched stays in the day’s “Not matched” group — you can move it to an activity later.</p>
-        <button className="money-action" onClick={() => onImport(chosen.map((p) => ({ ...p, id: `${p.id}-${Date.now()}` })))}><Check size={17} /> Add to timeline</button>
+        <button className="money-action mt-4" onClick={() => onImport(chosen.map((p) => ({ ...p, id: `${p.id}-${Date.now()}` })))}><Check size={17} /> Add to timeline</button>
       </>}
     </div>
   </div>;
