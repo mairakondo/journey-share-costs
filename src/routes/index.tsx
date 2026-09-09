@@ -112,7 +112,7 @@ function TravelersApp() {
         {view === "home" ? (
           <Dashboard onNavigate={setView} onCreate={() => setCreateOpen(true)} onSummary={() => setView("summary")} />
         ) : (
-          <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} stops={stops} setStops={setStops} photos={photos} setPhotos={setPhotos} expenses={expenses} setExpenses={setExpenses} />
+          <TripShell view={view} setView={setView} onScan={() => setScanOpen(true)} stops={stops} setStops={setStops} photos={photos} setPhotos={setPhotos} expenses={expenses} setExpenses={setExpenses} newPhotoIds={newPhotoIds} setNewPhotoIds={setNewPhotoIds} />
         )}
 
         {view !== "home" && view !== "summary" && <BottomNav view={view} setView={setView} />}
