@@ -525,15 +525,110 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
 
 }
 
+const importCandidates: Photo[] = [
+  { id: "n1", src: tokyoTsukiji, day: 1, time: "09:52", place: "Tsukiji Outer Market" },
+  { id: "n2", src: tokyoAsakusa, day: 1, time: "11:38", place: "Senso-ji, Asakusa 2-3-1" },
+  { id: "n3", src: tokyoTeamlab, day: 1, time: "15:05", place: "Toyosu 6-1-16" },
+  { id: "n4", src: tokyo, day: 0, time: "17:10", place: "Shibuya Crossing" },
+  { id: "n5", src: tokyoGoldenGai, day: 1, time: "22:40", place: "Golden Gai, Shinjuku" },
+];
+
+function PhotoImport({ stops, onClose, onImport }: { stops: Stop[]; onClose: () => void; onImport: (photos: Photo[]) => void }) {
+  const [step, setStep] = useState<"pick" | "matching" | "review">("pick");
+  const [selected, setSelected] = useState<string[]>(importCandidates.map((p) => p.id));
+  const [progress, setProgress] = useState(0);
+  const chosen = importCandidates.filter((p) => selected.includes(p.id));
+
+  const startMatching = () => {
+    setStep("matching");
+    setProgress(0);
+    let i = 0;
+    const tick = setInterval(() => {
+      i += 1;
+      setProgress(i);
+      if (i >= chosen.length) {
+        clearInterval(tick);
+        setTimeout(() => setStep("review"), 450);
+      }
+    }, 420);
+  };
+
+  const matchedCount = chosen.filter((p) => resolveStop(p, stops)).length;
+
+  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Add photos">
+    <div className="modal-sheet">
+      <div className="modal-head">
+        <div>
+          <p className="eyebrow">{step === "pick" ? "From your phone" : step === "matching" ? "Reading place, date & time" : `${matchedCount} of ${chosen.length} matched`}</p>
+          <h2>{step === "pick" ? "Add photos" : step === "matching" ? "Matching photos" : "Review matches"}</h2>
+        </div>
+        <IconButton label="Close" onClick={onClose}><X size={20} /></IconButton>
+      </div>
+
+      {step === "pick" && <>
+        <p className="gesture-hint">Pick the photos to add — we read each one’s place, date and time to attach it to the right activity.</p>
+        <div className="import-grid">
+          {importCandidates.map((p) => {
+            const on = selected.includes(p.id);
+            return <button key={p.id} type="button" className={on ? "import-tile on" : "import-tile"} aria-pressed={on} onClick={() => setSelected((s) => (on ? s.filter((id) => id !== p.id) : [...s, p.id]))}>
+              <img src={p.src} alt={`${p.place} photo`} width={320} height={320} loading="lazy" />
+              <small>{p.time}</small>
+              <i>{on && <Check size={12} />}</i>
+            </button>;
+          })}
+        </div>
+        <button className="money-action" disabled={chosen.length === 0} onClick={startMatching}><Search size={17} /> Match {chosen.length} {chosen.length === 1 ? "photo" : "photos"}</button>
+      </>}
+
+      {step === "matching" && <div className="match-progress">
+        <div className="match-bar"><span style={{ width: `${(progress / Math.max(1, chosen.length)) * 100}%` }} /></div>
+        <p className="gesture-hint">Comparing photo place, date and time with your itinerary… {Math.min(progress, chosen.length)}/{chosen.length}</p>
+        <ul className="match-list">
+          {chosen.map((p, i) => {
+            const done = i < progress;
+            const stop = resolveStop(p, stops);
+            return <li key={p.id} className={done ? "done" : "pending"}>
+              <img src={p.src} alt="" width={80} height={80} />
+              <span><b>{p.place}</b><small>Day {p.day + 1} · {p.time}</small></span>
+              {done ? (stop ? <em className="ok"><Check size={13} /> {stop.title}</em> : <em>No activity</em>) : <em className="wait">Reading…</em>}
+            </li>;
+          })}
+        </ul>
+      </div>}
+
+      {step === "review" && <>
+        <ul className="match-list">
+          {chosen.map((p) => {
+            const stop = resolveStop(p, stops);
+            return <li key={p.id} className="done">
+              <img src={p.src} alt="" width={80} height={80} />
+              <span><b>{p.place}</b><small>Day {p.day + 1} · {p.time}</small></span>
+              {stop ? <em className="ok"><MapPin size={13} /> {stop.time} · {stop.title}</em> : <em>Not matched</em>}
+            </li>;
+          })}
+        </ul>
+        <p className="gesture-hint">Anything unmatched stays in the day’s “Not matched” group — you can move it to an activity later.</p>
+        <button className="money-action" onClick={() => onImport(chosen.map((p) => ({ ...p, id: `${p.id}-${Date.now()}` })))}><Check size={17} /> Add to timeline</button>
+      </>}
+    </div>
+  </div>;
+}
+
 function Photos({ stops, photos, setPhotos }: { stops: Stop[]; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void }) {
   const [openDay, setOpenDay] = useState<number | null>(0);
   const [assigning, setAssigning] = useState<Photo | null>(null);
   const [viewing, setViewing] = useState<Photo | null>(null);
+  const [importing, setImporting] = useState(false);
   const days = Array.from(new Set(photos.map((p) => p.day))).sort((a, b) => a - b);
 
   return <>
-    <div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><div className="heading-actions"><button className="scan-chip"><Plus size={16} /> Add</button><button className="scan-chip"><Share2 size={16} /> Share</button></div></div>
+    <div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><div className="heading-actions"><button className="scan-chip" onClick={() => setImporting(true)}><Plus size={16} /> Add</button><button className="scan-chip"><Share2 size={16} /> Share</button></div></div>
     <p className="gesture-hint">Photos are matched to itinerary activities by place, date and time. Tap a photo to view it, or move it to another activity.</p>
+    {importing && <PhotoImport stops={stops} onClose={() => setImporting(false)} onImport={(added) => {
+      setPhotos((prev) => [...prev, ...added].sort((a, b) => a.day - b.day || a.time.localeCompare(b.time)));
+      setImporting(false);
+      setOpenDay(added[0]?.day ?? 0);
+    }} />
     <section className="photo-days">
       {days.map((day) => {
         const dayPhotos = photos.filter((p) => p.day === day);
