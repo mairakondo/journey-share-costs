@@ -359,7 +359,7 @@ function groupPhotosByStop(dayPhotos: Photo[], stops: Stop[]) {
 }
 
 
-function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses }: { setView: (v: View) => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; expenses: Expense[]; setExpenses: (fn: (p: Expense[]) => Expense[]) => void }) {
+function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, newPhotoIds = [], clearNewPhotos }: { setView: (v: View) => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; expenses: Expense[]; setExpenses: (fn: (p: Expense[]) => Expense[]) => void; newPhotoIds?: string[]; clearNewPhotos?: () => void }) {
   const [day, setDay] = useState(1);
   const [editing, setEditing] = useState<Stop | null>(null);
   const [editingCost, setEditingCost] = useState<Expense | null>(null);
