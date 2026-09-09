@@ -688,7 +688,6 @@ function MeetFlow({ traveler, onClose }: { traveler: { name: string; place: stri
     {started ? <>
       <h3 className="support-section-title">On your way</h3>
       <ol className="meet-steps">{route.steps.map((s, i) => <li key={s}><span>{i + 1}</span>{s}</li>)}</ol>
-      <button className="secondary-action wide" onClick={() => setStarted(false)}>Show route options</button>
     </> : <div className="tool-actions justify-end mt-4"><button className="scan-chip-ink" onClick={onClose}><X size={16} /> Not now</button><button className="scan-chip" onClick={() => setStarted(true)}><Navigation size={16} /> Start directions</button></div>}
   </ToolSheet>;
 }
