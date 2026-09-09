@@ -641,10 +641,12 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
   const [assigning, setAssigning] = useState<Photo | null>(null);
   const [viewing, setViewing] = useState<Photo | null>(null);
   const [importing, setImporting] = useState(false);
+  const [sharing, setSharing] = useState(false);
   const days = Array.from(new Set(photos.map((p) => p.day))).sort((a, b) => a - b);
 
   return <>
-    <div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><div className="heading-actions"><button className="scan-chip" onClick={() => setImporting(true)}><Plus size={16} /> Add</button><button className="scan-chip"><Share2 size={16} /> Share</button></div></div>
+    <div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><div className="heading-actions"><button className="scan-chip" onClick={() => setImporting(true)}><Plus size={16} /> Add</button><button className="scan-chip" onClick={() => setSharing(true)}><Share2 size={16} /> Share</button></div></div>
+    {sharing && <InstagramShare photos={photos} onClose={() => setSharing(false)} />}
     <p className="gesture-hint">Photos are matched to itinerary activities by place, date and time. Tap a photo to view it, or move it to another activity.</p>
     {importing && <PhotoImport stops={stops} onClose={() => setImporting(false)} onImport={(added) => {
       setPhotos((prev) => [...prev, ...added].sort((a, b) => a.day - b.day || a.time.localeCompare(b.time)));
