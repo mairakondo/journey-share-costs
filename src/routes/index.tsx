@@ -29,6 +29,7 @@ import {
   ShieldCheck,
   Toilet,
   Languages,
+  Loader2,
   Accessibility,
   Locate,
   Navigation,

@@ -532,4 +532,16 @@
   .share-bar .share-formats { @apply mt-0 gap-2; }
   .share-bar .share-format { @apply flex-row items-center gap-2 p-2; }
   .share-bar .money-action { @apply w-full; }
+  .scan-stage { @apply flex flex-col items-center gap-5 py-6; }
+  .scan-frame { @apply relative grid size-28 place-items-center overflow-hidden rounded-2xl border border-border bg-sky text-foreground; }
+  .scan-beam { @apply absolute inset-x-0 h-1/3 bg-gradient-to-b from-transparent via-white/80 to-transparent; animation: scan-sweep 1.4s ease-in-out infinite; }
+  @keyframes scan-sweep { 0% { transform: translateY(-120%); } 100% { transform: translateY(320%); } }
+  .scan-progress { @apply h-1.5 w-full overflow-hidden rounded-full bg-muted; }
+  .scan-progress i { @apply block h-full rounded-full bg-money transition-all duration-500; }
+  .scan-steps { @apply flex w-full flex-col gap-2.5; }
+  .scan-steps li { @apply flex items-center gap-2 text-sm text-muted-foreground; }
+  .scan-steps li.active { @apply font-semibold text-foreground; }
+  .scan-steps li.done { @apply text-money-ink; }
+  .scan-steps .spin { @apply animate-spin; }
+  .scan-steps .idle { @apply opacity-40; }
 }
