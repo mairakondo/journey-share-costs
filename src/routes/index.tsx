@@ -859,8 +859,8 @@ function PhotoAssign({ photo, stops, onClose, onAssign }: { photo: Photo; stops:
   </div>;
 }
 
-function BottomNav({ view, setView, planBadge = 0 }: { view: View; setView: (v: View) => void; planBadge?: number }) {
-  return <nav className="bottom-nav" aria-label="Trip navigation">{[{ id: "plan", label: "Plan", icon: <MapPin /> }, { id: "costs", label: "Costs", icon: <WalletCards /> }, { id: "photos", label: "Photos", icon: <Image /> }, { id: "emergency", label: "Emergency", icon: <ShieldCheck /> }].map((item) => <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => setView(item.id as View)}>{item.icon}<span>{item.label}</span>{item.id === "plan" && planBadge > 0 && <i className="nav-badge" aria-label={`${planBadge} new photos in the plan`}>{planBadge}</i>}</button>)}</nav>;
+function BottomNav({ view, setView, planBadge = 0, onPlanSeen }: { view: View; setView: (v: View) => void; planBadge?: number; onPlanSeen?: () => void }) {
+  return <nav className="bottom-nav" aria-label="Trip navigation">{[{ id: "plan", label: "Plan", icon: <MapPin /> }, { id: "costs", label: "Costs", icon: <WalletCards /> }, { id: "photos", label: "Photos", icon: <Image /> }, { id: "emergency", label: "Emergency", icon: <ShieldCheck /> }].map((item) => <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => { if (item.id === "plan") onPlanSeen?.(); setView(item.id as View); }}>{item.icon}<span>{item.label}</span>{item.id === "plan" && planBadge > 0 && <i className="nav-badge" aria-label={`${planBadge} new photos in the plan`}>{planBadge}</i>}</button>)}</nav>;
 }
 
 
