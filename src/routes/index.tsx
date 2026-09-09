@@ -811,7 +811,7 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
             <small><Play size={12} /> Day {(storyPhotos[slide]?.day ?? 0) + 1} · {storyPhotos[slide]?.time}</small>
           </div>
         </div>}
-        <p className="gesture-hint">Tokyo escape · 5 travelers · {photos.length} photos. Caption and location tag are filled in for you.</p>
+        <p className="gesture-hint">Tokyo escape · 5 travelers · {selectedPhotos.length} photos. Caption and location tag are filled in for you.</p>
         <button className="money-action mt-4" onClick={() => setStep("done")}><Instagram size={17} /> {format === "carousel" ? "Share as post" : "Share to stories"}</button>
       </>}
 
