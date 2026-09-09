@@ -176,7 +176,7 @@
 
 @layer components {
   .app-frame { @apply relative mx-auto min-h-screen w-full max-w-[1180px] overflow-x-hidden bg-background; isolation: isolate; }
-  .app-frame::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at 86% 8%, color-mix(in oklab, var(--cyan) 32%, transparent) 0 7rem, transparent 15rem), radial-gradient(circle at 5% 32%, color-mix(in oklab, var(--accent) 20%, transparent) 0 8rem, transparent 17rem); }
+  .app-frame::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at 12% 6%, color-mix(in oklab, var(--cyan) 55%, transparent) 0 8rem, transparent 20rem), radial-gradient(circle at 92% 88%, color-mix(in oklab, var(--sun) 60%, transparent) 0 9rem, transparent 22rem), radial-gradient(circle at 88% 20%, color-mix(in oklab, var(--sky) 40%, transparent) 0 6rem, transparent 16rem); }
   .page-pad { @apply px-5 pt-7 sm:px-8 lg:px-12 lg:pt-10; }
   .topbar { @apply sticky top-0 z-30 grid grid-cols-[minmax(0,1fr)_auto] items-center border-b border-primary-foreground/10 bg-primary px-5 py-4 backdrop-blur-xl sm:px-8 lg:px-12; }
   .brand { @apply flex min-w-0 items-center gap-2 font-display text-xl font-bold leading-none text-primary-foreground; }
