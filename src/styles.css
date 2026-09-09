@@ -476,8 +476,20 @@
   .share-format small { @apply text-xs text-muted-foreground; }
   .share-format.on { @apply border-money bg-money/10; }
   .share-format.on svg { @apply text-money-ink; }
-  .ig-grid { @apply mt-4 grid grid-cols-3 gap-1 overflow-hidden rounded-xl; }
-  .ig-grid img { @apply aspect-square w-full object-cover; }
+  .ig-carousel { @apply mt-4 flex flex-col items-center gap-2; }
+  .ig-carousel-stage { @apply relative w-full overflow-hidden rounded-2xl bg-primary; aspect-ratio: 4 / 5; }
+  .ig-carousel-stage img { @apply absolute inset-0 h-full w-full object-cover; }
+  .ig-carousel-nav { @apply absolute top-1/2 -translate-y-1/2 grid place-items-center h-8 w-8 rounded-full bg-white/90 text-primary shadow; }
+  .ig-carousel-nav.prev { @apply left-2; }
+  .ig-carousel-nav.next { @apply right-2; }
+  .ig-carousel-count { @apply absolute right-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[11px] font-semibold text-white; }
+  .ig-carousel-dots { @apply flex items-center justify-center gap-1.5; }
+  .ig-carousel-dots i { @apply h-1.5 w-1.5 cursor-pointer rounded-full bg-border; }
+  .ig-carousel-dots i.on { @apply w-4 bg-money-ink; }
+  .ig-carousel-caption { @apply flex flex-col gap-0.5 text-center; }
+  .ig-carousel-caption .eyebrow { @apply text-muted-foreground; }
+  .ig-carousel-caption b { @apply text-sm font-bold; }
+  .ig-carousel-caption small { @apply text-xs text-muted-foreground; }
   .ig-story { @apply relative mx-auto mt-4 w-full max-w-[240px] overflow-hidden rounded-2xl bg-primary; aspect-ratio: 9 / 16; }
   .ig-story img { @apply absolute inset-0 h-full w-full object-cover; }
   .ig-story-bars { @apply absolute inset-x-2 top-2 z-10 flex gap-1; }

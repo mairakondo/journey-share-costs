@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Instagram,
-  LayoutGrid,
+  GalleryHorizontal,
   Film,
   Play,
   ArrowLeft,
@@ -685,12 +685,12 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
 }
 
 function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => void }) {
-  const [format, setFormat] = useState<"grid" | "story">("grid");
+  const [format, setFormat] = useState<"carousel" | "story">("carousel");
   const [step, setStep] = useState<"pick" | "building" | "preview" | "done">("pick");
   const [progress, setProgress] = useState(0);
   const [slide, setSlide] = useState(0);
 
-  const gridPhotos = photos.slice(0, 9);
+  const carouselPhotos = photos.slice(0, 9);
   const storyPhotos = photos.slice(0, 6);
 
   const build = () => {
@@ -715,8 +715,8 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
 
   const headings = {
     pick: "Share to Instagram",
-    building: format === "grid" ? "Building your grid" : "Cutting your story",
-    preview: format === "grid" ? "Your Tokyo grid" : "Your Tokyo story",
+    building: format === "carousel" ? "Building your carousel" : "Cutting your story",
+    preview: format === "carousel" ? "Your Tokyo carousel" : "Your Tokyo story",
     done: "Shared to Instagram",
   } as const;
 
@@ -733,10 +733,10 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
       {step === "pick" && <>
         <p className="gesture-hint">We pre-build the post from the photos everyone added to this trip. Pick a format.</p>
         <div className="share-formats">
-          <button type="button" className={format === "grid" ? "share-format on" : "share-format"} aria-pressed={format === "grid"} onClick={() => setFormat("grid")}>
-            <LayoutGrid size={18} />
-            <b>Photo grid</b>
-            <small>9 photos, one carousel post</small>
+          <button type="button" className={format === "carousel" ? "share-format on" : "share-format"} aria-pressed={format === "carousel"} onClick={() => setFormat("carousel")}>
+            <GalleryHorizontal size={18} />
+            <b>Photo carousel</b>
+            <small>{Math.min(photos.length, 9)} photos, one swipeable post</small>
           </button>
           <button type="button" className={format === "story" ? "share-format on" : "share-format"} aria-pressed={format === "story"} onClick={() => setFormat("story")}>
             <Film size={18} />
@@ -744,17 +744,28 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
             <small>6s recap for your stories</small>
           </button>
         </div>
-        <button className="money-action mt-4" onClick={build}><Instagram size={17} /> Build my {format === "grid" ? "grid" : "story"}</button>
+        <button className="money-action mt-4" onClick={build}><Instagram size={17} /> Build my {format === "carousel" ? "carousel" : "story"}</button>
       </>}
 
       {step === "building" && <div className="match-progress">
         <div className="match-bar"><span style={{ width: `${progress}%` }} /></div>
-        <p className="gesture-hint">{format === "grid" ? "Laying out your best 9 photos in trip order…" : "Sequencing clips, adding captions and music…"} {progress}%</p>
+        <p className="gesture-hint">{format === "carousel" ? "Ordering your photos into a swipeable carousel…" : "Sequencing clips, adding captions and music…"} {progress}%</p>
       </div>}
 
       {step === "preview" && <>
-        {format === "grid" ? <div className="ig-grid">
-          {gridPhotos.map((p) => <img key={p.id} src={p.src} alt={`${p.place} memory`} loading="lazy" />)}
+        {format === "carousel" ? <div className="ig-carousel">
+          <div className="ig-carousel-stage">
+            {carouselPhotos[slide] && <img key={carouselPhotos[slide].id} src={carouselPhotos[slide].src} alt={`${carouselPhotos[slide].place} memory`} />}
+            {slide > 0 && <button className="ig-carousel-nav prev" aria-label="Previous photo" onClick={() => setSlide((s) => s - 1)}><ChevronLeft size={22} /></button>}
+            {slide < carouselPhotos.length - 1 && <button className="ig-carousel-nav next" aria-label="Next photo" onClick={() => setSlide((s) => s + 1)}><ChevronRight size={22} /></button>}
+            <span className="ig-carousel-count">{slide + 1}/{carouselPhotos.length}</span>
+          </div>
+          <div className="ig-carousel-dots">{carouselPhotos.map((p, i) => <i key={p.id} className={i === slide ? "on" : ""} onClick={() => setSlide(i)} />)}</div>
+          <div className="ig-carousel-caption">
+            <p className="eyebrow">Tokyo escape</p>
+            <b>{carouselPhotos[slide]?.place}</b>
+            <small>Day {(carouselPhotos[slide]?.day ?? 0) + 1} · {carouselPhotos[slide]?.time}</small>
+          </div>
         </div> : <div className="ig-story">
           <div className="ig-story-bars">{storyPhotos.map((p, i) => <i key={p.id} className={i <= slide ? "on" : ""} />)}</div>
           {storyPhotos[slide] && <img src={storyPhotos[slide].src} alt={`${storyPhotos[slide].place} memory`} />}
@@ -765,12 +776,12 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
           </div>
         </div>}
         <p className="gesture-hint">Tokyo escape · 5 travelers · {photos.length} photos. Caption and location tag are filled in for you.</p>
-        <button className="money-action mt-4" onClick={() => setStep("done")}><Instagram size={17} /> {format === "grid" ? "Share as post" : "Share to stories"}</button>
+        <button className="money-action mt-4" onClick={() => setStep("done")}><Instagram size={17} /> {format === "carousel" ? "Share as post" : "Share to stories"}</button>
       </>}
 
       {step === "done" && <>
         <div className="share-done"><Check size={26} /></div>
-        <p className="gesture-hint">Your {format === "grid" ? "photo grid" : "story video"} was handed to Instagram with the caption “Tokyo escape · 5 days, 5 friends”. Everyone on the trip gets a copy in the shared album.</p>
+        <p className="gesture-hint">Your {format === "carousel" ? "photo carousel" : "story video"} was handed to Instagram with the caption “Tokyo escape · 5 days, 5 friends”. Everyone on the trip gets a copy in the shared album.</p>
         <button className="money-action mt-4" onClick={onClose}><Check size={17} /> Done</button>
       </>}
     </div>
