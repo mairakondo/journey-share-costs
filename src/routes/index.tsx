@@ -17,7 +17,7 @@ import {
   Phone,
   Plane,
   Plus,
-  ReceiptText,
+  Share2,
   Search,
   Shuffle,
   ShieldCheck,
