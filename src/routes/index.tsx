@@ -531,11 +531,11 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
 }
 
 const importCandidates: Photo[] = [
-  { id: "n1", src: tokyoTsukiji, day: 1, time: "09:52", place: "Tsukiji Outer Market" },
-  { id: "n2", src: tokyoAsakusa, day: 1, time: "11:38", place: "Senso-ji, Asakusa 2-3-1" },
-  { id: "n3", src: tokyoTeamlab, day: 1, time: "15:05", place: "Toyosu 6-1-16" },
-  { id: "n4", src: tokyo, day: 0, time: "17:10", place: "Shibuya Crossing" },
-  { id: "n5", src: tokyoGoldenGai, day: 1, time: "22:40", place: "Golden Gai, Shinjuku" },
+  { id: "n1", src: importTsukijiFood, day: 1, time: "09:52", place: "Tsukiji Outer Market" },
+  { id: "n2", src: importAsakusaTemple, day: 1, time: "11:38", place: "Senso-ji, Asakusa 2-3-1" },
+  { id: "n3", src: importTeamlabArt, day: 1, time: "15:05", place: "Toyosu 6-1-16" },
+  { id: "n4", src: importShibuyaFriends, day: 0, time: "17:10", place: "Shibuya Crossing" },
+  { id: "n5", src: importGoldenGaiNight, day: 1, time: "22:40", place: "Golden Gai, Shinjuku" },
 ];
 
 function PhotoImport({ stops, onClose, onImport }: { stops: Stop[]; onClose: () => void; onImport: (photos: Photo[]) => void }) {
