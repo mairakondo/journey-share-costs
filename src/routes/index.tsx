@@ -38,6 +38,11 @@ import tokyoAsakusa from "@/assets/tokyo-asakusa.jpg";
 import tokyoTeamlab from "@/assets/tokyo-teamlab.jpg";
 import tokyoTsukiji from "@/assets/tokyo-tsukiji.jpg";
 import copenhagen from "@/assets/copenhagen.jpg";
+import importShibuyaFriends from "@/assets/import-shibuya-friends.jpg";
+import importTsukijiFood from "@/assets/import-tsukiji-food.jpg";
+import importAsakusaTemple from "@/assets/import-asakusa-temple.jpg";
+import importTeamlabArt from "@/assets/import-teamlab-art.jpg";
+import importGoldenGaiNight from "@/assets/import-golden-gai-night.jpg";
 
 type View = "home" | "plan" | "costs" | "photos" | "emergency" | "summary";
 
@@ -526,11 +531,11 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
 }
 
 const importCandidates: Photo[] = [
-  { id: "n1", src: tokyoTsukiji, day: 1, time: "09:52", place: "Tsukiji Outer Market" },
-  { id: "n2", src: tokyoAsakusa, day: 1, time: "11:38", place: "Senso-ji, Asakusa 2-3-1" },
-  { id: "n3", src: tokyoTeamlab, day: 1, time: "15:05", place: "Toyosu 6-1-16" },
-  { id: "n4", src: tokyo, day: 0, time: "17:10", place: "Shibuya Crossing" },
-  { id: "n5", src: tokyoGoldenGai, day: 1, time: "22:40", place: "Golden Gai, Shinjuku" },
+  { id: "n1", src: importTsukijiFood, day: 1, time: "09:52", place: "Tsukiji Outer Market" },
+  { id: "n2", src: importAsakusaTemple, day: 1, time: "11:38", place: "Senso-ji, Asakusa 2-3-1" },
+  { id: "n3", src: importTeamlabArt, day: 1, time: "15:05", place: "Toyosu 6-1-16" },
+  { id: "n4", src: importShibuyaFriends, day: 0, time: "17:10", place: "Shibuya Crossing" },
+  { id: "n5", src: importGoldenGaiNight, day: 1, time: "22:40", place: "Golden Gai, Shinjuku" },
 ];
 
 function PhotoImport({ stops, onClose, onImport }: { stops: Stop[]; onClose: () => void; onImport: (photos: Photo[]) => void }) {
