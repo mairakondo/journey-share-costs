@@ -26,6 +26,20 @@ import {
   Search,
   Shuffle,
   ShieldCheck,
+  Toilet,
+  Languages,
+  Accessibility,
+  Locate,
+  Navigation,
+  Baby,
+  Footprints,
+  Volume2,
+  Copy,
+  Sparkles,
+  Train,
+  TramFront,
+  Signal,
+  Timer,
   Trash2,
   Users,
   Wallet,
@@ -559,7 +573,7 @@ function Support() {
 function ToolSheet({ title, subtitle, onClose, children }: { title: string; subtitle: string; onClose: () => void; children: ReactNode }) {
   return <div className="modal-backdrop" role="dialog" aria-modal="true" onClick={onClose}>
     <div className="modal-sheet" onClick={(e) => e.stopPropagation()}>
-      <div className="modal-head"><div><h2>{title}</h2><p className="text-sm text-muted-foreground">{subtitle}</p></div><button className="icon-btn" aria-label="Close" onClick={onClose}><X size={19} /></button></div>
+      <div className="modal-head"><div><h2>{title}</h2><p className="text-sm text-muted-foreground">{subtitle}</p></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>
       {children}
     </div>
   </div>;
