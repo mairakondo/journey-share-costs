@@ -434,3 +434,25 @@
   .budget-progress h3 span { @apply mt-1 block; }
   .budget-progress footer { @apply items-start gap-3; }
 }
+
+@layer components {
+  .import-grid { @apply mt-4 grid grid-cols-3 gap-2; }
+  .import-tile { @apply relative aspect-square overflow-hidden rounded-lg border-2 border-border; }
+  .import-tile img { @apply h-full w-full object-cover; }
+  .import-tile > small { @apply absolute inset-x-1 bottom-1 rounded-md bg-primary/90 py-0.5 text-center text-[9px] font-bold text-primary-foreground; }
+  .import-tile > i { @apply absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-white/85 text-primary; }
+  .import-tile.on { @apply border-money; }
+  .import-tile.on > i { @apply bg-money text-white; }
+  .match-progress { @apply mt-4; }
+  .match-bar { @apply h-2 w-full overflow-hidden rounded-full bg-muted; }
+  .match-bar > span { @apply block h-full rounded-full bg-money transition-all duration-300; }
+  .match-list { @apply my-4 flex flex-col gap-2; }
+  .match-list li { @apply flex items-center gap-3 rounded-xl border border-border p-2; }
+  .match-list li img { @apply size-11 shrink-0 rounded-md object-cover; }
+  .match-list li > span { @apply flex min-w-0 flex-col; }
+  .match-list li b { @apply truncate text-sm font-bold; }
+  .match-list li small { @apply text-xs text-muted-foreground; }
+  .match-list li em { @apply ml-auto inline-flex shrink-0 items-center gap-1 rounded-full bg-muted px-2 py-1 text-[11px] font-bold not-italic text-muted-foreground; }
+  .match-list li em.ok { @apply bg-money/15 text-money-ink; }
+  .match-list li.pending { @apply opacity-60; }
+}
