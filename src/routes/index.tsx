@@ -387,8 +387,19 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
     <ReceiptText size={14} /><span><b>{e.label || "Untitled cost"}</b><small>{e.time} · {e.payer}{e.source === "scan" ? " · receipt" : ""}</small></span><strong>{euro(e.amount)}</strong>
   </button>;
 
+  const newPhotos = photos.filter((p) => newPhotoIds.includes(p.id));
+  const newMatched = newPhotos.filter((p) => resolveStop(p, stops));
+  const newDays = Array.from(new Set(newPhotos.map((p) => p.day)));
+
   return <>
-    <div className="day-strip">{["Sun 18", "Mon 19", "Tue 20", "Wed 21", "Thu 22"].map((d, i) => <button key={d} onClick={() => setDay(i)} className={day === i ? "active" : ""}><span>Day {i + 1}</span>{d}</button>)}</div>
+    {newPhotos.length > 0 && <div className="new-photos-note">
+      <span className="stop-icon"><Image size={16} /></span>
+      <p><b>{newPhotos.length} new {newPhotos.length === 1 ? "photo" : "photos"} added</b><small>{newMatched.length} attached to activities{newPhotos.length - newMatched.length > 0 ? ` · ${newPhotos.length - newMatched.length} still unmatched` : ""}</small></p>
+      <button type="button" onClick={() => { if (newDays[0] !== undefined) setDay(newDays[0]); }}>See day</button>
+      <IconButton label="Dismiss new photo notice" onClick={() => clearNewPhotos?.()}><X size={16} /></IconButton>
+    </div>}
+    <div className="day-strip">{["Sun 18", "Mon 19", "Tue 20", "Wed 21", "Thu 22"].map((d, i) => <button key={d} onClick={() => setDay(i)} className={day === i ? "active" : ""}><span>Day {i + 1}</span>{d}{newDays.includes(i) && <i className="day-dot" aria-label="New photos this day" />}</button>)}</div>
+
     <div className="content-grid">
       <section>
         <div className="date-heading"><div><div className="weather -mt-2"><CloudSun size={23} /><span>24°</span></div><p className="eyebrow">{["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"][day]}</p><div className="day-title-row mt-2"><h2>{day === 0 ? "Konnichiwa, Tokyo!" : ["Asakusa & old town", "Shibuya slow day", "Hakone day trip", "Last bites"][day - 1]}</h2></div></div>
