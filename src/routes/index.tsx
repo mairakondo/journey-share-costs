@@ -36,7 +36,6 @@ import kyoto from "@/assets/kyoto.jpg";
 import tokyoAsakusa from "@/assets/tokyo-asakusa.jpg";
 import tokyoTeamlab from "@/assets/tokyo-teamlab.jpg";
 import tokyoTsukiji from "@/assets/tokyo-tsukiji.jpg";
-import copenhagen from "@/assets/copenhagen.jpg";
 import tokyoGoldenGai from "@/assets/tokyo-goldengai.jpg";
 import lisbon from "@/assets/lisbon.jpg";
 import galTakoyaki from "@/assets/gal-takoyaki.jpg";
@@ -750,7 +749,7 @@ function Summary({ setView }: { setView: (v: View) => void }) {
       <article className="recap-card"><p className="eyebrow">Where you went</p><h3>Day-by-day recap</h3><div className="recap-days">{days.map((d) => <article key={d.day}><b>{d.day.replace("Day ", "D")}</b><div><h4>{d.title}</h4><p>{d.detail}</p></div><ChevronRight size={18} className="ml-auto text-muted-foreground" /></article>)}</div></article>
       <article className="recap-card"><p className="eyebrow text-money-ink">Planned ¥440,000 · actual ¥410,000</p><h3>Where the money went</h3><div className="recap-spend">{spend.map((s) => <article key={s.label}><header><span>{s.label}</span>{s.amount}</header><div className="recap-bar"><span style={{ width: `${s.pct}%` }} /></div></article>)}</div></article>
       <article className="recap-card"><p className="eyebrow">Who settled up</p><h3>Final balances</h3><div className="recap-people">{[{ m: members[1]!, text: "Jon paid you back", amount: "+ ¥4,820" }, { m: members[2]!, text: "You paid Ana", amount: "− ¥2,400" }, { m: members[3]!, text: "Luis settled", amount: "¥0" }].map((r) => <article key={r.m.name}><span className={r.m.tone}>{r.m.initials}</span>{r.text}<strong>{r.amount}</strong></article>)}</div></article>
-      <article className="recap-card"><p className="eyebrow">184 shared memories</p><h3>Photo highlights</h3><div className="recap-photos">{[kyoto, tokyoGoldenGai, copenhagen, lisbon].map((p, i) => <img key={i} src={p} alt={`Kyoto trip memory ${i + 1}`} width={640} height={640} loading="lazy" />)}</div></article>
+      <article className="recap-card"><p className="eyebrow">184 shared memories</p><h3>Photo highlights</h3><div className="recap-photos">{[kyoto, tokyoGoldenGai, lisbon].map((p, i) => <img key={i} src={p} alt={`Kyoto trip memory ${i + 1}`} width={640} height={640} loading="lazy" />)}</div></article>
     </div>
   </>;
 }
