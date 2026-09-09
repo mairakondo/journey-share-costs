@@ -392,12 +392,6 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
   const newDays = Array.from(new Set(newPhotos.map((p) => p.day)));
 
   return <>
-    {newPhotos.length > 0 && <div className="new-photos-note">
-      <span className="stop-icon"><Image size={16} /></span>
-      <p><b>{newPhotos.length} new {newPhotos.length === 1 ? "photo" : "photos"} added</b><small>{newMatched.length} attached to activities{newPhotos.length - newMatched.length > 0 ? ` · ${newPhotos.length - newMatched.length} still unmatched` : ""}</small></p>
-      <button type="button" onClick={() => { if (newDays[0] !== undefined) setDay(newDays[0]); }}>See day</button>
-      <IconButton label="Dismiss new photo notice" onClick={() => clearNewPhotos?.()}><X size={16} /></IconButton>
-    </div>}
     <div className="day-strip">{["Sun 18", "Mon 19", "Tue 20", "Wed 21", "Thu 22"].map((d, i) => <button key={d} onClick={() => setDay(i)} className={day === i ? "active" : ""}><span>Day {i + 1}</span>{d}{newDays.includes(i) && <i className="day-dot" aria-label="New photos this day" />}</button>)}</div>
 
     <div className="content-grid">
