@@ -392,7 +392,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
   const newDays = Array.from(new Set(newPhotos.map((p) => p.day)));
 
   return <>
-    <div className="day-strip">{["Sun 18", "Mon 19", "Tue 20", "Wed 21", "Thu 22"].map((d, i) => <button key={d} onClick={() => setDay(i)} className={day === i ? "active" : ""}><span>Day {i + 1}</span>{d}{newDays.includes(i) && <i className="day-dot" aria-label="New photos this day" />}</button>)}</div>
+    <div className="day-strip">{["Sun 18", "Mon 19", "Tue 20", "Wed 21", "Thu 22"].map((d, i) => <button key={d} onClick={() => setDay(i)} className={day === i ? "active" : ""}><span>Day {i + 1}</span>{d}</button>)}</div>
 
     <div className="content-grid">
       <section>
