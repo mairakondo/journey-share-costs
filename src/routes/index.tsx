@@ -192,19 +192,22 @@ function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: Vie
 
 function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, expenses, setExpenses }: { view: View; setView: (v: View) => void; onScan: () => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void; expenses: Expense[]; setExpenses: (fn: (p: Expense[]) => Expense[]) => void }) {
   return (
+function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, expenses, setExpenses, newPhotoIds, setNewPhotoIds }: { view: View; setView: (v: View) => void; onScan: () => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void; expenses: Expense[]; setExpenses: (fn: (p: Expense[]) => Expense[]) => void; newPhotoIds: string[]; setNewPhotoIds: (ids: string[]) => void }) {
+  return (
     <div className="page-pad trip-page pb-28">
       <div className="trip-heading">
         <div className="flex min-w-0 items-center gap-3"><IconButton label="Back to trips" onClick={() => setView("home")}><ArrowLeft size={20} /></IconButton><div className="min-w-0"><p className="eyebrow">Apr 6–11 · 4 travelers</p><h1 className="truncate text-3xl font-extrabold">Tokyo escape</h1></div></div>
         <div className="avatar-stack hidden sm:flex">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
       </div>
-      {view === "plan" && <Itinerary setView={setView} stops={stops} setStops={setStops} photos={photos} expenses={expenses} setExpenses={setExpenses} />}
+      {view === "plan" && <Itinerary setView={setView} stops={stops} setStops={setStops} photos={photos} expenses={expenses} setExpenses={setExpenses} newPhotoIds={newPhotoIds} clearNewPhotos={() => setNewPhotoIds([])} />}
       {view === "emergency" && <Emergency />}
       {view === "costs" && <Costs onScan={onScan} stops={stops} expenses={expenses} setView={setView} />}
-      {view === "photos" && <Photos stops={stops} photos={photos} setPhotos={setPhotos} />}
+      {view === "photos" && <Photos stops={stops} photos={photos} setPhotos={setPhotos} onImported={(ids) => setNewPhotoIds(ids)} />}
       {view === "summary" && <Summary setView={setView} />}
     </div>
   );
 }
+
 
 type Stop = { id: string; day: number; time: string; title: string; place: string; tag: string };
 
