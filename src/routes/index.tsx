@@ -767,20 +767,120 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
   const [assigning, setAssigning] = useState<Photo | null>(null);
   const [viewing, setViewing] = useState<Photo | null>(null);
   const [importing, setImporting] = useState(false);
-  const [sharing, setSharing] = useState(false);
+  const [shareMode, setShareMode] = useState(false);
+  const [shareFormat, setShareFormat] = useState<"carousel" | "story">("carousel");
+  const [shareStep, setShareStep] = useState<"select" | "building" | "preview" | "done">("select");
+  const [shareSelected, setShareSelected] = useState<string[]>([]);
+  const [progress, setProgress] = useState(0);
+  const [slide, setSlide] = useState(0);
   const days = Array.from(new Set(photos.map((p) => p.day))).sort((a, b) => a - b);
 
+  const maxPhotos = shareFormat === "carousel" ? 9 : 6;
+  const selectedPhotos = photos.filter((p) => shareSelected.includes(p.id));
+  const carouselPhotos = selectedPhotos.slice(0, 9);
+  const storyPhotos = selectedPhotos.slice(0, 6);
+
+  const enterShare = () => {
+    setShareFormat("carousel");
+    setShareSelected(photos.slice(0, 9).map((p) => p.id));
+    setShareStep("select");
+    setShareMode(true);
+  };
+  const exitShare = () => { setShareMode(false); setShareSelected([]); setShareStep("select"); };
+
+  const toggleSelect = (id: string) => setShareSelected((prev) => {
+    if (prev.includes(id)) return prev.filter((x) => x !== id);
+    if (prev.length >= maxPhotos) return prev;
+    return [...prev, id];
+  });
+
+  const build = () => {
+    setShareStep("building");
+    setProgress(0);
+    let i = 0;
+    const tick = setInterval(() => {
+      i += 8;
+      setProgress(Math.min(i, 100));
+      if (i >= 100) {
+        clearInterval(tick);
+        setTimeout(() => { setSlide(0); setShareStep("preview"); }, 350);
+      }
+    }, 90);
+  };
+
+  useEffect(() => {
+    if (!shareMode || shareStep !== "preview" || shareFormat !== "story" || storyPhotos.length === 0) return;
+    const tick = setInterval(() => setSlide((s) => (s + 1) % storyPhotos.length), 1400);
+    return () => clearInterval(tick);
+  }, [shareMode, shareStep, shareFormat, storyPhotos.length]);
+
+  useEffect(() => {
+    if (!shareMode || shareStep !== "select") return;
+    setShareSelected((prev) => prev.filter((id) => photos.some((p) => p.id === id)).slice(0, maxPhotos));
+  }, [shareFormat]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return <>
-    <div className="section-heading photo-heading"><div><p className="eyebrow">Shared memories</p><h2>Photo timeline</h2></div><div className="heading-actions"><button className="scan-chip" onClick={() => setImporting(true)}><Plus size={16} /> Add</button><button className="scan-chip" onClick={() => setSharing(true)}><Share2 size={16} /> Share</button></div></div>
-    {sharing && <InstagramShare photos={photos} onClose={() => setSharing(false)} />}
-    <p className="gesture-hint">Photos are matched to itinerary activities by place, date and time. Tap a photo to view it, or move it to another activity.</p>
+    <div className="section-heading photo-heading">
+      <div><p className="eyebrow">{shareMode ? "Share to Instagram" : "Shared memories"}</p><h2>{shareMode ? "Select photos to share" : "Photo timeline"}</h2></div>
+      <div className="heading-actions">
+        {shareMode ? <button className="scan-chip" onClick={exitShare}><X size={16} /> Cancel</button> : <>
+          <button className="scan-chip" onClick={() => setImporting(true)}><Plus size={16} /> Add</button>
+          <button className="scan-chip" onClick={enterShare}><Share2 size={16} /> Share</button>
+        </>}
+      </div>
+    </div>
+
+    {!shareMode && <p className="gesture-hint">Photos are matched to itinerary activities by place, date and time. Tap a photo to view it, or move it to another activity.</p>}
+    {shareMode && shareStep === "select" && <p className="gesture-hint">Tap the photos you want to share — up to {maxPhotos} for a {shareFormat === "carousel" ? "carousel" : "story"}. {shareSelected.length} selected.</p>}
+
     {importing && <PhotoImport stops={stops} onClose={() => setImporting(false)} onImport={(added) => {
       setPhotos((prev) => [...prev, ...added].sort((a, b) => a.day - b.day || a.time.localeCompare(b.time)));
       setImporting(false);
       onImported?.(added.map((p) => p.id));
-
     }} />}
-    <section className="photo-days">
+
+    {shareMode && shareStep === "building" && <div className="match-progress">
+      <div className="match-bar"><span style={{ width: `${progress}%` }} /></div>
+      <p className="gesture-hint">{shareFormat === "carousel" ? "Ordering your photos into a swipeable carousel…" : "Sequencing clips, adding captions and music…"} {progress}%</p>
+    </div>}
+
+    {shareMode && shareStep === "preview" && <>
+      {shareFormat === "carousel" ? <div className="ig-carousel">
+        <div className="ig-carousel-stage">
+          {carouselPhotos[slide] && <img key={carouselPhotos[slide].id} src={carouselPhotos[slide].src} alt={`${carouselPhotos[slide].place} memory`} />}
+          {slide > 0 && <button className="ig-carousel-nav prev" aria-label="Previous photo" onClick={() => setSlide((s) => s - 1)}><ChevronLeft size={22} /></button>}
+          {slide < carouselPhotos.length - 1 && <button className="ig-carousel-nav next" aria-label="Next photo" onClick={() => setSlide((s) => s + 1)}><ChevronRight size={22} /></button>}
+          <span className="ig-carousel-count">{slide + 1}/{carouselPhotos.length}</span>
+        </div>
+        <div className="ig-carousel-dots">{carouselPhotos.map((p, i) => <i key={p.id} className={i === slide ? "on" : ""} onClick={() => setSlide(i)} />)}</div>
+        <div className="ig-carousel-caption">
+          <p className="eyebrow">Tokyo escape</p>
+          <b>{carouselPhotos[slide]?.place}</b>
+          <small>Day {(carouselPhotos[slide]?.day ?? 0) + 1} · {carouselPhotos[slide]?.time}</small>
+        </div>
+      </div> : <div className="ig-story">
+        <div className="ig-story-bars">{storyPhotos.map((p, i) => <i key={p.id} className={i <= slide ? "on" : ""} />)}</div>
+        {storyPhotos[slide] && <img src={storyPhotos[slide].src} alt={`${storyPhotos[slide].place} memory`} />}
+        <div className="ig-story-caption">
+          <p className="eyebrow">Tokyo escape</p>
+          <b>{storyPhotos[slide]?.place}</b>
+          <small><Play size={12} /> Day {(storyPhotos[slide]?.day ?? 0) + 1} · {storyPhotos[slide]?.time}</small>
+        </div>
+      </div>}
+      <p className="gesture-hint">Tokyo escape · {selectedPhotos.length} photos. Caption and location tag are filled in for you.</p>
+      <div className="share-bar">
+        <button className="scan-chip" onClick={() => setShareStep("select")}><ArrowLeft size={16} /> Back</button>
+        <button className="money-action" onClick={() => setShareStep("done")}><Instagram size={17} /> {shareFormat === "carousel" ? "Share as post" : "Share to stories"}</button>
+      </div>
+    </>}
+
+    {shareMode && shareStep === "done" && <>
+      <div className="share-done"><Check size={26} /></div>
+      <p className="gesture-hint">Your {shareFormat === "carousel" ? "photo carousel" : "story video"} was handed to Instagram with the caption “Tokyo escape · 5 days, 5 friends”. Everyone on the trip gets a copy in the shared album.</p>
+      <button className="money-action mt-4" onClick={exitShare}><Check size={17} /> Done</button>
+    </>}
+
+    {(!shareMode || shareStep === "select") && <section className="photo-days">
       {days.map((day) => {
         const dayPhotos = photos.filter((p) => p.day === day);
         const groups = groupPhotosByStop(dayPhotos, stops);
@@ -790,15 +890,37 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
           </div>
           {groups.map((group) => <div className="activity-cluster" key={group.stop?.id ?? "unmatched"}>
             <p className="cluster-label">{group.stop ? <><MapPin size={13} /> {group.stop.time} · {group.stop.title}</> : <><Image size={13} /> Not matched to an activity</>}</p>
-            <div className="photo-grid">{group.photos.map((photo) => <button key={photo.id} className="photo-tile" onClick={() => setViewing(photo)}>
-              <img src={photo.src} alt={`${photo.place} memory`} width={1280} height={800} loading="lazy" />
-              <small className="photo-meta">{photo.time}</small>
-              {photo.stopId && <i className="manual-badge"><Check size={12} /></i>}
-            </button>)}</div>
+            <div className="photo-grid">{group.photos.map((photo) => {
+              const on = shareMode && shareSelected.includes(photo.id);
+              const disabled = shareMode && !on && shareSelected.length >= maxPhotos;
+              return <button key={photo.id} type="button" className={shareMode ? (on ? "photo-tile selected" : "photo-tile") : "photo-tile"} disabled={disabled} aria-pressed={on} onClick={() => shareMode ? toggleSelect(photo.id) : setViewing(photo)}>
+                <img src={photo.src} alt={`${photo.place} memory`} width={1280} height={800} loading="lazy" />
+                <small className="photo-meta">{photo.time}</small>
+                {photo.stopId && <i className="manual-badge"><Check size={12} /></i>}
+                {shareMode && on && <i className="photo-select-check"><Check size={13} /></i>}
+              </button>;
+            })}</div>
           </div>)}
         </article>;
       })}
-    </section>
+    </section>}
+
+    {shareMode && shareStep === "select" && <div className="share-bar">
+      <div className="share-formats">
+        <button type="button" className={shareFormat === "carousel" ? "share-format on" : "share-format"} aria-pressed={shareFormat === "carousel"} onClick={() => setShareFormat("carousel")}>
+          <GalleryHorizontal size={18} />
+          <b>Carousel</b>
+          <small>Up to 9 photos</small>
+        </button>
+        <button type="button" className={shareFormat === "story" ? "share-format on" : "share-format"} aria-pressed={shareFormat === "story"} onClick={() => setShareFormat("story")}>
+          <Film size={18} />
+          <b>Story</b>
+          <small>Up to 6 photos</small>
+        </button>
+      </div>
+      <button className="money-action" disabled={selectedPhotos.length === 0} onClick={build}><Instagram size={17} /> Build {shareFormat} · {selectedPhotos.length}</button>
+    </div>}
+
     {viewing && <PhotoLightbox photo={viewing} photos={photos} stops={stops} onClose={() => setViewing(null)} onPrev={(p) => setViewing(p)} onNext={(p) => setViewing(p)} onMove={() => { setAssigning(viewing); setViewing(null); }} />}
     {assigning && <PhotoAssign photo={assigning} stops={stops} onClose={() => setAssigning(null)} onAssign={(stopId) => {
       setPhotos((prev) => prev.map((p) => (p.id === assigning.id ? { ...p, stopId, day: stopId ? (stops.find((s) => s.id === stopId)?.day ?? p.day) : p.day } : p)));
@@ -807,145 +929,6 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
   </>;
 }
 
-function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => void }) {
-  const [format, setFormat] = useState<"carousel" | "story">("carousel");
-  const [step, setStep] = useState<"pick" | "building" | "preview" | "done">("pick");
-  const [progress, setProgress] = useState(0);
-  const [slide, setSlide] = useState(0);
-  const [selected, setSelected] = useState<string[]>(photos.map((p) => p.id));
-
-  const selectedPhotos = photos.filter((p) => selected.includes(p.id));
-  const maxPhotos = format === "carousel" ? 9 : 6;
-  const carouselPhotos = selectedPhotos.slice(0, 9);
-  const storyPhotos = selectedPhotos.slice(0, 6);
-
-  const togglePhoto = (id: string) => {
-    setSelected((prev) => {
-      if (prev.includes(id)) return prev.filter((x) => x !== id);
-      if (prev.length >= maxPhotos) return prev;
-      return [...prev, id];
-    });
-  };
-
-  const selectAll = () => setSelected(photos.slice(0, maxPhotos).map((p) => p.id));
-  const clearAll = () => setSelected([]);
-
-  const build = () => {
-    setStep("building");
-    setProgress(0);
-    let i = 0;
-    const tick = setInterval(() => {
-      i += 8;
-      setProgress(Math.min(i, 100));
-      if (i >= 100) {
-        clearInterval(tick);
-        setTimeout(() => { setSlide(0); setStep("preview"); }, 350);
-      }
-    }, 90);
-  };
-
-  useEffect(() => {
-    if (step !== "preview" || format !== "story" || storyPhotos.length === 0) return;
-    const tick = setInterval(() => setSlide((s) => (s + 1) % storyPhotos.length), 1400);
-    return () => clearInterval(tick);
-  }, [step, format, storyPhotos.length]);
-
-  useEffect(() => {
-    if (step !== "pick") return;
-    setSelected((prev) => {
-      const kept = prev.filter((id) => photos.some((p) => p.id === id));
-      return kept.slice(0, maxPhotos);
-    });
-  }, [format]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const headings = {
-    pick: "Share to Instagram",
-    building: format === "carousel" ? "Building your carousel" : "Cutting your story",
-    preview: format === "carousel" ? "Your Tokyo carousel" : "Your Tokyo story",
-    done: "Shared to Instagram",
-  } as const;
-
-  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Share to Instagram">
-    <div className="modal-sheet">
-      <div className="modal-head">
-        <div>
-          <p className="eyebrow">{step === "done" ? "Opened in Instagram" : `${selectedPhotos.length} of ${photos.length} photos selected`}</p>
-          <h2>{headings[step]}</h2>
-        </div>
-        <IconButton label="Close" onClick={onClose}><X size={20} /></IconButton>
-      </div>
-
-      {step === "pick" && <>
-        <p className="gesture-hint">Pick the photos to include, then choose a format. {format === "carousel" ? "Up to 9 photos" : "Up to 6 photos"} per post.</p>
-        <div className="share-photo-grid">
-          {photos.map((p) => {
-            const on = selected.includes(p.id);
-            const disabled = !on && selected.length >= maxPhotos;
-            return <button type="button" key={p.id} className={on ? "share-photo on" : "share-photo"} disabled={disabled} onClick={() => togglePhoto(p.id)} aria-pressed={on}>
-              <img src={p.src} alt={`${p.place} memory`} loading="lazy" />
-              {on && <span className="share-photo-check"><Check size={13} /></span>}
-            </button>;
-          })}
-        </div>
-        <div className="share-select-bar">
-          <button type="button" className="text-link" onClick={selectAll}>Select all</button>
-          <button type="button" className="text-link" onClick={clearAll}>Clear</button>
-        </div>
-        <div className="share-formats">
-          <button type="button" className={format === "carousel" ? "share-format on" : "share-format"} aria-pressed={format === "carousel"} onClick={() => setFormat("carousel")}>
-            <GalleryHorizontal size={18} />
-            <b>Photo carousel</b>
-            <small>Up to 9 photos, one swipeable post</small>
-          </button>
-          <button type="button" className={format === "story" ? "share-format on" : "share-format"} aria-pressed={format === "story"} onClick={() => setFormat("story")}>
-            <Film size={18} />
-            <b>Story video</b>
-            <small>6s recap for your stories</small>
-          </button>
-        </div>
-        <button className="money-action mt-4" onClick={build} disabled={selectedPhotos.length === 0}><Instagram size={17} /> Build my {format === "carousel" ? "carousel" : "story"}</button>
-      </>}
-
-      {step === "building" && <div className="match-progress">
-        <div className="match-bar"><span style={{ width: `${progress}%` }} /></div>
-        <p className="gesture-hint">{format === "carousel" ? "Ordering your photos into a swipeable carousel…" : "Sequencing clips, adding captions and music…"} {progress}%</p>
-      </div>}
-
-      {step === "preview" && <>
-        {format === "carousel" ? <div className="ig-carousel">
-          <div className="ig-carousel-stage">
-            {carouselPhotos[slide] && <img key={carouselPhotos[slide].id} src={carouselPhotos[slide].src} alt={`${carouselPhotos[slide].place} memory`} />}
-            {slide > 0 && <button className="ig-carousel-nav prev" aria-label="Previous photo" onClick={() => setSlide((s) => s - 1)}><ChevronLeft size={22} /></button>}
-            {slide < carouselPhotos.length - 1 && <button className="ig-carousel-nav next" aria-label="Next photo" onClick={() => setSlide((s) => s + 1)}><ChevronRight size={22} /></button>}
-            <span className="ig-carousel-count">{slide + 1}/{carouselPhotos.length}</span>
-          </div>
-          <div className="ig-carousel-dots">{carouselPhotos.map((p, i) => <i key={p.id} className={i === slide ? "on" : ""} onClick={() => setSlide(i)} />)}</div>
-          <div className="ig-carousel-caption">
-            <p className="eyebrow">Tokyo escape</p>
-            <b>{carouselPhotos[slide]?.place}</b>
-            <small>Day {(carouselPhotos[slide]?.day ?? 0) + 1} · {carouselPhotos[slide]?.time}</small>
-          </div>
-        </div> : <div className="ig-story">
-          <div className="ig-story-bars">{storyPhotos.map((p, i) => <i key={p.id} className={i <= slide ? "on" : ""} />)}</div>
-          {storyPhotos[slide] && <img src={storyPhotos[slide].src} alt={`${storyPhotos[slide].place} memory`} />}
-          <div className="ig-story-caption">
-            <p className="eyebrow">Tokyo escape</p>
-            <b>{storyPhotos[slide]?.place}</b>
-            <small><Play size={12} /> Day {(storyPhotos[slide]?.day ?? 0) + 1} · {storyPhotos[slide]?.time}</small>
-          </div>
-        </div>}
-        <p className="gesture-hint">Tokyo escape · 5 travelers · {selectedPhotos.length} photos. Caption and location tag are filled in for you.</p>
-        <button className="money-action mt-4" onClick={() => setStep("done")}><Instagram size={17} /> {format === "carousel" ? "Share as post" : "Share to stories"}</button>
-      </>}
-
-      {step === "done" && <>
-        <div className="share-done"><Check size={26} /></div>
-        <p className="gesture-hint">Your {format === "carousel" ? "photo carousel" : "story video"} was handed to Instagram with the caption “Tokyo escape · 5 days, 5 friends”. Everyone on the trip gets a copy in the shared album.</p>
-        <button className="money-action mt-4" onClick={onClose}><Check size={17} /> Done</button>
-      </>}
-    </div>
-  </div>;
-}
 
 
 
