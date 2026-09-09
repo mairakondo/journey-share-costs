@@ -628,7 +628,7 @@ function Photos({ stops, photos, setPhotos }: { stops: Stop[]; photos: Photo[]; 
       setPhotos((prev) => [...prev, ...added].sort((a, b) => a.day - b.day || a.time.localeCompare(b.time)));
       setImporting(false);
       setOpenDay(added[0]?.day ?? 0);
-    }} />
+    }} />}
     <section className="photo-days">
       {days.map((day) => {
         const dayPhotos = photos.filter((p) => p.day === day);
