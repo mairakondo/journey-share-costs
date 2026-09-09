@@ -689,9 +689,23 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
   const [step, setStep] = useState<"pick" | "building" | "preview" | "done">("pick");
   const [progress, setProgress] = useState(0);
   const [slide, setSlide] = useState(0);
+  const [selected, setSelected] = useState<string[]>(photos.map((p) => p.id));
 
-  const carouselPhotos = photos.slice(0, 9);
-  const storyPhotos = photos.slice(0, 6);
+  const selectedPhotos = photos.filter((p) => selected.includes(p.id));
+  const maxPhotos = format === "carousel" ? 9 : 6;
+  const carouselPhotos = selectedPhotos.slice(0, 9);
+  const storyPhotos = selectedPhotos.slice(0, 6);
+
+  const togglePhoto = (id: string) => {
+    setSelected((prev) => {
+      if (prev.includes(id)) return prev.filter((x) => x !== id);
+      if (prev.length >= maxPhotos) return prev;
+      return [...prev, id];
+    });
+  };
+
+  const selectAll = () => setSelected(photos.slice(0, maxPhotos).map((p) => p.id));
+  const clearAll = () => setSelected([]);
 
   const build = () => {
     setStep("building");
@@ -713,6 +727,14 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
     return () => clearInterval(tick);
   }, [step, format, storyPhotos.length]);
 
+  useEffect(() => {
+    if (step !== "pick") return;
+    setSelected((prev) => {
+      const kept = prev.filter((id) => photos.some((p) => p.id === id));
+      return kept.slice(0, maxPhotos);
+    });
+  }, [format]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const headings = {
     pick: "Share to Instagram",
     building: format === "carousel" ? "Building your carousel" : "Cutting your story",
@@ -724,19 +746,33 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
     <div className="modal-sheet">
       <div className="modal-head">
         <div>
-          <p className="eyebrow">{step === "done" ? "Opened in Instagram" : `${photos.length} shared memories`}</p>
+          <p className="eyebrow">{step === "done" ? "Opened in Instagram" : `${selectedPhotos.length} of ${photos.length} photos selected`}</p>
           <h2>{headings[step]}</h2>
         </div>
         <IconButton label="Close" onClick={onClose}><X size={20} /></IconButton>
       </div>
 
       {step === "pick" && <>
-        <p className="gesture-hint">We pre-build the post from the photos everyone added to this trip. Pick a format.</p>
+        <p className="gesture-hint">Pick the photos to include, then choose a format. {format === "carousel" ? "Up to 9 photos" : "Up to 6 photos"} per post.</p>
+        <div className="share-photo-grid">
+          {photos.map((p) => {
+            const on = selected.includes(p.id);
+            const disabled = !on && selected.length >= maxPhotos;
+            return <button type="button" key={p.id} className={on ? "share-photo on" : "share-photo"} disabled={disabled} onClick={() => togglePhoto(p.id)} aria-pressed={on}>
+              <img src={p.src} alt={`${p.place} memory`} loading="lazy" />
+              {on && <span className="share-photo-check"><Check size={13} /></span>}
+            </button>;
+          })}
+        </div>
+        <div className="share-select-bar">
+          <button type="button" className="text-link" onClick={selectAll}>Select all</button>
+          <button type="button" className="text-link" onClick={clearAll}>Clear</button>
+        </div>
         <div className="share-formats">
           <button type="button" className={format === "carousel" ? "share-format on" : "share-format"} aria-pressed={format === "carousel"} onClick={() => setFormat("carousel")}>
             <GalleryHorizontal size={18} />
             <b>Photo carousel</b>
-            <small>{Math.min(photos.length, 9)} photos, one swipeable post</small>
+            <small>Up to 9 photos, one swipeable post</small>
           </button>
           <button type="button" className={format === "story" ? "share-format on" : "share-format"} aria-pressed={format === "story"} onClick={() => setFormat("story")}>
             <Film size={18} />
@@ -744,7 +780,7 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
             <small>6s recap for your stories</small>
           </button>
         </div>
-        <button className="money-action mt-4" onClick={build}><Instagram size={17} /> Build my {format === "carousel" ? "carousel" : "story"}</button>
+        <button className="money-action mt-4" onClick={build} disabled={selectedPhotos.length === 0}><Instagram size={17} /> Build my {format === "carousel" ? "carousel" : "story"}</button>
       </>}
 
       {step === "building" && <div className="match-progress">
@@ -775,7 +811,7 @@ function InstagramShare({ photos, onClose }: { photos: Photo[]; onClose: () => v
             <small><Play size={12} /> Day {(storyPhotos[slide]?.day ?? 0) + 1} · {storyPhotos[slide]?.time}</small>
           </div>
         </div>}
-        <p className="gesture-hint">Tokyo escape · 5 travelers · {photos.length} photos. Caption and location tag are filled in for you.</p>
+        <p className="gesture-hint">Tokyo escape · 5 travelers · {selectedPhotos.length} photos. Caption and location tag are filled in for you.</p>
         <button className="money-action mt-4" onClick={() => setStep("done")}><Instagram size={17} /> {format === "carousel" ? "Share as post" : "Share to stories"}</button>
       </>}
 
