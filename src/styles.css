@@ -415,7 +415,7 @@
   .quick-panel button { @apply min-h-24; }
   .memory-preview { @apply min-h-32 p-5; }
   .memory-preview button { @apply size-10 p-0 text-[0px]; }
-  .section-heading { @apply flex items-center justify-between gap-3; }
+  .section-heading { @apply flex items-center justify-between gap-3; }.heading-actions { @apply flex items-center gap-2; }
   .timeline-head-actions { @apply flex items-center gap-2; }
   .spend-timeline { @apply min-w-0; }
   .spend-timeline > section { @apply min-w-0 overflow-hidden rounded-2xl p-3; }
