@@ -187,7 +187,7 @@ function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: Vie
   );
 }
 
-function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, expenses, setExpenses, newPhotoIds, setNewPhotoIds }: { view: View; setView: (v: View) => void; onScan: () => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void; expenses: Expense[]; setExpenses: (fn: (p: Expense[]) => Expense[]) => void; newPhotoIds: string[]; setNewPhotoIds: (ids: string[]) => void }) {
+function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, expenses, setExpenses, newPhotoIds, dismissPhotos, onImported }: { view: View; setView: (v: View) => void; onScan: () => void; stops: Stop[]; setStops: (fn: (p: Stop[]) => Stop[]) => void; photos: Photo[]; setPhotos: (fn: (p: Photo[]) => Photo[]) => void; expenses: Expense[]; setExpenses: (fn: (p: Expense[]) => Expense[]) => void; newPhotoIds: string[]; dismissPhotos: (ids: string[]) => void; onImported: (ids: string[]) => void }) {
   return (
 
     <div className="page-pad trip-page pb-28">
