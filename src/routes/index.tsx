@@ -85,6 +85,8 @@ function TravelersApp() {
   const [stops, setStops] = useState<Stop[]>(initialStops);
   const [photos, setPhotos] = useState<Photo[]>(initialPhotos);
   const [expenses, setExpenses] = useState<Expense[]>(initialExpenses);
+  const [newPhotoIds, setNewPhotoIds] = useState<string[]>([]);
+
 
   return (
     <main className="min-h-screen bg-background text-foreground">
