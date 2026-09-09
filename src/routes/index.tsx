@@ -154,12 +154,6 @@ function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: Vie
             </div>
           </button>
           <div className="home-side-stack">
-          <article className="quick-panel" aria-label="Tokyo trip shortcuts">
-            <button onClick={() => onNavigate("plan")}><span><MapPin size={18} /></span><b>Itinerary</b><small>4 stops planned</small></button>
-            <button onClick={() => onNavigate("costs")}><span><WalletCards size={18} /></span><b>Costs</b><small>¥32,200 tracked</small></button>
-            <button onClick={() => onNavigate("photos")}><span><Image size={18} /></span><b>Photos</b><small>9 memories</small></button>
-            <button className="emergency-shortcut" onClick={() => onNavigate("emergency")}><span><ShieldCheck size={18} /></span><b>Emergency</b><small>Saved offline</small></button>
-          </article>
           <button className="trip-card compact-card" onClick={() => onNavigate("plan")}>
             <img src={copenhagen} alt="Colorful Copenhagen harbor" width={1280} height={800} loading="lazy" />
             <div className="trip-overlay compact">
