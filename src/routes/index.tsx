@@ -602,7 +602,7 @@ function PhotoImport({ stops, onClose, onImport }: { stops: Stop[]; onClose: () 
             </button>;
           })}
         </div>
-        <button className="money-action mt-4" disabled={chosen.length === 0} onClick={startMatching}><Search size={17} /> Match {chosen.length} {chosen.length === 1 ? "photo" : "photos"}</button>
+        <button className="money-action mt-4" disabled={chosen.length === 0} onClick={startMatching}><Search size={17} /> Add photos</button>
       </>}
 
       {step === "matching" && <div className="match-progress">
