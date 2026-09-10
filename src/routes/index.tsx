@@ -51,24 +51,24 @@ import {
 } from "lucide-react";
 import { useState, useEffect, type ReactNode } from "react";
 
-import icelandHero from "@/assets/iceland-hero.jpg";
+import tokyo from "@/assets/tokyo.jpg";
 import kyoto from "@/assets/kyoto.jpg";
-import icelandHallgrimskirkja from "@/assets/iceland-hallgrimskirkja.jpg";
-import icelandBluelagoon from "@/assets/iceland-bluelagoon.jpg";
-import icelandBreakfast from "@/assets/iceland-breakfast.jpg";
+import tokyoAsakusa from "@/assets/tokyo-asakusa.jpg";
+import tokyoTeamlab from "@/assets/tokyo-teamlab.jpg";
+import tokyoTsukiji from "@/assets/tokyo-tsukiji.jpg";
 import copenhagen from "@/assets/copenhagen.jpg";
 import tokyoGoldenGai from "@/assets/tokyo-goldengai.jpg";
 import lisbon from "@/assets/lisbon.jpg";
-import icelandPylsurStand from "@/assets/iceland-pylsur-stand.jpg";
-import icelandBus from "@/assets/iceland-bus.jpg";
-import icelandTowerView from "@/assets/iceland-tower-view.jpg";
-import icelandAurora from "@/assets/iceland-aurora.jpg";
-import icelandAlley from "@/assets/iceland-alley.jpg";
-import icelandStreet from "@/assets/iceland-street.jpg";
-import icelandFood from "@/assets/iceland-food.jpg";
-import icelandChurchDetail from "@/assets/iceland-church-detail.jpg";
-import icelandLagoonArt from "@/assets/iceland-lagoon-art.jpg";
-import icelandEvening from "@/assets/iceland-evening.jpg";
+import galTakoyaki from "@/assets/gal-takoyaki.jpg";
+import galMetro from "@/assets/gal-metro.jpg";
+import galOmikuji from "@/assets/gal-omikuji.jpg";
+import galLights from "@/assets/gal-lights.jpg";
+import galAlley from "@/assets/gal-alley.jpg";
+import importShibuyaFriends from "@/assets/import-shibuya-friends.jpg";
+import importTsukijiFood from "@/assets/import-tsukiji-food.jpg";
+import importAsakusaTemple from "@/assets/import-asakusa-temple.jpg";
+import importTeamlabArt from "@/assets/import-teamlab-art.jpg";
+import importGoldenGaiNight from "@/assets/import-golden-gai-night.jpg";
 
 type View = "home" | "plan" | "costs" | "photos" | "support" | "summary";
 
@@ -130,7 +130,7 @@ function TravelersApp() {
             <span>Travelers</span>
           </button>
           <div className="flex items-center gap-2">
-            {view !== "home" && <span className="hidden text-sm font-semibold text-primary-foreground/70 sm:inline">Iceland · Apr 6–11</span>}
+            {view !== "home" && <span className="hidden text-sm font-semibold text-primary-foreground/70 sm:inline">Tokyo · Apr 6–11</span>}
             <IconButton label="Meet request from Yuki" onClick={() => { setMeetOpen(false); setMeetAlert(true); }}><Bell size={20} /></IconButton>
             <button className="avatar">MK</button>
           </div>
@@ -148,7 +148,7 @@ function TravelersApp() {
         <div className="meet-toast" role="status">
           <button className="meet-toast-main" onClick={() => { setMeetOpen(true); setMeetAlert(false); }}>
             <span className="traveler-dot">Y</span>
-            <span className="flex-1 text-left"><strong>Yuki wants to meet you</strong><small>Laugavegur shopping street · 8 min walk</small></span>
+            <span className="flex-1 text-left"><strong>Yuki wants to meet you</strong><small>Nakamise shopping street · 8 min walk</small></span>
             <ChevronRight size={18} />
           </button>
           <IconButton label="Dismiss notification" onClick={() => setMeetAlert(false)}><X size={17} /></IconButton>
@@ -178,12 +178,12 @@ function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: Vie
         <>
         <section className="trip-grid home-trip-grid">
           <button className="trip-card featured" onClick={() => onNavigate("plan")}>
-            <img src={icelandHero} alt="Colorful Reykjavik houses at golden hour" width={1280} height={800} />
+            <img src={tokyo} alt="Neon-lit Tokyo street at golden hour" width={1280} height={800} />
             <div className="trip-overlay">
               <div className="status-pill"><span /> Next adventure · in 12 days</div>
               <div>
-                <p className="eyebrow trip-country">Iceland</p>
-                <h2>Iceland escape</h2>
+                <p className="eyebrow trip-country">Japan</p>
+                <h2>Tokyo escape</h2>
                 <p className="trip-dates">Apr 6–11 · 6 days</p>
                 <div className="mt-3 flex items-center justify-between gap-3">
                   <div className="avatar-stack">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
@@ -194,10 +194,10 @@ function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: Vie
           </button>
           <div className="home-side-stack">
           <button className="trip-card compact-card" onClick={() => onNavigate("plan")}>
-            <img src={icelandAurora} alt="Northern lights over Iceland" width={1280} height={800} loading="lazy" />
+            <img src={copenhagen} alt="Colorful Copenhagen harbor" width={1280} height={800} loading="lazy" />
             <div className="trip-overlay compact">
               <div className="status-pill"><span /> In 68 days</div>
-              <div><p className="text-xs font-semibold">Jul 13–17</p><h2>Iceland</h2><p className="mt-1 text-sm">3 travelers</p></div>
+              <div><p className="text-xs font-semibold">Jul 13–17</p><h2>Copenhagen</h2><p className="mt-1 text-sm">3 travelers</p></div>
             </div>
           </button>
           </div>
@@ -224,7 +224,7 @@ function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, 
 
     <div className="page-pad trip-page pb-28">
       <div className="trip-heading">
-        <div className="flex min-w-0 items-center gap-3"><IconButton label="Back to trips" onClick={() => setView("home")}><ArrowLeft size={20} /></IconButton><div className="min-w-0"><p className="eyebrow">Apr 6–11 · 4 travelers</p><h1 className="truncate text-3xl font-extrabold">Iceland escape</h1></div></div>
+        <div className="flex min-w-0 items-center gap-3"><IconButton label="Back to trips" onClick={() => setView("home")}><ArrowLeft size={20} /></IconButton><div className="min-w-0"><p className="eyebrow">Apr 6–11 · 4 travelers</p><h1 className="truncate text-3xl font-extrabold">Tokyo escape</h1></div></div>
         <div className="avatar-stack hidden sm:flex">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
       </div>
       {view === "plan" && <Itinerary setView={setView} stops={stops} setStops={setStops} photos={photos} expenses={expenses} setExpenses={setExpenses} newPhotoIds={newPhotoIds} dismissPhotos={dismissPhotos} />}
@@ -240,10 +240,10 @@ function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, 
 type Stop = { id: string; day: number; time: string; title: string; place: string; tag: string };
 
 const initialStops: Stop[] = [
-  { id: "s1", day: 1, time: "09:30", title: "Reykjavik breakfast", place: "Bæjarins Beztu Pylsur", tag: "Local favorite" },
-  { id: "s2", day: 1, time: "11:00", title: "Hallgrimskirkja", place: "Hallgrimstorg 1", tag: "Must see" },
-  { id: "s3", day: 1, time: "14:30", title: "Blue Lagoon", place: "Reykjanesbraut", tag: "Explore" },
-  { id: "s4", day: 0, time: "16:00", title: "Check in & Laugavegur stroll", place: "Laugavegur 36", tag: "Easy start" },
+  { id: "s1", day: 1, time: "09:30", title: "Tsukiji breakfast", place: "Tsukiji Outer Market", tag: "Local favorite" },
+  { id: "s2", day: 1, time: "11:00", title: "Senso-ji Temple", place: "Asakusa 2-3-1", tag: "Must see" },
+  { id: "s3", day: 1, time: "14:30", title: "teamLab Planets", place: "Toyosu 6-1-16", tag: "Explore" },
+  { id: "s4", day: 0, time: "16:00", title: "Check in & Shibuya stroll", place: "Shibuya Crossing", tag: "Easy start" },
 ];
 
 type Photo = { id: string; src: string; day: number; time: string; place: string; stopId?: string | null };
@@ -312,7 +312,7 @@ function SplitPicker({ split: rawSplit, amount, onChange }: { split: Split | und
         const on = split.participants.includes(m.name);
         return <div key={m.name} className={on ? "split-row on" : "split-row"}>
           <button className="split-person" onClick={() => toggle(m.name)} aria-pressed={on}><span className={m.tone}>{m.initials}</span>{m.name}<i>{on && <Check size={12} />}</i></button>
-          {on && split.mode !== "equal" && <div className="split-value">{split.mode === "exact" && <small>kr</small>}<input inputMode="decimal" aria-label={`${split.mode === "percent" ? "Percentage" : "Amount"} for ${m.name}`} value={String(split.values[m.name] ?? "")} onChange={(e) => setValue(m.name, Number(e.target.value.replace(",", ".")) || 0)} />{split.mode === "percent" && <small>%</small>}</div>}
+          {on && split.mode !== "equal" && <div className="split-value">{split.mode === "exact" && <small>¥</small>}<input inputMode="decimal" aria-label={`${split.mode === "percent" ? "Percentage" : "Amount"} for ${m.name}`} value={String(split.values[m.name] ?? "")} onChange={(e) => setValue(m.name, Number(e.target.value.replace(",", ".")) || 0)} />{split.mode === "percent" && <small>%</small>}</div>}
           {on && split.mode !== "exact" && <strong>{euro(shares[m.name] ?? 0)}</strong>}
         </div>;
       })}
@@ -325,23 +325,23 @@ function SplitPicker({ split: rawSplit, amount, onChange }: { split: Split | und
 
 
 const initialPhotos: Photo[] = [
-  { id: "p1", src: icelandHero, day: 0, time: "16:20", place: "Laugavegur 36" },
-  { id: "p2", src: icelandStreet, day: 0, time: "16:55", place: "Laugavegur, city center" },
-  { id: "p3", src: icelandEvening, day: 0, time: "21:10", place: "Sun Voyager, Reykjavik" },
-  { id: "p4", src: icelandBreakfast, day: 1, time: "09:40", place: "Bæjarins Beztu Pylsur" },
-  { id: "p5", src: icelandFood, day: 1, time: "10:05", place: "Bæjarins Beztu Pylsur" },
-  { id: "p6", src: icelandHallgrimskirkja, day: 1, time: "11:25", place: "Hallgrimstorg 1" },
-  { id: "p7", src: icelandChurchDetail, day: 1, time: "11:50", place: "Hallgrimskirkja, Hallgrimstorg 1" },
-  { id: "p8", src: icelandBluelagoon, day: 1, time: "14:50", place: "Reykjanesbraut" },
-  { id: "p9", src: icelandLagoonArt, day: 1, time: "15:30", place: "Blue Lagoon, Reykjanesbraut" },
+  { id: "p1", src: tokyo, day: 0, time: "16:20", place: "Shibuya Crossing" },
+  { id: "p2", src: importShibuyaFriends, day: 0, time: "16:55", place: "Shibuya Crossing, Center Gai" },
+  { id: "p3", src: importGoldenGaiNight, day: 0, time: "21:10", place: "Golden Gai" },
+  { id: "p4", src: tokyoTsukiji, day: 1, time: "09:40", place: "Tsukiji Outer Market" },
+  { id: "p5", src: importTsukijiFood, day: 1, time: "10:05", place: "Tsukiji Outer Market" },
+  { id: "p6", src: tokyoAsakusa, day: 1, time: "11:25", place: "Asakusa 2-3-1" },
+  { id: "p7", src: importAsakusaTemple, day: 1, time: "11:50", place: "Senso-ji, Asakusa 2-3-1" },
+  { id: "p8", src: tokyoTeamlab, day: 1, time: "14:50", place: "Toyosu 6-1-16" },
+  { id: "p9", src: importTeamlabArt, day: 1, time: "15:30", place: "teamLab Planets" },
 ];
 
 const initialExpenses: Expense[] = [
-  { id: "e1", day: 1, time: "09:45", place: "Bæjarins Beztu Pylsur", label: "Pylsur breakfast", amount: 1800, payer: "Maira", source: "scan", split: equalSplit() },
-  { id: "e2", day: 1, time: "11:10", place: "Hallgrimstorg 1", label: "Church tower entry", amount: 1200, payer: "Jon", source: "scan", split: equalSplit() },
-  { id: "e3", day: 1, time: "14:55", place: "Reykjanesbraut", label: "Blue Lagoon tickets", amount: 9900, payer: "Ana", source: "scan", split: { mode: "exact", participants: ["You", "Jon", "Ana"], values: { You: 3300, Jon: 3600, Ana: 3000 } } },
-  { id: "e4", day: 0, time: "16:15", place: "Laugavegur 36", label: "Flybus airport transfer", amount: 6400, payer: "Maira", source: "manual", split: equalSplit(["You", "Jon"]) },
-  { id: "e5", day: 1, time: "20:30", place: "Sun Voyager, Reykjavik", label: "Late drinks", amount: 6800, payer: "Luis", source: "manual", split: { mode: "percent", participants: ["You", "Luis"], values: { You: 40, Luis: 60 } } },
+  { id: "e1", day: 1, time: "09:45", place: "Tsukiji Outer Market", label: "Sushi breakfast", amount: 3200, payer: "Maira", source: "scan", split: equalSplit() },
+  { id: "e2", day: 1, time: "11:10", place: "Asakusa 2-3-1", label: "Temple omamori", amount: 1800, payer: "Jon", source: "scan", split: equalSplit() },
+  { id: "e3", day: 1, time: "14:55", place: "Toyosu 6-1-16", label: "teamLab tickets", amount: 15600, payer: "Ana", source: "scan", split: { mode: "exact", participants: ["You", "Jon", "Ana"], values: { You: 5600, Jon: 6000, Ana: 4000 } } },
+  { id: "e4", day: 0, time: "16:15", place: "Shibuya Crossing", label: "Narita Express", amount: 6400, payer: "Maira", source: "manual", split: equalSplit(["You", "Jon"]) },
+  { id: "e5", day: 1, time: "20:30", place: "Golden Gai", label: "Late drinks", amount: 5200, payer: "Luis", source: "manual", split: { mode: "percent", participants: ["You", "Luis"], values: { You: 40, Luis: 60 } } },
 
 ];
 
@@ -373,7 +373,7 @@ function resolveStop(item: Taggable, stops: Stop[]): Stop | null {
   return best && best.score > 0.6 ? best.stop : null;
 }
 
-const euro = (n: number) => `kr ${Math.round(n).toLocaleString("en-US")}`;
+const euro = (n: number) => `¥${Math.round(n).toLocaleString("en-US")}`;
 
 function groupPhotosByStop(dayPhotos: Photo[], stops: Stop[]) {
   const groups: { stop: Stop | null; photos: Photo[] }[] = [];
@@ -427,7 +427,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
 
     <div className="content-grid">
       <section>
-        <div className="date-heading"><div><div className="weather -mt-2"><CloudSun size={23} /><span>9°</span></div><p className="eyebrow">{["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"][day]}</p><div className="day-title-row mt-2"><h2>{day === 0 ? "Velkomin, Reykjavik!" : ["Hallgrimskirkja & old town", "Golden Circle day", "South coast waterfalls", "Last soak & goodbye"][day - 1]}</h2></div></div>
+        <div className="date-heading"><div><div className="weather -mt-2"><CloudSun size={23} /><span>24°</span></div><p className="eyebrow">{["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"][day]}</p><div className="day-title-row mt-2"><h2>{day === 0 ? "Konnichiwa, Tokyo!" : ["Asakusa & old town", "Shibuya slow day", "Hakone day trip", "Last bites"][day - 1]}</h2></div></div>
           <div className="add-menu-wrap">
             <button className="scan-chip" aria-haspopup="menu" aria-expanded={addOpen} onClick={() => setAddOpen((o) => !o)}><Plus size={16} /> Add</button>
             {addOpen && <div className="add-menu" role="menu">
@@ -470,9 +470,9 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
 }
 
 const sampleReceipts = [
-  { label: "Blue Lagoon tickets", place: "Reykjanesbraut", amount: 9900, time: "14:55" },
-  { label: "City bus card", place: "Reykjavik Bus Terminal", amount: 2200, time: "10:20" },
-  { label: "Dinner at Þrír Frakkar", place: "Bergstaðastræti 1", amount: 9800, time: "20:10" },
+  { label: "teamLab tickets", place: "Toyosu 6-1-16", amount: 15600, time: "14:55" },
+  { label: "Suica top-up", place: "Shinjuku Station", amount: 3000, time: "10:20" },
+  { label: "Dinner at Omoide Yokocho", place: "Nishi-Shinjuku 1-2", amount: 11800, time: "20:10" },
 ];
 
 function ExpenseEditor({ expense, stops, onClose, onSave, onDelete }: { expense: Expense; stops: Stop[]; onClose: () => void; onSave: (e: Expense) => void; onDelete?: (() => void) | undefined }) {
@@ -500,10 +500,10 @@ function ExpenseEditor({ expense, stops, onClose, onSave, onDelete }: { expense:
       <div className="form-grid">
         <label>What was it?<input value={draft.label} placeholder="Lunch at Rio Maravilha" onChange={(e) => setDraft({ ...draft, label: e.target.value })} /></label>
         <div className="two-cols">
-          <label>Amount (kr)<input inputMode="decimal" value={draft.amount ? String(draft.amount) : ""} placeholder="0" onChange={(e) => setDraft({ ...draft, amount: Number(e.target.value.replace(",", ".")) || 0 })} /></label>
+          <label>Amount (¥)<input inputMode="decimal" value={draft.amount ? String(draft.amount) : ""} placeholder="0.00" onChange={(e) => setDraft({ ...draft, amount: Number(e.target.value.replace(",", ".")) || 0 })} /></label>
           <label>Time<input type="time" value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} /></label>
         </div>
-        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Bæjarins Beztu Pylsur" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
+        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Tsukiji Outer Market" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
         <label>Paid by<input value={draft.payer} onChange={(e) => setDraft({ ...draft, payer: e.target.value })} /></label>
       </div>
       <div className="split-block">
@@ -525,8 +525,8 @@ function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: 
     <div className="modal-sheet">
       <div className="modal-head"><div><p className="eyebrow">Day {draft.day + 1}</p><h2>{isNew ? "Add activity" : "Edit activity"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>
       <div className="form-grid">
-        <label>Activity<input value={draft.title} placeholder="Reykjavik breakfast" onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></label>
-        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Bæjarins Beztu Pylsur" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
+        <label>Activity<input value={draft.title} placeholder="Tsukiji breakfast" onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></label>
+        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Tsukiji Outer Market" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
         <div className="two-cols">
 <label>Time<div className="input-icon"><Clock size={17} /><input type="time" value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} /></div></label>
           <label>Tag<input value={draft.tag} placeholder="Must see" onChange={(e) => setDraft({ ...draft, tag: e.target.value })} /></label>
@@ -541,33 +541,33 @@ function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: 
 type Tool = "restroom" | "translate" | "access" | "locate";
 
 const RESTROOMS = [
-  { name: "Hallgrimskirkja grounds", detail: "Hallgrimstorg 1 · 3 min walk", tags: ["Accessible", "Baby change"], clean: "Very clean" },
-  { name: "Reykjavik City Library", detail: "Inside · 6 min walk", tags: ["Accessible"], clean: "Clean" },
-  { name: "Kaffi Loki café", detail: "Ask at counter · 8 min walk", tags: ["Free"], clean: "Clean" },
-  { name: "Reykjavik pond north gate", detail: "Riverside path · 11 min walk", tags: ["Accessible", "Baby change"], clean: "Basic" },
+  { name: "Senso-ji temple grounds", detail: "Asakusa 2-3-1 · 3 min walk", tags: ["Accessible", "Baby change"], clean: "Very clean" },
+  { name: "Asakusa station · exit 4", detail: "Inside gates · 6 min walk", tags: ["Accessible"], clean: "Clean" },
+  { name: "Family Mart Kaminarimon", detail: "Ask at counter · 8 min walk", tags: ["Free"], clean: "Clean" },
+  { name: "Sumida park north gate", detail: "Riverside path · 11 min walk", tags: ["Accessible", "Baby change"], clean: "Basic" },
 ];
 
 const PHRASES = [
-  { en: "Where is the nearest restroom?", jp: "Hvar er næsta klósett?", ro: "Kvar er næsta klósett?" },
-  { en: "A table for four, please.", jp: "Borð fyrir fjóra, takk.", ro: "Borth fyrir fjora, takk" },
-  { en: "Does this have meat or fish?", jp: "Er þetta með kjöt eða fisk?", ro: "Er thetta me kjot eda fisk?" },
-  { en: "Can you help me, please?", jp: "Geturðu hjálpað mér, takk?", ro: "Geturdu hjalpad mer, takk?" },
-  { en: "How much does it cost?", jp: "Hvað kostar þetta?", ro: "Hvad kostar thetta?" },
+  { en: "Where is the nearest restroom?", jp: "一番近いトイレはどこですか？", ro: "Ichiban chikai toire wa doko desu ka?" },
+  { en: "A table for four, please.", jp: "4名でお願いします。", ro: "Yonmei de onegaishimasu." },
+  { en: "Does this have meat or fish?", jp: "これに肉や魚は入っていますか？", ro: "Kore ni niku ya sakana wa haitte imasu ka?" },
+  { en: "Can you help me, please?", jp: "手伝っていただけますか？", ro: "Tetsudatte itadakemasu ka?" },
+  { en: "How much does it cost?", jp: "いくらですか？", ro: "Ikura desu ka?" },
 ];
 
 const ACCESSIBLE = [
-  { name: "Reykjavik City Library", detail: "Elevator to all floors · step-free entrance", tags: ["Step-free", "Tactile paving"] },
-  { name: "Strætó bus 18", detail: "Low-floor bus with ramp · every 15 min", tags: ["Ramp", "Wheelchair space"] },
-  { name: "Hallgrimskirkja main hall", detail: "Ramp on west side, staff assistance", tags: ["Ramp", "Accessible restroom"] },
-  { name: "Blue Lagoon", detail: "Wheelchair route available · book ahead", tags: ["Step-free", "Lift"] },
-  { name: "Harpa concert hall", detail: "Lifts to all floors · priority queue", tags: ["Lift", "Accessible restroom"] },
+  { name: "Asakusa station (Ginza line)", detail: "Elevator to platform · step-free exit 4", tags: ["Step-free", "Tactile paving"] },
+  { name: "Toei bus 東42", detail: "Low-floor bus with ramp · every 12 min", tags: ["Ramp", "Wheelchair space"] },
+  { name: "Senso-ji main hall", detail: "Ramp on west side, staff assistance", tags: ["Ramp", "Accessible restroom"] },
+  { name: "teamLab Planets", detail: "Wheelchair route available · book ahead", tags: ["Step-free", "Lift"] },
+  { name: "Tokyo Skytree deck", detail: "Lifts to all floors · priority queue", tags: ["Lift", "Accessible restroom"] },
 ];
 
 const TRAVELERS = [
-  { name: "Maira", place: "Hallgrimskirkja main hall", when: "now", initials: "M" },
-  { name: "Yuki", place: "Laugavegur shopping street", when: "2 min ago", initials: "Y" },
-  { name: "Tom", place: "Reykjavik City Library", when: "5 min ago", initials: "T" },
-  { name: "Lena", place: "Reykjavik pond riverside", when: "9 min ago", initials: "L" },
+  { name: "Maira", place: "Senso-ji main hall", when: "now", initials: "M" },
+  { name: "Yuki", place: "Nakamise shopping street", when: "2 min ago", initials: "Y" },
+  { name: "Tom", place: "Asakusa station · exit 4", when: "5 min ago", initials: "T" },
+  { name: "Lena", place: "Sumida park riverside", when: "9 min ago", initials: "L" },
 ];
 
 function Support() {
@@ -579,7 +579,7 @@ function Support() {
   </section>
   <h3 className="support-section-title">Emergency contacts</h3>
   <section className="support-grid">
-    {[{ icon: <HeartPulse />, label: "Nearest hospital", title: "Landspítali University Hospital", detail: "Fossvogur · 2.4 km", number: "+354 543 1000" }, { icon: <Landmark />, label: "U.S. Embassy", title: "Embassy of the United States", detail: "Reykjavik · 4.1 km", number: "+354 562 9100" }, { icon: <Phone />, label: "National emergency", title: "Police 112 · Fire & Ambulance 112", detail: "Available 24 hours", number: "112" }].map((x) => <article className="support-card" key={x.label}><span className="support-icon">{x.icon}</span><div className="flex-1"><p className="eyebrow">{x.label}</p><h3>{x.title}</h3><p>{x.detail}</p><a href={`tel:${x.number}`}><Phone size={16} /> {x.number}</a></div></article>)}
+    {[{ icon: <HeartPulse />, label: "Nearest hospital", title: "St. Luke's International Hospital", detail: "Akashi-cho 9-1 · 2.4 km", number: "+81 3 3541 5151" }, { icon: <Landmark />, label: "U.S. Embassy", title: "Embassy of the United States", detail: "Akasaka 1-10-5 · 4.1 km", number: "+81 3 3224 5000" }, { icon: <Phone />, label: "National emergency", title: "Police 110 · Fire & Ambulance 119", detail: "Available 24 hours", number: "110" }].map((x) => <article className="support-card" key={x.label}><span className="support-icon">{x.icon}</span><div className="flex-1"><p className="eyebrow">{x.label}</p><h3>{x.title}</h3><p>{x.detail}</p><a href={`tel:${x.number}`}><Phone size={16} /> {x.number}</a></div></article>)}
   </section>
   {tool === "restroom" && <RestroomFlow onClose={() => setTool(null)} />}
   {tool === "translate" && <TranslateFlow onClose={() => setTool(null)} />}
@@ -603,7 +603,7 @@ function RestroomFlow({ onClose }: { onClose: () => void }) {
   const [going, setGoing] = useState<string | null>(null);
   useEffect(() => { const t = setTimeout(() => setLocating(false), 1200); return () => clearTimeout(t); }, []);
   const list = only ? RESTROOMS.filter((r) => r.tags.includes("Accessible")) : RESTROOMS;
-  return <ToolSheet title="Find restrooms" subtitle="Around Hallgrimskirkja, Reykjavik" onClose={onClose}>
+  return <ToolSheet title="Find restrooms" subtitle="Around Senso-ji, Asakusa" onClose={onClose}>
     {locating ? <div className="tool-loading"><Locate size={20} /> Finding restrooms near you…</div> : going ? <div className="tool-done"><span><Navigation size={22} /></span><h3>Walking to {going}</h3><p>Follow the blue route · arrive in about 3 min</p><button className="secondary-action wide" onClick={() => setGoing(null)}>Back to list</button></div> : <>
       <div className="tool-filter mt-4"><button className={only ? "" : "on"} onClick={() => setOnly(false)}>All</button><button className={only ? "on" : ""} onClick={() => setOnly(true)}>Accessible only</button></div>
       <ul className="tool-list">{list.map((r) => <li key={r.name}><span className="tool-list-icon"><Toilet size={18} /></span><div className="flex-1"><strong>{r.name}</strong><small>{r.detail} · {r.clean}</small><span className="tool-tags">{r.tags.map((t) => <i key={t}>{t === "Baby change" ? <Baby size={12} /> : t === "Accessible" ? <Accessibility size={12} /> : null}{t}</i>)}</span></div><button className="scan-chip" onClick={() => setGoing(r.name)}><Footprints size={15} /> Go</button></li>)}</ul>
@@ -621,11 +621,11 @@ function TranslateFlow({ onClose }: { onClose: () => void }) {
     const hit = PHRASES.find((p) => p.en.toLowerCase() === en.trim().toLowerCase());
     setTimeout(() => { setBusy(false); setResult(hit ? { jp: hit.jp, ro: hit.ro } : { jp: "すみません、これをお願いできますか？", ro: "Sumimasen, kore o onegai dekimasu ka?" }); }, 900);
   };
-  return <ToolSheet title="Translator" subtitle="English → Icelandic, works offline" onClose={onClose}>
+  return <ToolSheet title="Translator" subtitle="English → Japanese, works offline" onClose={onClose}>
     <label className="tool-field mt-4">Say something<textarea rows={2} value={text} placeholder="Type what you want to say" onChange={(e) => setText(e.target.value)} /></label>
     <div className="tool-actions justify-end"><button className="scan-chip-ink" onClick={() => run("Does this have meat or fish?")}><Camera size={17} /> Scan menu</button><button className="scan-chip" disabled={!text.trim()} onClick={() => run(text)}><Languages size={17} /> Translate</button></div>
     {busy && <div className="tool-loading mt-4"><Sparkles size={18} /> Translating…</div>}
-    {result && <div className="tool-result"><p className="eyebrow">Icelandic</p><h3>{result.jp}</h3><small>{result.ro}</small><div className="tool-actions"><button className="scan-chip" onClick={() => setSpoke(true)}><Volume2 size={15} /> Speak out loud</button><button className="secondary-action" onClick={() => setSpoke(false)}><Copy size={16} /> Copy</button></div>{spoke && <p className="tool-hint"><Volume2 size={14} /> Playing at full volume — show your phone to help.</p>}</div>}
+    {result && <div className="tool-result"><p className="eyebrow">Japanese</p><h3>{result.jp}</h3><small>{result.ro}</small><div className="tool-actions"><button className="scan-chip" onClick={() => setSpoke(true)}><Volume2 size={15} /> Speak out loud</button><button className="secondary-action" onClick={() => setSpoke(false)}><Copy size={16} /> Copy</button></div>{spoke && <p className="tool-hint"><Volume2 size={14} /> Playing at full volume — show your phone to help.</p>}</div>}
     <h3 className="support-section-title">Quick phrases</h3>
     <ul className="tool-chips">{PHRASES.map((p) => <li key={p.en}><button onClick={() => run(p.en)}>{p.en}</button></li>)}</ul>
   </ToolSheet>;
@@ -658,9 +658,9 @@ function LocateFlow({ onClose }: { onClose: () => void }) {
 }
 
 const MEET_ROUTES = [
-  { id: "walk", icon: <Footprints size={18} />, label: "Walk", time: "8 min", detail: "650 m · along Laugavegur", steps: ["Leave Hallgrimskirkja by the main door", "Walk down Laugavegur shopping street", "Pass the second mural alley", "Yuki is waiting by the red shopfront"] },
-  { id: "metro", icon: <Train size={18} />, label: "Bus", time: "6 min", detail: "Strætó bus 18 · 1 stop, step-free", steps: ["Enter Hlemmur bus stop, ramps", "Strætó toward city center · 1 stop", "Leave by the front doors", "Meet Yuki at the street corner"] },
-  { id: "taxi", icon: <TramFront size={18} />, label: "Taxi", time: "4 min", detail: "≈ kr 1,500 · busy traffic now", steps: ["Taxi rank outside the church", "Show the saved address in Icelandic", "Arrive at Laugavegur street"] },
+  { id: "walk", icon: <Footprints size={18} />, label: "Walk", time: "8 min", detail: "650 m · through Nakamise street", steps: ["Leave Senso-ji by the main gate", "Walk south along Nakamise street", "Pass the second souvenir arch", "Yuki is waiting by the red lanterns"] },
+  { id: "metro", icon: <Train size={18} />, label: "Metro", time: "6 min", detail: "Ginza line · 1 stop, step-free", steps: ["Enter Asakusa station, exit 4 lifts", "Ginza line toward Shibuya · 1 stop", "Leave by exit 1", "Meet Yuki at the street corner"] },
+  { id: "taxi", icon: <TramFront size={18} />, label: "Taxi", time: "4 min", detail: "≈ ¥760 · busy traffic now", steps: ["Taxi rank outside the temple gate", "Show the saved address in Japanese", "Arrive at Nakamise street"] },
 ];
 
 function MeetFlow({ traveler, onClose }: { traveler: { name: string; place: string; initials: string }; onClose: () => void }) {
@@ -706,7 +706,7 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
     </article>
     
 
-    <div className="cost-layout"><section><div className="section-heading"><div><p className="eyebrow">Settle up</p><h2>Running balance</h2></div></div><div className="balance-list"><article><span className="bg-sky text-sky-foreground">JR</span><div><h3>Jon owes you</h3><p>3 shared expenses</p></div><strong className="positive">+ kr 4,820</strong></article><article><span className="bg-money text-money-foreground">AL</span><div><h3>You owe Ana</h3><p>Dinner at Þrír Frakkar</p></div><strong className="text-money-ink">− kr 2,400</strong></article><article><span className="bg-sun text-sun-foreground">LM</span><div><h3>Luis is settled</h3><p>All caught up</p></div><strong className="muted-amount">kr 0</strong></article></div></section></div>
+    <div className="cost-layout"><section><div className="section-heading"><div><p className="eyebrow">Settle up</p><h2>Running balance</h2></div></div><div className="balance-list"><article><span className="bg-sky text-sky-foreground">JR</span><div><h3>Jon owes you</h3><p>3 shared expenses</p></div><strong className="positive">+ ¥4,820</strong></article><article><span className="bg-money text-money-foreground">AL</span><div><h3>You owe Ana</h3><p>Dinner at Omoide Yokocho</p></div><strong className="text-money-ink">− ¥2,400</strong></article><article><span className="bg-sun text-sun-foreground">LM</span><div><h3>Luis is settled</h3><p>All caught up</p></div><strong className="muted-amount">¥0</strong></article></div></section></div>
     <div className="section-heading mt-8"><div><p className="eyebrow">When it happened</p><h2>Spending timeline</h2></div><div className="timeline-head-actions"><button onClick={onScan} className="scan-chip"><Camera size={16} /> Receipt</button></div></div>
     <div className="spend-timeline">{days.map((d) => <section key={d}>
       <header><h3>Day {d + 1}</h3><strong>{euro(expenses.filter((e) => e.day === d).reduce((s, e) => s + e.amount, 0))}</strong></header>
@@ -729,11 +729,11 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
 }
 
 const importCandidates: Photo[] = [
-  { id: "n1", src: icelandPylsurStand, day: 1, time: "09:52", place: "Bæjarins Beztu Pylsur" },
-  { id: "n2", src: icelandTowerView, day: 1, time: "11:38", place: "Hallgrimskirkja, Hallgrimstorg 1" },
-  { id: "n3", src: icelandAurora, day: 1, time: "15:05", place: "Reykjanesbraut" },
-  { id: "n4", src: icelandBus, day: 0, time: "17:10", place: "Laugavegur 36" },
-  { id: "n5", src: icelandAlley, day: 1, time: "22:40", place: "Sun Voyager, Reykjavik" },
+  { id: "n1", src: galTakoyaki, day: 1, time: "09:52", place: "Tsukiji Outer Market" },
+  { id: "n2", src: galOmikuji, day: 1, time: "11:38", place: "Senso-ji, Asakusa 2-3-1" },
+  { id: "n3", src: galLights, day: 1, time: "15:05", place: "Toyosu 6-1-16" },
+  { id: "n4", src: galMetro, day: 0, time: "17:10", place: "Shibuya Crossing" },
+  { id: "n5", src: galAlley, day: 1, time: "22:40", place: "Golden Gai, Shinjuku" },
 ];
 
 function PhotoImport({ stops, onClose, onImport }: { stops: Stop[]; onClose: () => void; onImport: (photos: Photo[]) => void }) {
@@ -910,7 +910,7 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
         </div>
         <div className="ig-carousel-dots">{carouselPhotos.map((p, i) => <i key={p.id} className={i === slide ? "on" : ""} onClick={() => setSlide(i)} />)}</div>
         <div className="ig-carousel-caption">
-          <p className="eyebrow">Iceland escape</p>
+          <p className="eyebrow">Tokyo escape</p>
           <b>{carouselPhotos[slide]?.place}</b>
           <small>Day {(carouselPhotos[slide]?.day ?? 0) + 1} · {carouselPhotos[slide]?.time}</small>
         </div>
@@ -918,7 +918,7 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
         <div className="ig-story-bars">{storyPhotos.map((p, i) => <i key={p.id} className={i <= slide ? "on" : ""} />)}</div>
         {storyPhotos[slide] && <img src={storyPhotos[slide].src} alt={`${storyPhotos[slide].place} memory`} />}
         <div className="ig-story-caption">
-          <p className="eyebrow">Iceland escape</p>
+          <p className="eyebrow">Tokyo escape</p>
           <b>{storyPhotos[slide]?.place}</b>
           <small><Play size={12} /> Day {(storyPhotos[slide]?.day ?? 0) + 1} · {storyPhotos[slide]?.time}</small>
         </div>
@@ -932,7 +932,7 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
 
     {shareMode && shareStep === "done" && <>
       <div className="share-done"><Check size={26} /></div>
-      <p className="gesture-hint">Your {shareFormat === "carousel" ? "photo carousel" : "story video"} was handed to Instagram with the caption “Iceland escape · 5 days, 4 friends”. Everyone on the trip gets a copy in the shared album.</p>
+      <p className="gesture-hint">Your {shareFormat === "carousel" ? "photo carousel" : "story video"} was handed to Instagram with the caption “Tokyo escape · 5 days, 5 friends”. Everyone on the trip gets a copy in the shared album.</p>
       <button className="money-action mt-4" onClick={exitShare}><Check size={17} /> Done</button>
     </>}
 
@@ -1027,13 +1027,13 @@ function BottomNav({ view, setView, planBadge = 0, onPlanSeen }: { view: View; s
 
 
 function CreateTrip({ onClose, onCreate }: { onClose: () => void; onCreate: () => void }) {
-  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Create a trip"><div className="modal-sheet"><div className="modal-head"><div><p className="eyebrow">New adventure</p><h2>Create a trip</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div><div className="form-grid"><label>Trip name<input defaultValue="Iceland escape" /></label><label>Destination<div className="input-icon"><MapPin size={17} /><input defaultValue="Reykjavik, Iceland" /></div></label><div className="two-cols"><label>Starts<input type="date" defaultValue="2026-04-06" /></label><label>Ends<input type="date" defaultValue="2026-04-11" /></label></div><label>Invite members<div className="invite-row"><div className="avatar-stack">{members.slice(0, 3).map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div><button className="invite-button"><Plus size={16} /> Add people</button></div></label></div><button className="primary-action wide" onClick={onCreate}>Create trip <ArrowRight size={19} /></button></div></div>;
+  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Create a trip"><div className="modal-sheet"><div className="modal-head"><div><p className="eyebrow">New adventure</p><h2>Create a trip</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div><div className="form-grid"><label>Trip name<input defaultValue="Tokyo escape" /></label><label>Destination<div className="input-icon"><MapPin size={17} /><input defaultValue="Tokyo, Japan" /></div></label><div className="two-cols"><label>Starts<input type="date" defaultValue="2026-04-06" /></label><label>Ends<input type="date" defaultValue="2026-04-11" /></label></div><label>Invite members<div className="invite-row"><div className="avatar-stack">{members.slice(0, 3).map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div><button className="invite-button"><Plus size={16} /> Add people</button></div></label></div><button className="primary-action wide" onClick={onCreate}>Create trip <ArrowRight size={19} /></button></div></div>;
 }
 
 function ReceiptConfirm({ onClose, stops, onSave }: { onClose: () => void; stops: Stop[]; onSave: (e: Expense) => void }) {
   const [confirmed, setConfirmed] = useState(false);
   const [split, setSplit] = useState<Split>(equalSplit(["You", "Jon", "Ana"]));
-  const [draft, setDraft] = useState({ amount: "9900", label: "Blue Lagoon tickets", place: "Reykjanesbraut", time: "14:55", day: 1 });
+  const [draft, setDraft] = useState({ amount: "15600", label: "teamLab tickets", place: "Toyosu 6-1-16", time: "14:55", day: 1 });
   const amount = Number(draft.amount.replace(",", ".")) || 0;
   const match = resolveStop({ day: draft.day, time: draft.time, place: draft.place }, stops);
   const SCAN_STEPS = ["Capturing the receipt", "Reading the text", "Finding the total", "Matching place and time"];
