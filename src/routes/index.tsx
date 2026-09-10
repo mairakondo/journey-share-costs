@@ -427,7 +427,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
 
     <div className="content-grid">
       <section>
-        <div className="date-heading"><div><div className="weather -mt-2"><CloudSun size={23} /><span>24°</span></div><p className="eyebrow">{["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"][day]}</p><div className="day-title-row mt-2"><h2>{day === 0 ? "Konnichiwa, Tokyo!" : ["Asakusa & old town", "Shibuya slow day", "Hakone day trip", "Last bites"][day - 1]}</h2></div></div>
+        <div className="date-heading"><div><div className="weather -mt-2"><CloudSun size={23} /><span>9°</span></div><p className="eyebrow">{["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"][day]}</p><div className="day-title-row mt-2"><h2>{day === 0 ? "Velkomin, Reykjavik!" : ["Hallgrimskirkja & old town", "Golden Circle day", "South coast waterfalls", "Last soak & goodbye"][day - 1]}</h2></div></div>
           <div className="add-menu-wrap">
             <button className="scan-chip" aria-haspopup="menu" aria-expanded={addOpen} onClick={() => setAddOpen((o) => !o)}><Plus size={16} /> Add</button>
             {addOpen && <div className="add-menu" role="menu">
@@ -470,9 +470,9 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
 }
 
 const sampleReceipts = [
-  { label: "teamLab tickets", place: "Toyosu 6-1-16", amount: 15600, time: "14:55" },
-  { label: "Suica top-up", place: "Shinjuku Station", amount: 3000, time: "10:20" },
-  { label: "Dinner at Omoide Yokocho", place: "Nishi-Shinjuku 1-2", amount: 11800, time: "20:10" },
+  { label: "Blue Lagoon tickets", place: "Reykjanesbraut", amount: 9900, time: "14:55" },
+  { label: "City bus card", place: "Reykjavik Bus Terminal", amount: 2200, time: "10:20" },
+  { label: "Dinner at Þrír Frakkar", place: "Bergstaðastræti 1", amount: 9800, time: "20:10" },
 ];
 
 function ExpenseEditor({ expense, stops, onClose, onSave, onDelete }: { expense: Expense; stops: Stop[]; onClose: () => void; onSave: (e: Expense) => void; onDelete?: (() => void) | undefined }) {
@@ -500,10 +500,10 @@ function ExpenseEditor({ expense, stops, onClose, onSave, onDelete }: { expense:
       <div className="form-grid">
         <label>What was it?<input value={draft.label} placeholder="Lunch at Rio Maravilha" onChange={(e) => setDraft({ ...draft, label: e.target.value })} /></label>
         <div className="two-cols">
-          <label>Amount (¥)<input inputMode="decimal" value={draft.amount ? String(draft.amount) : ""} placeholder="0.00" onChange={(e) => setDraft({ ...draft, amount: Number(e.target.value.replace(",", ".")) || 0 })} /></label>
+          <label>Amount (kr)<input inputMode="decimal" value={draft.amount ? String(draft.amount) : ""} placeholder="0" onChange={(e) => setDraft({ ...draft, amount: Number(e.target.value.replace(",", ".")) || 0 })} /></label>
           <label>Time<input type="time" value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} /></label>
         </div>
-        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Tsukiji Outer Market" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
+        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Bæjarins Beztu Pylsur" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
         <label>Paid by<input value={draft.payer} onChange={(e) => setDraft({ ...draft, payer: e.target.value })} /></label>
       </div>
       <div className="split-block">
@@ -525,8 +525,8 @@ function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: 
     <div className="modal-sheet">
       <div className="modal-head"><div><p className="eyebrow">Day {draft.day + 1}</p><h2>{isNew ? "Add activity" : "Edit activity"}</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div>
       <div className="form-grid">
-        <label>Activity<input value={draft.title} placeholder="Tsukiji breakfast" onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></label>
-        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Tsukiji Outer Market" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
+        <label>Activity<input value={draft.title} placeholder="Reykjavik breakfast" onChange={(e) => setDraft({ ...draft, title: e.target.value })} /></label>
+        <label>Place<div className="input-icon"><MapPin size={17} /><input value={draft.place} placeholder="Bæjarins Beztu Pylsur" onChange={(e) => setDraft({ ...draft, place: e.target.value })} /></div></label>
         <div className="two-cols">
 <label>Time<div className="input-icon"><Clock size={17} /><input type="time" value={draft.time} onChange={(e) => setDraft({ ...draft, time: e.target.value })} /></div></label>
           <label>Tag<input value={draft.tag} placeholder="Must see" onChange={(e) => setDraft({ ...draft, tag: e.target.value })} /></label>
@@ -541,33 +541,33 @@ function StopEditor({ stop, onClose, onSave, onDelete }: { stop: Stop; onClose: 
 type Tool = "restroom" | "translate" | "access" | "locate";
 
 const RESTROOMS = [
-  { name: "Senso-ji temple grounds", detail: "Asakusa 2-3-1 · 3 min walk", tags: ["Accessible", "Baby change"], clean: "Very clean" },
-  { name: "Asakusa station · exit 4", detail: "Inside gates · 6 min walk", tags: ["Accessible"], clean: "Clean" },
-  { name: "Family Mart Kaminarimon", detail: "Ask at counter · 8 min walk", tags: ["Free"], clean: "Clean" },
-  { name: "Sumida park north gate", detail: "Riverside path · 11 min walk", tags: ["Accessible", "Baby change"], clean: "Basic" },
+  { name: "Hallgrimskirkja grounds", detail: "Hallgrimstorg 1 · 3 min walk", tags: ["Accessible", "Baby change"], clean: "Very clean" },
+  { name: "Reykjavik City Library", detail: "Inside · 6 min walk", tags: ["Accessible"], clean: "Clean" },
+  { name: "Kaffi Loki café", detail: "Ask at counter · 8 min walk", tags: ["Free"], clean: "Clean" },
+  { name: "Reykjavik pond north gate", detail: "Riverside path · 11 min walk", tags: ["Accessible", "Baby change"], clean: "Basic" },
 ];
 
 const PHRASES = [
-  { en: "Where is the nearest restroom?", jp: "一番近いトイレはどこですか？", ro: "Ichiban chikai toire wa doko desu ka?" },
-  { en: "A table for four, please.", jp: "4名でお願いします。", ro: "Yonmei de onegaishimasu." },
-  { en: "Does this have meat or fish?", jp: "これに肉や魚は入っていますか？", ro: "Kore ni niku ya sakana wa haitte imasu ka?" },
-  { en: "Can you help me, please?", jp: "手伝っていただけますか？", ro: "Tetsudatte itadakemasu ka?" },
-  { en: "How much does it cost?", jp: "いくらですか？", ro: "Ikura desu ka?" },
+  { en: "Where is the nearest restroom?", jp: "Hvar er næsta klósett?", ro: "Kvar er næsta klósett?" },
+  { en: "A table for four, please.", jp: "Borð fyrir fjóra, takk.", ro: "Borth fyrir fjora, takk" },
+  { en: "Does this have meat or fish?", jp: "Er þetta með kjöt eða fisk?", ro: "Er thetta me kjot eda fisk?" },
+  { en: "Can you help me, please?", jp: "Geturðu hjálpað mér, takk?", ro: "Geturdu hjalpad mer, takk?" },
+  { en: "How much does it cost?", jp: "Hvað kostar þetta?", ro: "Hvad kostar thetta?" },
 ];
 
 const ACCESSIBLE = [
-  { name: "Asakusa station (Ginza line)", detail: "Elevator to platform · step-free exit 4", tags: ["Step-free", "Tactile paving"] },
-  { name: "Toei bus 東42", detail: "Low-floor bus with ramp · every 12 min", tags: ["Ramp", "Wheelchair space"] },
-  { name: "Senso-ji main hall", detail: "Ramp on west side, staff assistance", tags: ["Ramp", "Accessible restroom"] },
-  { name: "teamLab Planets", detail: "Wheelchair route available · book ahead", tags: ["Step-free", "Lift"] },
-  { name: "Tokyo Skytree deck", detail: "Lifts to all floors · priority queue", tags: ["Lift", "Accessible restroom"] },
+  { name: "Reykjavik City Library", detail: "Elevator to all floors · step-free entrance", tags: ["Step-free", "Tactile paving"] },
+  { name: "Strætó bus 18", detail: "Low-floor bus with ramp · every 15 min", tags: ["Ramp", "Wheelchair space"] },
+  { name: "Hallgrimskirkja main hall", detail: "Ramp on west side, staff assistance", tags: ["Ramp", "Accessible restroom"] },
+  { name: "Blue Lagoon", detail: "Wheelchair route available · book ahead", tags: ["Step-free", "Lift"] },
+  { name: "Harpa concert hall", detail: "Lifts to all floors · priority queue", tags: ["Lift", "Accessible restroom"] },
 ];
 
 const TRAVELERS = [
-  { name: "Maira", place: "Senso-ji main hall", when: "now", initials: "M" },
-  { name: "Yuki", place: "Nakamise shopping street", when: "2 min ago", initials: "Y" },
-  { name: "Tom", place: "Asakusa station · exit 4", when: "5 min ago", initials: "T" },
-  { name: "Lena", place: "Sumida park riverside", when: "9 min ago", initials: "L" },
+  { name: "Maira", place: "Hallgrimskirkja main hall", when: "now", initials: "M" },
+  { name: "Yuki", place: "Laugavegur shopping street", when: "2 min ago", initials: "Y" },
+  { name: "Tom", place: "Reykjavik City Library", when: "5 min ago", initials: "T" },
+  { name: "Lena", place: "Reykjavik pond riverside", when: "9 min ago", initials: "L" },
 ];
 
 function Support() {
@@ -579,7 +579,7 @@ function Support() {
   </section>
   <h3 className="support-section-title">Emergency contacts</h3>
   <section className="support-grid">
-    {[{ icon: <HeartPulse />, label: "Nearest hospital", title: "St. Luke's International Hospital", detail: "Akashi-cho 9-1 · 2.4 km", number: "+81 3 3541 5151" }, { icon: <Landmark />, label: "U.S. Embassy", title: "Embassy of the United States", detail: "Akasaka 1-10-5 · 4.1 km", number: "+81 3 3224 5000" }, { icon: <Phone />, label: "National emergency", title: "Police 110 · Fire & Ambulance 119", detail: "Available 24 hours", number: "110" }].map((x) => <article className="support-card" key={x.label}><span className="support-icon">{x.icon}</span><div className="flex-1"><p className="eyebrow">{x.label}</p><h3>{x.title}</h3><p>{x.detail}</p><a href={`tel:${x.number}`}><Phone size={16} /> {x.number}</a></div></article>)}
+    {[{ icon: <HeartPulse />, label: "Nearest hospital", title: "Landspítali University Hospital", detail: "Fossvogur · 2.4 km", number: "+354 543 1000" }, { icon: <Landmark />, label: "U.S. Embassy", title: "Embassy of the United States", detail: "Reykjavik · 4.1 km", number: "+354 562 9100" }, { icon: <Phone />, label: "National emergency", title: "Police 112 · Fire & Ambulance 112", detail: "Available 24 hours", number: "112" }].map((x) => <article className="support-card" key={x.label}><span className="support-icon">{x.icon}</span><div className="flex-1"><p className="eyebrow">{x.label}</p><h3>{x.title}</h3><p>{x.detail}</p><a href={`tel:${x.number}`}><Phone size={16} /> {x.number}</a></div></article>)}
   </section>
   {tool === "restroom" && <RestroomFlow onClose={() => setTool(null)} />}
   {tool === "translate" && <TranslateFlow onClose={() => setTool(null)} />}
@@ -603,7 +603,7 @@ function RestroomFlow({ onClose }: { onClose: () => void }) {
   const [going, setGoing] = useState<string | null>(null);
   useEffect(() => { const t = setTimeout(() => setLocating(false), 1200); return () => clearTimeout(t); }, []);
   const list = only ? RESTROOMS.filter((r) => r.tags.includes("Accessible")) : RESTROOMS;
-  return <ToolSheet title="Find restrooms" subtitle="Around Senso-ji, Asakusa" onClose={onClose}>
+  return <ToolSheet title="Find restrooms" subtitle="Around Hallgrimskirkja, Reykjavik" onClose={onClose}>
     {locating ? <div className="tool-loading"><Locate size={20} /> Finding restrooms near you…</div> : going ? <div className="tool-done"><span><Navigation size={22} /></span><h3>Walking to {going}</h3><p>Follow the blue route · arrive in about 3 min</p><button className="secondary-action wide" onClick={() => setGoing(null)}>Back to list</button></div> : <>
       <div className="tool-filter mt-4"><button className={only ? "" : "on"} onClick={() => setOnly(false)}>All</button><button className={only ? "on" : ""} onClick={() => setOnly(true)}>Accessible only</button></div>
       <ul className="tool-list">{list.map((r) => <li key={r.name}><span className="tool-list-icon"><Toilet size={18} /></span><div className="flex-1"><strong>{r.name}</strong><small>{r.detail} · {r.clean}</small><span className="tool-tags">{r.tags.map((t) => <i key={t}>{t === "Baby change" ? <Baby size={12} /> : t === "Accessible" ? <Accessibility size={12} /> : null}{t}</i>)}</span></div><button className="scan-chip" onClick={() => setGoing(r.name)}><Footprints size={15} /> Go</button></li>)}</ul>
@@ -621,11 +621,11 @@ function TranslateFlow({ onClose }: { onClose: () => void }) {
     const hit = PHRASES.find((p) => p.en.toLowerCase() === en.trim().toLowerCase());
     setTimeout(() => { setBusy(false); setResult(hit ? { jp: hit.jp, ro: hit.ro } : { jp: "すみません、これをお願いできますか？", ro: "Sumimasen, kore o onegai dekimasu ka?" }); }, 900);
   };
-  return <ToolSheet title="Translator" subtitle="English → Japanese, works offline" onClose={onClose}>
+  return <ToolSheet title="Translator" subtitle="English → Icelandic, works offline" onClose={onClose}>
     <label className="tool-field mt-4">Say something<textarea rows={2} value={text} placeholder="Type what you want to say" onChange={(e) => setText(e.target.value)} /></label>
     <div className="tool-actions justify-end"><button className="scan-chip-ink" onClick={() => run("Does this have meat or fish?")}><Camera size={17} /> Scan menu</button><button className="scan-chip" disabled={!text.trim()} onClick={() => run(text)}><Languages size={17} /> Translate</button></div>
     {busy && <div className="tool-loading mt-4"><Sparkles size={18} /> Translating…</div>}
-    {result && <div className="tool-result"><p className="eyebrow">Japanese</p><h3>{result.jp}</h3><small>{result.ro}</small><div className="tool-actions"><button className="scan-chip" onClick={() => setSpoke(true)}><Volume2 size={15} /> Speak out loud</button><button className="secondary-action" onClick={() => setSpoke(false)}><Copy size={16} /> Copy</button></div>{spoke && <p className="tool-hint"><Volume2 size={14} /> Playing at full volume — show your phone to help.</p>}</div>}
+    {result && <div className="tool-result"><p className="eyebrow">Icelandic</p><h3>{result.jp}</h3><small>{result.ro}</small><div className="tool-actions"><button className="scan-chip" onClick={() => setSpoke(true)}><Volume2 size={15} /> Speak out loud</button><button className="secondary-action" onClick={() => setSpoke(false)}><Copy size={16} /> Copy</button></div>{spoke && <p className="tool-hint"><Volume2 size={14} /> Playing at full volume — show your phone to help.</p>}</div>}
     <h3 className="support-section-title">Quick phrases</h3>
     <ul className="tool-chips">{PHRASES.map((p) => <li key={p.en}><button onClick={() => run(p.en)}>{p.en}</button></li>)}</ul>
   </ToolSheet>;
