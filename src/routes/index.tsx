@@ -926,7 +926,7 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
       
       <div className="share-bar">
         <button className="money-action" onClick={() => setShareStep("done")}><Instagram size={17} /> {shareFormat === "carousel" ? "Share as post" : "Share to stories"}</button>
-        <button className="cancel-link" onClick={exitShare}>Cancel</button>
+        <button className="cancel-text" onClick={exitShare}>Cancel</button>
       </div>
     </>}
 
