@@ -51,24 +51,24 @@ import {
 } from "lucide-react";
 import { useState, useEffect, type ReactNode } from "react";
 
-import tokyo from "@/assets/tokyo.jpg";
+import icelandHero from "@/assets/iceland-hero.jpg";
 import kyoto from "@/assets/kyoto.jpg";
-import tokyoAsakusa from "@/assets/tokyo-asakusa.jpg";
-import tokyoTeamlab from "@/assets/tokyo-teamlab.jpg";
-import tokyoTsukiji from "@/assets/tokyo-tsukiji.jpg";
+import icelandHallgrimskirkja from "@/assets/iceland-hallgrimskirkja.jpg";
+import icelandBluelagoon from "@/assets/iceland-bluelagoon.jpg";
+import icelandBreakfast from "@/assets/iceland-breakfast.jpg";
 import copenhagen from "@/assets/copenhagen.jpg";
 import tokyoGoldenGai from "@/assets/tokyo-goldengai.jpg";
 import lisbon from "@/assets/lisbon.jpg";
-import galTakoyaki from "@/assets/gal-takoyaki.jpg";
-import galMetro from "@/assets/gal-metro.jpg";
-import galOmikuji from "@/assets/gal-omikuji.jpg";
-import galLights from "@/assets/gal-lights.jpg";
-import galAlley from "@/assets/gal-alley.jpg";
-import importShibuyaFriends from "@/assets/import-shibuya-friends.jpg";
-import importTsukijiFood from "@/assets/import-tsukiji-food.jpg";
-import importAsakusaTemple from "@/assets/import-asakusa-temple.jpg";
-import importTeamlabArt from "@/assets/import-teamlab-art.jpg";
-import importGoldenGaiNight from "@/assets/import-golden-gai-night.jpg";
+import icelandPylsurStand from "@/assets/iceland-pylsur-stand.jpg";
+import icelandBus from "@/assets/iceland-bus.jpg";
+import icelandTowerView from "@/assets/iceland-tower-view.jpg";
+import icelandAurora from "@/assets/iceland-aurora.jpg";
+import icelandAlley from "@/assets/iceland-alley.jpg";
+import icelandStreet from "@/assets/iceland-street.jpg";
+import icelandFood from "@/assets/iceland-food.jpg";
+import icelandChurchDetail from "@/assets/iceland-church-detail.jpg";
+import icelandLagoonArt from "@/assets/iceland-lagoon-art.jpg";
+import icelandEvening from "@/assets/iceland-evening.jpg";
 
 type View = "home" | "plan" | "costs" | "photos" | "support" | "summary";
 
@@ -130,7 +130,7 @@ function TravelersApp() {
             <span>Travelers</span>
           </button>
           <div className="flex items-center gap-2">
-            {view !== "home" && <span className="hidden text-sm font-semibold text-primary-foreground/70 sm:inline">Tokyo · Apr 6–11</span>}
+            {view !== "home" && <span className="hidden text-sm font-semibold text-primary-foreground/70 sm:inline">Iceland · Apr 6–11</span>}
             <IconButton label="Meet request from Yuki" onClick={() => { setMeetOpen(false); setMeetAlert(true); }}><Bell size={20} /></IconButton>
             <button className="avatar">MK</button>
           </div>
@@ -148,7 +148,7 @@ function TravelersApp() {
         <div className="meet-toast" role="status">
           <button className="meet-toast-main" onClick={() => { setMeetOpen(true); setMeetAlert(false); }}>
             <span className="traveler-dot">Y</span>
-            <span className="flex-1 text-left"><strong>Yuki wants to meet you</strong><small>Nakamise shopping street · 8 min walk</small></span>
+            <span className="flex-1 text-left"><strong>Yuki wants to meet you</strong><small>Laugavegur shopping street · 8 min walk</small></span>
             <ChevronRight size={18} />
           </button>
           <IconButton label="Dismiss notification" onClick={() => setMeetAlert(false)}><X size={17} /></IconButton>
@@ -178,12 +178,12 @@ function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: Vie
         <>
         <section className="trip-grid home-trip-grid">
           <button className="trip-card featured" onClick={() => onNavigate("plan")}>
-            <img src={tokyo} alt="Neon-lit Tokyo street at golden hour" width={1280} height={800} />
+            <img src={icelandHero} alt="Colorful Reykjavik houses at golden hour" width={1280} height={800} />
             <div className="trip-overlay">
               <div className="status-pill"><span /> Next adventure · in 12 days</div>
               <div>
-                <p className="eyebrow trip-country">Japan</p>
-                <h2>Tokyo escape</h2>
+                <p className="eyebrow trip-country">Iceland</p>
+                <h2>Iceland escape</h2>
                 <p className="trip-dates">Apr 6–11 · 6 days</p>
                 <div className="mt-3 flex items-center justify-between gap-3">
                   <div className="avatar-stack">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
@@ -194,10 +194,10 @@ function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: Vie
           </button>
           <div className="home-side-stack">
           <button className="trip-card compact-card" onClick={() => onNavigate("plan")}>
-            <img src={copenhagen} alt="Colorful Copenhagen harbor" width={1280} height={800} loading="lazy" />
+            <img src={icelandAurora} alt="Northern lights over Iceland" width={1280} height={800} loading="lazy" />
             <div className="trip-overlay compact">
               <div className="status-pill"><span /> In 68 days</div>
-              <div><p className="text-xs font-semibold">Jul 13–17</p><h2>Copenhagen</h2><p className="mt-1 text-sm">3 travelers</p></div>
+              <div><p className="text-xs font-semibold">Jul 13–17</p><h2>Iceland</h2><p className="mt-1 text-sm">3 travelers</p></div>
             </div>
           </button>
           </div>
@@ -224,7 +224,7 @@ function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, 
 
     <div className="page-pad trip-page pb-28">
       <div className="trip-heading">
-        <div className="flex min-w-0 items-center gap-3"><IconButton label="Back to trips" onClick={() => setView("home")}><ArrowLeft size={20} /></IconButton><div className="min-w-0"><p className="eyebrow">Apr 6–11 · 4 travelers</p><h1 className="truncate text-3xl font-extrabold">Tokyo escape</h1></div></div>
+        <div className="flex min-w-0 items-center gap-3"><IconButton label="Back to trips" onClick={() => setView("home")}><ArrowLeft size={20} /></IconButton><div className="min-w-0"><p className="eyebrow">Apr 6–11 · 4 travelers</p><h1 className="truncate text-3xl font-extrabold">Iceland escape</h1></div></div>
         <div className="avatar-stack hidden sm:flex">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
       </div>
       {view === "plan" && <Itinerary setView={setView} stops={stops} setStops={setStops} photos={photos} expenses={expenses} setExpenses={setExpenses} newPhotoIds={newPhotoIds} dismissPhotos={dismissPhotos} />}
@@ -240,10 +240,10 @@ function TripShell({ view, setView, onScan, stops, setStops, photos, setPhotos, 
 type Stop = { id: string; day: number; time: string; title: string; place: string; tag: string };
 
 const initialStops: Stop[] = [
-  { id: "s1", day: 1, time: "09:30", title: "Tsukiji breakfast", place: "Tsukiji Outer Market", tag: "Local favorite" },
-  { id: "s2", day: 1, time: "11:00", title: "Senso-ji Temple", place: "Asakusa 2-3-1", tag: "Must see" },
-  { id: "s3", day: 1, time: "14:30", title: "teamLab Planets", place: "Toyosu 6-1-16", tag: "Explore" },
-  { id: "s4", day: 0, time: "16:00", title: "Check in & Shibuya stroll", place: "Shibuya Crossing", tag: "Easy start" },
+  { id: "s1", day: 1, time: "09:30", title: "Reykjavik breakfast", place: "Bæjarins Beztu Pylsur", tag: "Local favorite" },
+  { id: "s2", day: 1, time: "11:00", title: "Hallgrimskirkja", place: "Hallgrimstorg 1", tag: "Must see" },
+  { id: "s3", day: 1, time: "14:30", title: "Blue Lagoon", place: "Reykjanesbraut", tag: "Explore" },
+  { id: "s4", day: 0, time: "16:00", title: "Check in & Laugavegur stroll", place: "Laugavegur 36", tag: "Easy start" },
 ];
 
 type Photo = { id: string; src: string; day: number; time: string; place: string; stopId?: string | null };
@@ -312,7 +312,7 @@ function SplitPicker({ split: rawSplit, amount, onChange }: { split: Split | und
         const on = split.participants.includes(m.name);
         return <div key={m.name} className={on ? "split-row on" : "split-row"}>
           <button className="split-person" onClick={() => toggle(m.name)} aria-pressed={on}><span className={m.tone}>{m.initials}</span>{m.name}<i>{on && <Check size={12} />}</i></button>
-          {on && split.mode !== "equal" && <div className="split-value">{split.mode === "exact" && <small>¥</small>}<input inputMode="decimal" aria-label={`${split.mode === "percent" ? "Percentage" : "Amount"} for ${m.name}`} value={String(split.values[m.name] ?? "")} onChange={(e) => setValue(m.name, Number(e.target.value.replace(",", ".")) || 0)} />{split.mode === "percent" && <small>%</small>}</div>}
+          {on && split.mode !== "equal" && <div className="split-value">{split.mode === "exact" && <small>kr</small>}<input inputMode="decimal" aria-label={`${split.mode === "percent" ? "Percentage" : "Amount"} for ${m.name}`} value={String(split.values[m.name] ?? "")} onChange={(e) => setValue(m.name, Number(e.target.value.replace(",", ".")) || 0)} />{split.mode === "percent" && <small>%</small>}</div>}
           {on && split.mode !== "exact" && <strong>{euro(shares[m.name] ?? 0)}</strong>}
         </div>;
       })}
@@ -325,23 +325,23 @@ function SplitPicker({ split: rawSplit, amount, onChange }: { split: Split | und
 
 
 const initialPhotos: Photo[] = [
-  { id: "p1", src: tokyo, day: 0, time: "16:20", place: "Shibuya Crossing" },
-  { id: "p2", src: importShibuyaFriends, day: 0, time: "16:55", place: "Shibuya Crossing, Center Gai" },
-  { id: "p3", src: importGoldenGaiNight, day: 0, time: "21:10", place: "Golden Gai" },
-  { id: "p4", src: tokyoTsukiji, day: 1, time: "09:40", place: "Tsukiji Outer Market" },
-  { id: "p5", src: importTsukijiFood, day: 1, time: "10:05", place: "Tsukiji Outer Market" },
-  { id: "p6", src: tokyoAsakusa, day: 1, time: "11:25", place: "Asakusa 2-3-1" },
-  { id: "p7", src: importAsakusaTemple, day: 1, time: "11:50", place: "Senso-ji, Asakusa 2-3-1" },
-  { id: "p8", src: tokyoTeamlab, day: 1, time: "14:50", place: "Toyosu 6-1-16" },
-  { id: "p9", src: importTeamlabArt, day: 1, time: "15:30", place: "teamLab Planets" },
+  { id: "p1", src: icelandHero, day: 0, time: "16:20", place: "Laugavegur 36" },
+  { id: "p2", src: icelandStreet, day: 0, time: "16:55", place: "Laugavegur, city center" },
+  { id: "p3", src: icelandEvening, day: 0, time: "21:10", place: "Sun Voyager, Reykjavik" },
+  { id: "p4", src: icelandBreakfast, day: 1, time: "09:40", place: "Bæjarins Beztu Pylsur" },
+  { id: "p5", src: icelandFood, day: 1, time: "10:05", place: "Bæjarins Beztu Pylsur" },
+  { id: "p6", src: icelandHallgrimskirkja, day: 1, time: "11:25", place: "Hallgrimstorg 1" },
+  { id: "p7", src: icelandChurchDetail, day: 1, time: "11:50", place: "Hallgrimskirkja, Hallgrimstorg 1" },
+  { id: "p8", src: icelandBluelagoon, day: 1, time: "14:50", place: "Reykjanesbraut" },
+  { id: "p9", src: icelandLagoonArt, day: 1, time: "15:30", place: "Blue Lagoon, Reykjanesbraut" },
 ];
 
 const initialExpenses: Expense[] = [
-  { id: "e1", day: 1, time: "09:45", place: "Tsukiji Outer Market", label: "Sushi breakfast", amount: 3200, payer: "Maira", source: "scan", split: equalSplit() },
-  { id: "e2", day: 1, time: "11:10", place: "Asakusa 2-3-1", label: "Temple omamori", amount: 1800, payer: "Jon", source: "scan", split: equalSplit() },
-  { id: "e3", day: 1, time: "14:55", place: "Toyosu 6-1-16", label: "teamLab tickets", amount: 15600, payer: "Ana", source: "scan", split: { mode: "exact", participants: ["You", "Jon", "Ana"], values: { You: 5600, Jon: 6000, Ana: 4000 } } },
-  { id: "e4", day: 0, time: "16:15", place: "Shibuya Crossing", label: "Narita Express", amount: 6400, payer: "Maira", source: "manual", split: equalSplit(["You", "Jon"]) },
-  { id: "e5", day: 1, time: "20:30", place: "Golden Gai", label: "Late drinks", amount: 5200, payer: "Luis", source: "manual", split: { mode: "percent", participants: ["You", "Luis"], values: { You: 40, Luis: 60 } } },
+  { id: "e1", day: 1, time: "09:45", place: "Bæjarins Beztu Pylsur", label: "Pylsur breakfast", amount: 1800, payer: "Maira", source: "scan", split: equalSplit() },
+  { id: "e2", day: 1, time: "11:10", place: "Hallgrimstorg 1", label: "Church tower entry", amount: 1200, payer: "Jon", source: "scan", split: equalSplit() },
+  { id: "e3", day: 1, time: "14:55", place: "Reykjanesbraut", label: "Blue Lagoon tickets", amount: 9900, payer: "Ana", source: "scan", split: { mode: "exact", participants: ["You", "Jon", "Ana"], values: { You: 3300, Jon: 3600, Ana: 3000 } } },
+  { id: "e4", day: 0, time: "16:15", place: "Laugavegur 36", label: "Flybus airport transfer", amount: 6400, payer: "Maira", source: "manual", split: equalSplit(["You", "Jon"]) },
+  { id: "e5", day: 1, time: "20:30", place: "Sun Voyager, Reykjavik", label: "Late drinks", amount: 6800, payer: "Luis", source: "manual", split: { mode: "percent", participants: ["You", "Luis"], values: { You: 40, Luis: 60 } } },
 
 ];
 
@@ -373,7 +373,7 @@ function resolveStop(item: Taggable, stops: Stop[]): Stop | null {
   return best && best.score > 0.6 ? best.stop : null;
 }
 
-const euro = (n: number) => `¥${Math.round(n).toLocaleString("en-US")}`;
+const euro = (n: number) => `kr ${Math.round(n).toLocaleString("en-US")}`;
 
 function groupPhotosByStop(dayPhotos: Photo[], stops: Stop[]) {
   const groups: { stop: Stop | null; photos: Photo[] }[] = [];
