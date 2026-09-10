@@ -877,12 +877,12 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
     <div className="section-heading photo-heading">
       <div><p className="eyebrow">{shareMode ? "Share to Instagram" : "Shared memories"}</p><h2>{shareMode ? "Select photos to share" : "Photo timeline"}</h2></div>
       <div className="heading-actions">
-        {shareMode ? <>
+        {shareMode && shareStep === "select" ? <>
           <button className="cancel-link" onClick={exitShare}>Cancel</button>
-        </> : <>
+        </> : !shareMode ? <>
           <button className="scan-chip-ink" onClick={enterShare}><Share2 size={16} /> Share</button>
           <button className="scan-chip" onClick={() => setImporting(true)}><Plus size={16} /> Add</button>
-        </>}
+        </> : null}
       </div>
     </div>
 
