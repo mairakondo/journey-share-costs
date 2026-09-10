@@ -880,8 +880,8 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
       <div><p className="eyebrow">{shareMode ? "Share to Instagram" : "Shared memories"}</p><h2>{shareMode ? "Select photos to share" : "Photo timeline"}</h2></div>
       <div className="heading-actions">
         {shareMode ? <button className="scan-chip" onClick={exitShare}><X size={16} /> Cancel</button> : <>
+          <button className="scan-chip-ink" onClick={enterShare}><Share2 size={16} /> Share</button>
           <button className="scan-chip" onClick={() => setImporting(true)}><Plus size={16} /> Add</button>
-          <button className="scan-chip" onClick={enterShare}><Share2 size={16} /> Share</button>
         </>}
       </div>
     </div>
