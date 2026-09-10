@@ -342,7 +342,7 @@
 
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; } }
 @layer components {
-  .activity-cluster { @apply mt-4; }
+  .activity-cluster { @apply mt-1; }
   .cluster-label { @apply mb-2 flex items-center gap-1 text-xs font-extrabold text-muted-foreground; }
   .photo-tile .photo-meta { @apply bg-foreground/70 text-background; }
   .manual-badge { @apply absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-primary text-primary-foreground; }
