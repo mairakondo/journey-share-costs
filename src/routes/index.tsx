@@ -180,7 +180,7 @@ function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: Vie
           <button className="trip-card featured" onClick={() => onNavigate("plan")}>
             <img src={tokyo} alt="Neon-lit Tokyo street at golden hour" width={1280} height={800} />
             <div className="trip-overlay">
-              <div className="status-pill"><span /> Next adventure · in 12 days</div>
+              <div className="status-pill"><span /> Current trip</div>
               <div>
                 <p className="eyebrow trip-country">Japan</p>
                 <h2>Tokyo escape</h2>
