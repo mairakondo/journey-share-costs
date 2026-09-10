@@ -393,6 +393,8 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
   const [editing, setEditing] = useState<Stop | null>(null);
   const [editingCost, setEditingCost] = useState<Expense | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [viewing, setViewing] = useState<Photo | null>(null);
+  const [viewingPool, setViewingPool] = useState<Photo[]>([]);
 
 
 
@@ -451,7 +453,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
               </div>
               <div className="stop-summary">
                 <div className="stop-place"><span className="stop-icon"><MapPin size={16} /></span><p>{stop.place}</p></div>
-                {matchedPhotos.length > 0 && <button type="button" className={freshPhotos.length > 0 ? "stop-photo-preview fresh" : "stop-photo-preview"} onClick={() => { if (freshPhotos.length > 0) dismissPhotos?.(freshPhotos.map((p) => p.id)); setView("photos"); }} aria-label={`View ${matchedPhotos.length} ${matchedPhotos.length === 1 ? "photo" : "photos"} for ${stop.title}`}><img src={cover?.src} alt={`${stop.title} photo`} width={160} height={160} loading="lazy" />{matchedPhotos.length > 1 && <span>+{matchedPhotos.length - 1}</span>}<small>{matchedPhotos.length} {matchedPhotos.length === 1 ? "photo" : "photos"}</small></button>}
+                {matchedPhotos.length > 0 && <button type="button" className={freshPhotos.length > 0 ? "stop-photo-preview fresh" : "stop-photo-preview"} onClick={() => { if (freshPhotos.length > 0) dismissPhotos?.(freshPhotos.map((p) => p.id)); setViewingPool(matchedPhotos); setViewing(cover ?? matchedPhotos[0]!); }} aria-label={`View ${matchedPhotos.length} ${matchedPhotos.length === 1 ? "photo" : "photos"} for ${stop.title}`}><img src={cover?.src} alt={`${stop.title} photo`} width={160} height={160} loading="lazy" />{matchedPhotos.length > 1 && <span>+{matchedPhotos.length - 1}</span>}<small>{matchedPhotos.length} {matchedPhotos.length === 1 ? "photo" : "photos"}</small></button>}
               </div>
 
               <div className="stop-footer"><div className="stop-costs">{matchedExpenses.map(costRow)}{matchedExpenses.length === 0 && <span className="no-cost">No costs yet</span>}</div></div>
@@ -466,6 +468,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
     </div>
     {editing && <StopEditor stop={editing} onClose={() => setEditing(null)} onSave={saveStop} onDelete={stops.some((s) => s.id === editing.id) ? () => { deleteStop(editing.id); setEditing(null); } : undefined} />}
     {editingCost && <ExpenseEditor expense={editingCost} stops={stops} onClose={() => setEditingCost(null)} onSave={saveExpense} onDelete={expenses.some((x) => x.id === editingCost.id) ? () => { deleteExpense(editingCost.id); setEditingCost(null); } : undefined} />}
+    {viewing && <PhotoLightbox photo={viewing} photos={viewingPool} stops={stops} onClose={() => setViewing(null)} onPrev={(p) => setViewing(p)} onNext={(p) => setViewing(p)} onMove={() => setView("photos")} />}
   </>;
 }
 
