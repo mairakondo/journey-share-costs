@@ -468,6 +468,7 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
     </div>
     {editing && <StopEditor stop={editing} onClose={() => setEditing(null)} onSave={saveStop} onDelete={stops.some((s) => s.id === editing.id) ? () => { deleteStop(editing.id); setEditing(null); } : undefined} />}
     {editingCost && <ExpenseEditor expense={editingCost} stops={stops} onClose={() => setEditingCost(null)} onSave={saveExpense} onDelete={expenses.some((x) => x.id === editingCost.id) ? () => { deleteExpense(editingCost.id); setEditingCost(null); } : undefined} />}
+    {viewing && <PhotoLightbox photo={viewing} photos={viewingPool} stops={stops} onClose={() => setViewing(null)} onPrev={(p) => setViewing(p)} onNext={(p) => setViewing(p)} onMove={() => setView("photos")} />}
   </>;
 }
 
