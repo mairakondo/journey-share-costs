@@ -163,7 +163,6 @@ function TravelersApp() {
 }
 
 function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: View) => void; onCreate: () => void; onSummary: () => void }) {
-  const [filter, setFilter] = useState<"upcoming" | "past">("upcoming");
   return (
     <div className="page-pad dashboard-page pb-28">
       <section className="hero-row dashboard-intro">
@@ -174,47 +173,76 @@ function Dashboard({ onNavigate, onCreate, onSummary }: { onNavigate: (view: Vie
         <button onClick={onCreate} className="primary-action"><Plus size={20} /> Create trip</button>
       </section>
 
-      {filter === "upcoming" ? (
-        <>
-        <section className="trip-grid home-trip-grid">
-          <button className="trip-card featured" onClick={() => onNavigate("plan")}>
-            <img src={tokyo} alt="Neon-lit Tokyo street at golden hour" width={1280} height={800} />
-            <div className="trip-overlay">
-              <div className="status-pill"><span /> Current trip</div>
-              <div>
-                <p className="eyebrow trip-country">Japan</p>
-                <h2>Tokyo escape</h2>
-                <p className="trip-dates">Apr 6–11 · 6 days</p>
-                <div className="mt-3 flex items-center justify-between gap-3">
-                  <div className="avatar-stack">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
-                  <span className="open-label">Open trip <ArrowRight size={17} /></span>
-                </div>
+      {/* ── Current trip ── */}
+      <div className="section-label">
+        <span className="section-dot live" /> Current trip
+      </div>
+      <section className="trip-grid home-trip-grid">
+        <button className="trip-card featured" onClick={() => onNavigate("plan")}>
+          <img src={tokyo} alt="Neon-lit Tokyo street at golden hour" width={1280} height={800} />
+          <div className="trip-overlay">
+            <div className="status-pill"><span /> Now in progress</div>
+            <div>
+              <p className="eyebrow trip-country">Japan</p>
+              <h2>Tokyo escape</h2>
+              <p className="trip-dates">Apr 6–11 · 6 days</p>
+              <div className="mt-3 flex items-center justify-between gap-3">
+                <div className="avatar-stack">{members.map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div>
+                <span className="open-label">Open trip <ArrowRight size={17} /></span>
               </div>
             </div>
-          </button>
-          <div className="home-side-stack">
-          <button className="trip-card compact-card" onClick={() => onNavigate("plan")}>
-            <img src={copenhagen} alt="Colorful Copenhagen harbor" width={1280} height={800} loading="lazy" />
-            <div className="trip-overlay compact">
-              <div className="status-pill"><span /> In 68 days</div>
-              <div><p className="text-xs font-semibold">Jul 13–17</p><h2>Copenhagen</h2><p className="mt-1 text-sm">3 travelers</p></div>
-            </div>
-          </button>
           </div>
-        </section>
-        <section className="memory-preview">
-          <div><p className="eyebrow">Last journey</p><h2>Kyoto memories</h2><p>8 days · 184 photos · 27 places</p></div>
-          <button onClick={onSummary}>View trip <ArrowRight size={17} /></button>
-        </section>
-        </>
-      ) : (
-        <section className="trip-grid">
-          <button className="trip-card featured" onClick={onSummary}>
-            <img src={kyoto} alt="Cherry blossoms in a quiet Kyoto lane" width={1280} height={800} loading="lazy" />
-            <div className="trip-overlay"><div className="status-pill muted">Completed</div><div><p className="text-sm font-semibold">Mar 24–31 · 8 days</p><h2>Kyoto</h2><span className="open-label mt-3">View memories <ArrowRight size={17} /></span></div></div>
-          </button>
-        </section>
-      )}
+        </button>
+        <div className="home-side-stack">
+          <div className="current-stats">
+            <div><strong>Day 3</strong><small>of 6</small></div>
+            <div><strong>4 stops</strong><small>today</small></div>
+            <div><strong>¥38,200</strong><small>spent so far</small></div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Upcoming trips ── */}
+      <div className="section-label">
+        <span className="section-dot upcoming" /> Upcoming trips
+      </div>
+      <section className="trip-grid upcoming-grid">
+        <button className="trip-card compact-card" onClick={() => onNavigate("plan")}>
+          <img src={copenhagen} alt="Colorful Copenhagen harbor" width={1280} height={800} loading="lazy" />
+          <div className="trip-overlay compact">
+            <div className="status-pill"><span /> In 68 days</div>
+            <div><p className="text-xs font-semibold">Jul 13–17</p><h2>Copenhagen</h2><p className="mt-1 text-sm">3 travelers</p></div>
+          </div>
+        </button>
+        <button className="trip-card compact-card" onClick={() => onNavigate("plan")}>
+          <img src={lisbon} alt="Sunny Lisbon waterfront" width={1280} height={800} loading="lazy" />
+          <div className="trip-overlay compact">
+            <div className="status-pill"><span /> In 112 days</div>
+            <div><p className="text-xs font-semibold">Oct 2–8</p><h2>Lisbon</h2><p className="mt-1 text-sm">5 travelers</p></div>
+          </div>
+        </button>
+      </section>
+
+      {/* ── Past trips ── */}
+      <div className="section-label">
+        <span className="section-dot past" /> Past trips
+      </div>
+      <section className="trip-grid past-grid">
+        <button className="trip-card compact-card past-card" onClick={onSummary}>
+          <img src={kyoto} alt="Cherry blossoms in a quiet Kyoto lane" width={1280} height={800} loading="lazy" />
+          <div className="trip-overlay compact">
+            <div className="status-pill muted">Completed</div>
+            <div><p className="text-xs font-semibold">Mar 24–31 · 8 days</p><h2>Kyoto</h2><p className="mt-1 text-sm">184 photos · 27 places</p></div>
+          </div>
+        </button>
+        <button className="trip-card compact-card past-card" onClick={onSummary}>
+          <img src={tokyoAsakusa} alt="Asakusa temple at dusk" width={1280} height={800} loading="lazy" />
+          <div className="trip-overlay compact">
+            <div className="status-pill muted">Completed</div>
+            <div><p className="text-xs font-semibold">Feb 14–18 · 5 days</p><h2>Osaka</h2><p className="mt-1 text-sm">96 photos · 15 places</p></div>
+          </div>
+        </button>
+      </section>
     </div>
   );
 }
