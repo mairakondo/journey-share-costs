@@ -25,7 +25,6 @@ import {
   Plus,
   ReceiptText,
   Share2,
-  Search,
   Shuffle,
   ShieldCheck,
   Toilet,
