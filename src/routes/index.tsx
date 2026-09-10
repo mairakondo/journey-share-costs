@@ -17,6 +17,7 @@ import {
   HeartPulse,
   Image,
   Landmark,
+  Footprints,
   MapPin,
   MoreHorizontal,
   Pencil,
