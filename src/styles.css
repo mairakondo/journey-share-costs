@@ -529,7 +529,7 @@
   .photo-tile.selected { @apply border-money ring-2 ring-money/40; }
   .photo-tile:disabled { @apply opacity-40; }
   .photo-select-check { @apply absolute right-1 top-1 z-10 grid size-5 place-items-center rounded-full bg-money text-white shadow; }
-  .share-bar { @apply sticky bottom-24 z-30 mt-4 flex flex-col gap-3 p-4; }
+  .share-bar { @apply sticky bottom-24 z-30 mt-4 flex flex-col gap-3; }
   .share-bar .share-formats { @apply mt-0 gap-2; }
   .share-bar .share-format { @apply flex-row items-center gap-2 p-2; }
   .share-bar .money-action { @apply w-full; }
