@@ -200,8 +200,22 @@
   .segmented button.active { @apply bg-surface text-foreground shadow-sm; }
   .segmented span { @apply ml-1 text-xs; }
   .trip-grid { @apply mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-[1.45fr_.9fr]; }
-  .home-trip-grid { @apply mt-7 lg:grid-cols-[1.35fr_.8fr]; }
+  .home-trip-grid { @apply mt-5 lg:grid-cols-[1.35fr_.8fr]; }
   .home-side-stack { @apply grid gap-4; }
+  .upcoming-grid, .past-grid { @apply mt-5 grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 lg:grid-cols-[1fr_1fr]; }
+  .section-label { @apply mt-8 mb-1 flex items-center gap-2 text-sm font-extrabold text-foreground; }
+  .section-label:first-of-type { @apply mt-7; }
+  .section-dot { @apply size-2.5 rounded-full; }
+  .section-dot.live { @apply bg-accent shadow-[0_0_0_4px] shadow-accent/25; animation: pulse-dot 2s ease-in-out infinite; }
+  .section-dot.upcoming { @apply bg-primary; }
+  .section-dot.past { @apply bg-muted-foreground/50; }
+  @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
+  .current-stats { @apply grid grid-cols-3 gap-2 self-stretch rounded-[2rem] border border-primary/15 bg-surface/60 p-5 backdrop-blur-xl; }
+  .current-stats > div { @apply flex flex-col gap-1 text-center; }
+  .current-stats strong { @apply text-lg font-extrabold text-primary; }
+  .current-stats small { @apply text-[10px] font-bold uppercase text-muted-foreground; letter-spacing: .08em; }
+  .past-card img { @apply grayscale-[.35] saturate-[.8]; }
+  .past-card:hover img { @apply grayscale-0 saturate-100; }
   .trip-country { @apply mb-1 text-primary-foreground/90; }
   .trip-dates { @apply mt-2 text-sm font-semibold text-primary-foreground/90; }
   .compact-card { @apply min-h-64; }
