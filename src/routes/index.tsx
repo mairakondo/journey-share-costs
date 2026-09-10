@@ -658,9 +658,9 @@ function LocateFlow({ onClose }: { onClose: () => void }) {
 }
 
 const MEET_ROUTES = [
-  { id: "walk", icon: <Footprints size={18} />, label: "Walk", time: "8 min", detail: "650 m · through Nakamise street", steps: ["Leave Senso-ji by the main gate", "Walk south along Nakamise street", "Pass the second souvenir arch", "Yuki is waiting by the red lanterns"] },
-  { id: "metro", icon: <Train size={18} />, label: "Metro", time: "6 min", detail: "Ginza line · 1 stop, step-free", steps: ["Enter Asakusa station, exit 4 lifts", "Ginza line toward Shibuya · 1 stop", "Leave by exit 1", "Meet Yuki at the street corner"] },
-  { id: "taxi", icon: <TramFront size={18} />, label: "Taxi", time: "4 min", detail: "≈ ¥760 · busy traffic now", steps: ["Taxi rank outside the temple gate", "Show the saved address in Japanese", "Arrive at Nakamise street"] },
+  { id: "walk", icon: <Footprints size={18} />, label: "Walk", time: "8 min", detail: "650 m · along Laugavegur", steps: ["Leave Hallgrimskirkja by the main door", "Walk down Laugavegur shopping street", "Pass the second mural alley", "Yuki is waiting by the red shopfront"] },
+  { id: "metro", icon: <Train size={18} />, label: "Bus", time: "6 min", detail: "Strætó bus 18 · 1 stop, step-free", steps: ["Enter Hlemmur bus stop, ramps", "Strætó toward city center · 1 stop", "Leave by the front doors", "Meet Yuki at the street corner"] },
+  { id: "taxi", icon: <TramFront size={18} />, label: "Taxi", time: "4 min", detail: "≈ kr 1,500 · busy traffic now", steps: ["Taxi rank outside the church", "Show the saved address in Icelandic", "Arrive at Laugavegur street"] },
 ];
 
 function MeetFlow({ traveler, onClose }: { traveler: { name: string; place: string; initials: string }; onClose: () => void }) {
@@ -706,7 +706,7 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
     </article>
     
 
-    <div className="cost-layout"><section><div className="section-heading"><div><p className="eyebrow">Settle up</p><h2>Running balance</h2></div></div><div className="balance-list"><article><span className="bg-sky text-sky-foreground">JR</span><div><h3>Jon owes you</h3><p>3 shared expenses</p></div><strong className="positive">+ ¥4,820</strong></article><article><span className="bg-money text-money-foreground">AL</span><div><h3>You owe Ana</h3><p>Dinner at Omoide Yokocho</p></div><strong className="text-money-ink">− ¥2,400</strong></article><article><span className="bg-sun text-sun-foreground">LM</span><div><h3>Luis is settled</h3><p>All caught up</p></div><strong className="muted-amount">¥0</strong></article></div></section></div>
+    <div className="cost-layout"><section><div className="section-heading"><div><p className="eyebrow">Settle up</p><h2>Running balance</h2></div></div><div className="balance-list"><article><span className="bg-sky text-sky-foreground">JR</span><div><h3>Jon owes you</h3><p>3 shared expenses</p></div><strong className="positive">+ kr 4,820</strong></article><article><span className="bg-money text-money-foreground">AL</span><div><h3>You owe Ana</h3><p>Dinner at Þrír Frakkar</p></div><strong className="text-money-ink">− kr 2,400</strong></article><article><span className="bg-sun text-sun-foreground">LM</span><div><h3>Luis is settled</h3><p>All caught up</p></div><strong className="muted-amount">kr 0</strong></article></div></section></div>
     <div className="section-heading mt-8"><div><p className="eyebrow">When it happened</p><h2>Spending timeline</h2></div><div className="timeline-head-actions"><button onClick={onScan} className="scan-chip"><Camera size={16} /> Receipt</button></div></div>
     <div className="spend-timeline">{days.map((d) => <section key={d}>
       <header><h3>Day {d + 1}</h3><strong>{euro(expenses.filter((e) => e.day === d).reduce((s, e) => s + e.amount, 0))}</strong></header>
@@ -729,11 +729,11 @@ function Costs({ onScan, stops, expenses, setView }: { onScan: () => void; stops
 }
 
 const importCandidates: Photo[] = [
-  { id: "n1", src: galTakoyaki, day: 1, time: "09:52", place: "Tsukiji Outer Market" },
-  { id: "n2", src: galOmikuji, day: 1, time: "11:38", place: "Senso-ji, Asakusa 2-3-1" },
-  { id: "n3", src: galLights, day: 1, time: "15:05", place: "Toyosu 6-1-16" },
-  { id: "n4", src: galMetro, day: 0, time: "17:10", place: "Shibuya Crossing" },
-  { id: "n5", src: galAlley, day: 1, time: "22:40", place: "Golden Gai, Shinjuku" },
+  { id: "n1", src: icelandPylsurStand, day: 1, time: "09:52", place: "Bæjarins Beztu Pylsur" },
+  { id: "n2", src: icelandTowerView, day: 1, time: "11:38", place: "Hallgrimskirkja, Hallgrimstorg 1" },
+  { id: "n3", src: icelandAurora, day: 1, time: "15:05", place: "Reykjanesbraut" },
+  { id: "n4", src: icelandBus, day: 0, time: "17:10", place: "Laugavegur 36" },
+  { id: "n5", src: icelandAlley, day: 1, time: "22:40", place: "Sun Voyager, Reykjavik" },
 ];
 
 function PhotoImport({ stops, onClose, onImport }: { stops: Stop[]; onClose: () => void; onImport: (photos: Photo[]) => void }) {
@@ -910,7 +910,7 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
         </div>
         <div className="ig-carousel-dots">{carouselPhotos.map((p, i) => <i key={p.id} className={i === slide ? "on" : ""} onClick={() => setSlide(i)} />)}</div>
         <div className="ig-carousel-caption">
-          <p className="eyebrow">Tokyo escape</p>
+          <p className="eyebrow">Iceland escape</p>
           <b>{carouselPhotos[slide]?.place}</b>
           <small>Day {(carouselPhotos[slide]?.day ?? 0) + 1} · {carouselPhotos[slide]?.time}</small>
         </div>
@@ -918,7 +918,7 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
         <div className="ig-story-bars">{storyPhotos.map((p, i) => <i key={p.id} className={i <= slide ? "on" : ""} />)}</div>
         {storyPhotos[slide] && <img src={storyPhotos[slide].src} alt={`${storyPhotos[slide].place} memory`} />}
         <div className="ig-story-caption">
-          <p className="eyebrow">Tokyo escape</p>
+          <p className="eyebrow">Iceland escape</p>
           <b>{storyPhotos[slide]?.place}</b>
           <small><Play size={12} /> Day {(storyPhotos[slide]?.day ?? 0) + 1} · {storyPhotos[slide]?.time}</small>
         </div>
@@ -932,7 +932,7 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
 
     {shareMode && shareStep === "done" && <>
       <div className="share-done"><Check size={26} /></div>
-      <p className="gesture-hint">Your {shareFormat === "carousel" ? "photo carousel" : "story video"} was handed to Instagram with the caption “Tokyo escape · 5 days, 5 friends”. Everyone on the trip gets a copy in the shared album.</p>
+      <p className="gesture-hint">Your {shareFormat === "carousel" ? "photo carousel" : "story video"} was handed to Instagram with the caption “Iceland escape · 5 days, 4 friends”. Everyone on the trip gets a copy in the shared album.</p>
       <button className="money-action mt-4" onClick={exitShare}><Check size={17} /> Done</button>
     </>}
 
@@ -1027,13 +1027,13 @@ function BottomNav({ view, setView, planBadge = 0, onPlanSeen }: { view: View; s
 
 
 function CreateTrip({ onClose, onCreate }: { onClose: () => void; onCreate: () => void }) {
-  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Create a trip"><div className="modal-sheet"><div className="modal-head"><div><p className="eyebrow">New adventure</p><h2>Create a trip</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div><div className="form-grid"><label>Trip name<input defaultValue="Tokyo escape" /></label><label>Destination<div className="input-icon"><MapPin size={17} /><input defaultValue="Tokyo, Japan" /></div></label><div className="two-cols"><label>Starts<input type="date" defaultValue="2026-04-06" /></label><label>Ends<input type="date" defaultValue="2026-04-11" /></label></div><label>Invite members<div className="invite-row"><div className="avatar-stack">{members.slice(0, 3).map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div><button className="invite-button"><Plus size={16} /> Add people</button></div></label></div><button className="primary-action wide" onClick={onCreate}>Create trip <ArrowRight size={19} /></button></div></div>;
+  return <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Create a trip"><div className="modal-sheet"><div className="modal-head"><div><p className="eyebrow">New adventure</p><h2>Create a trip</h2></div><IconButton label="Close" onClick={onClose}><X size={20} /></IconButton></div><div className="form-grid"><label>Trip name<input defaultValue="Iceland escape" /></label><label>Destination<div className="input-icon"><MapPin size={17} /><input defaultValue="Reykjavik, Iceland" /></div></label><div className="two-cols"><label>Starts<input type="date" defaultValue="2026-04-06" /></label><label>Ends<input type="date" defaultValue="2026-04-11" /></label></div><label>Invite members<div className="invite-row"><div className="avatar-stack">{members.slice(0, 3).map((m) => <span key={m.name} className={m.tone}>{m.initials}</span>)}</div><button className="invite-button"><Plus size={16} /> Add people</button></div></label></div><button className="primary-action wide" onClick={onCreate}>Create trip <ArrowRight size={19} /></button></div></div>;
 }
 
 function ReceiptConfirm({ onClose, stops, onSave }: { onClose: () => void; stops: Stop[]; onSave: (e: Expense) => void }) {
   const [confirmed, setConfirmed] = useState(false);
   const [split, setSplit] = useState<Split>(equalSplit(["You", "Jon", "Ana"]));
-  const [draft, setDraft] = useState({ amount: "15600", label: "teamLab tickets", place: "Toyosu 6-1-16", time: "14:55", day: 1 });
+  const [draft, setDraft] = useState({ amount: "9900", label: "Blue Lagoon tickets", place: "Reykjanesbraut", time: "14:55", day: 1 });
   const amount = Number(draft.amount.replace(",", ".")) || 0;
   const match = resolveStop({ day: draft.day, time: draft.time, place: draft.place }, stops);
   const SCAN_STEPS = ["Capturing the receipt", "Reading the text", "Finding the total", "Matching place and time"];
