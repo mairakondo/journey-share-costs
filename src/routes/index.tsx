@@ -921,7 +921,7 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
           <small><Play size={12} /> Day {(storyPhotos[slide]?.day ?? 0) + 1} · {storyPhotos[slide]?.time}</small>
         </div>
       </div>}
-      <p className="gesture-hint">Tokyo escape · {selectedPhotos.length} photos. Caption and location tag are filled in for you.</p>
+      
       <div className="share-bar">
         <button className="money-action" onClick={() => setShareStep("done")}><Instagram size={17} /> {shareFormat === "carousel" ? "Share as post" : "Share to stories"}</button>
         <button className="cancel-link" onClick={exitShare}>Cancel</button>
