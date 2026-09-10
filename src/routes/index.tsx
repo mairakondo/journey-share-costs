@@ -393,6 +393,8 @@ function Itinerary({ setView, stops, setStops, photos, expenses, setExpenses, ne
   const [editing, setEditing] = useState<Stop | null>(null);
   const [editingCost, setEditingCost] = useState<Expense | null>(null);
   const [addOpen, setAddOpen] = useState(false);
+  const [viewing, setViewing] = useState<Photo | null>(null);
+  const [viewingPool, setViewingPool] = useState<Photo[]>([]);
 
 
 
