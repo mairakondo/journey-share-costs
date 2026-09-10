@@ -943,7 +943,6 @@ function Photos({ stops, photos, setPhotos, onImported }: { stops: Stop[]; photo
             <span><b>Day {day + 1}</b><small>{groups.filter((g) => g.stop).length} activities · {dayPhotos.length} photos</small></span>
           </div>
           {groups.map((group) => <div className="activity-cluster" key={group.stop?.id ?? "unmatched"}>
-            <p className="cluster-label">{group.stop ? <><MapPin size={13} /> {group.stop.time} · {group.stop.title}</> : <><Image size={13} /> Not matched to an activity</>}</p>
             <div className="photo-grid">{group.photos.map((photo) => {
               const on = shareMode && shareSelected.includes(photo.id);
               const disabled = shareMode && !on && shareSelected.length >= maxPhotos;
