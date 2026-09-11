@@ -1,0 +1,21 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-playwright", "--headless"],
+      "env": {
+        "PLAYWRIGHT_BROWSERS_PATH": "./.cache/playwright"
+      }
+    },
+    "github": {
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-github"],
+      "env": {}
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["@anthropic-ai/mcp-filesystem", "./src", "./public", "./.claude"],
+      "env": {}
+    }
+  }
+}
