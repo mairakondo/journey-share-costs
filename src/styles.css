@@ -167,420 +167,1698 @@
     font-family: var(--font-sans);
     letter-spacing: 0;
   }
-  button, input { font: inherit; }
-  button { cursor: pointer; }
-  button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
-  h1, h2, h3, h4 { margin-top: 0.75rem; margin-bottom: 0.5rem; }
-  h1:first-child, h2:first-child, h3:first-child, h4:first-child { margin-top: 0; }
+  button,
+  input {
+    font: inherit;
+  }
+  button {
+    cursor: pointer;
+  }
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  h1:first-child,
+  h2:first-child,
+  h3:first-child,
+  h4:first-child {
+    margin-top: 0;
+  }
 }
 
 @layer components {
-  .app-frame { @apply relative mx-auto min-h-screen w-full max-w-[1180px] overflow-x-hidden bg-background; isolation: isolate; }
-  .app-frame::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(circle at 12% 6%, color-mix(in oklab, var(--cyan) 55%, transparent) 0 8rem, transparent 20rem), radial-gradient(circle at 92% 88%, color-mix(in oklab, var(--sun) 60%, transparent) 0 9rem, transparent 22rem), radial-gradient(circle at 88% 20%, color-mix(in oklab, var(--sky) 40%, transparent) 0 6rem, transparent 16rem); }
-  .page-pad { @apply px-5 pt-7 sm:px-8 lg:px-12 lg:pt-10; }
-  .topbar { @apply sticky top-0 z-30 grid grid-cols-[minmax(0,1fr)_auto] items-center border-b border-primary-foreground/10 bg-primary px-5 py-4 backdrop-blur-xl sm:px-8 lg:px-12; }
-  .brand { @apply flex min-w-0 items-center gap-2 font-display text-xl font-bold leading-none text-primary-foreground; }
-  .brand-mark { @apply grid size-9 shrink-0 rotate-3 place-items-center rounded-xl bg-accent text-accent-foreground shadow-lg; }
-  .avatar { @apply grid size-10 shrink-0 place-items-center rounded-xl bg-primary-foreground text-xs font-extrabold text-primary shadow-lg; }
-  .icon-button { @apply grid size-10 shrink-0 place-items-center rounded-xl border border-primary/20 bg-surface text-primary shadow-sm transition hover:border-primary/40 hover:bg-secondary; }
-  .topbar .icon-button, .lightbox-stage .icon-button, .memory-preview .icon-button { @apply border-primary-foreground/25 bg-primary-foreground/15 text-primary-foreground backdrop-blur-xl hover:bg-primary-foreground/25; }
-  .lightbox-bar .icon-button { @apply border-primary/20 bg-surface text-primary; }
-  .eyebrow { @apply text-[11px] font-extrabold uppercase text-muted-foreground; letter-spacing: .12em; }
-  .page-title { @apply mt-2 max-w-3xl font-display text-4xl font-bold leading-none sm:text-6xl; }
-  .hero-row { @apply flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between; }
-  .dashboard-page { @apply pt-5 lg:pt-8; }
-  .dashboard-intro { @apply items-start sm:items-end; }
-  .dashboard-intro .primary-action { @apply bg-accent text-accent-foreground shadow-lg shadow-accent/20; }
-  .primary-action, .secondary-action { @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 text-sm font-extrabold transition active:scale-[.98]; }
-  .primary-action { @apply bg-primary text-primary-foreground hover:brightness-95; }
-  .secondary-action { @apply border border-border bg-surface text-foreground; }
-  .primary-action.wide { @apply w-full; }
-  .segmented { @apply mt-10 inline-grid grid-cols-2 rounded-full bg-secondary p-1; }
-  .segmented button { @apply rounded-full px-5 py-2 text-sm font-bold text-secondary-foreground/80; }
-  .segmented button.active { @apply bg-surface text-foreground shadow-sm; }
-  .segmented span { @apply ml-1 text-xs; }
-  .trip-grid { @apply mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-[1.45fr_.9fr]; }
-  .home-trip-grid { @apply mt-5 lg:grid-cols-[1.35fr_.8fr]; }
-  .home-side-stack { @apply grid gap-4; }
-  .upcoming-grid, .past-grid { @apply mt-5 grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 lg:grid-cols-[1fr_1fr]; }
-  .section-label { @apply mt-8 mb-1 flex items-center gap-2 text-sm font-extrabold text-foreground; }
-  .section-label:first-of-type { @apply mt-7; }
-  .section-dot { @apply size-2.5 rounded-full; }
-  .section-dot.live { @apply bg-accent shadow-[0_0_0_4px] shadow-accent/25; animation: pulse-dot 2s ease-in-out infinite; }
-  .section-dot.upcoming { @apply bg-primary; }
-  .section-dot.past { @apply bg-muted-foreground/50; }
-  @keyframes pulse-dot { 0%,100% { opacity: 1; } 50% { opacity: .5; } }
-  .current-stats { @apply grid grid-cols-3 gap-2 self-stretch rounded-[2rem] border border-primary/15 bg-surface/60 p-5 backdrop-blur-xl; }
-  .current-stats > div { @apply flex flex-col gap-1 text-center; }
-  .current-stats strong { @apply text-lg font-extrabold text-primary; }
-  .current-stats small { @apply text-[10px] font-bold uppercase text-muted-foreground; letter-spacing: .08em; }
-  .past-card img { @apply grayscale-[.35] saturate-[.8]; }
-  .past-card:hover img { @apply grayscale-0 saturate-100; }
-  .trip-country { @apply mb-1 text-primary-foreground/90; }
-  .trip-dates { @apply mt-2 text-sm font-semibold text-primary-foreground/90; }
-  .compact-card { @apply min-h-64; }
-  .quick-panel { @apply grid grid-cols-2 gap-2 rounded-[2rem] border border-primary/10 bg-surface/45 p-3 shadow-xl backdrop-blur-xl; }
-  .quick-panel button { @apply grid min-h-28 grid-cols-[auto_1fr] content-center items-center gap-x-2 rounded-2xl border border-primary/10 bg-surface/80 p-3 text-left shadow-sm backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg; }
-  .quick-panel button > span { @apply row-span-2 grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-md; }
-  .quick-panel button b { @apply self-end text-sm font-extrabold; }
-  .quick-panel button small { @apply self-start text-[10px] font-bold text-muted-foreground; }
-  .quick-panel .support-shortcut { @apply bg-cyan/80; }
-  .quick-panel button:nth-child(2) > span { @apply bg-accent; }
-  .quick-panel button:nth-child(3) > span { @apply bg-cyan text-sky-foreground; }
-  .memory-preview { @apply relative mt-5 flex min-h-36 items-end justify-between gap-4 overflow-hidden rounded-[2rem] bg-primary p-6 text-primary-foreground shadow-xl; background-image: linear-gradient(90deg, var(--primary) 20%, color-mix(in oklab, var(--primary) 78%, transparent)), url("/src/assets/kyoto.jpg"); background-position: center; background-size: cover; }
-  .memory-preview h2 { @apply mt-1 font-display text-2xl font-bold; }
-  .memory-preview p:not(.eyebrow) { @apply mt-1 text-xs text-primary-foreground/85; }
-  .memory-preview .eyebrow { @apply text-cyan; }
-  .memory-preview button { @apply inline-flex shrink-0 items-center gap-2 rounded-xl bg-surface px-4 py-2 text-xs font-extrabold text-primary; }
-  .home-filter { @apply sticky bottom-5 left-1/2 z-30 mt-7 -translate-x-1/2 bg-primary/90 p-1.5 shadow-xl backdrop-blur-xl flex items-center; }
-  .home-filter button { @apply text-primary-foreground/80; }
-  .home-filter button.active { @apply bg-surface text-primary; }
-  .trip-card { @apply relative min-h-72 overflow-hidden rounded-[2rem] border border-primary-foreground/15 text-left text-primary-foreground shadow-2xl; }
-  .trip-card.featured { @apply md:row-span-2 md:min-h-[540px]; }
-  .trip-card img { @apply absolute inset-0 h-full w-full object-cover transition duration-500; }
-  .trip-card:hover img { @apply scale-[1.03]; }
-  .trip-overlay { @apply absolute inset-0 flex flex-col justify-between bg-gradient-to-t from-primary via-primary/35 to-primary/45 p-5 sm:p-7; }
-  .trip-overlay.compact { @apply p-5; }
-  .trip-overlay h2 { @apply font-display text-4xl font-bold leading-none sm:text-5xl; }
-  .compact h2 { @apply text-2xl; }
-  .status-pill { @apply flex w-fit items-center gap-2 rounded-xl border border-primary-foreground/20 bg-surface/20 px-3 py-1.5 text-[10px] font-extrabold uppercase text-primary-foreground shadow-sm backdrop-blur-xl; }
-  .status-pill span { @apply size-2 rounded-full bg-cyan; }
-  .status-pill.muted { @apply text-primary-foreground/85; }
-  .avatar-stack { @apply flex items-center; }
-  .avatar-stack > span { @apply -ml-1 grid size-8 place-items-center rounded-full border-2 border-surface text-[10px] font-black first:ml-0; }
-  .open-label { @apply inline-flex items-center gap-2 text-sm font-extrabold; }
-  .budget-card { @apply flex min-h-48 flex-col justify-between rounded-2xl border border-border bg-surface p-5; }
-  .budget-card h3 { @apply mt-1 font-display text-2xl font-bold leading-none; }
-  .budget-card h3 span { @apply text-sm font-semibold text-muted-foreground; }
-  .money-icon { @apply grid size-10 place-items-center rounded-xl bg-money/20 text-money-ink; }
-  .progress { @apply h-2 overflow-hidden rounded-full bg-muted; }
-  .progress span { @apply block h-full w-[69%] rounded-full bg-money; }
-  .offline-banner { @apply sticky top-0 z-50 flex w-full items-center gap-2 bg-foreground px-5 py-2 text-left text-xs font-bold text-background; }
-  .trip-heading { @apply grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4; }
-  .trip-heading h1 { margin-top: 0.25rem; }
-  .section-tabs { @apply mt-8 flex gap-6 border-b border-border; }
-  .section-tabs button { @apply relative pb-3 text-sm font-bold text-foreground/65; }
-  .section-tabs button.active { @apply text-foreground after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-primary; }
-  .day-strip { @apply -mx-5 mt-5 flex gap-2 overflow-x-auto px-5 pb-2 sm:mx-0 sm:px-0; scrollbar-width: none; }
-  .day-strip button { @apply min-w-24 rounded-2xl border border-primary/15 bg-surface px-4 py-3 text-sm font-extrabold; }
-  .day-strip button span { @apply mb-1 block text-[10px] uppercase text-muted-foreground; }
-  .day-strip button.active { @apply border-primary bg-primary text-primary-foreground; }
-  .day-strip button.active span { @apply text-primary-foreground/80; }
-  .content-grid { @apply mt-7 grid gap-8 lg:grid-cols-[1fr_300px]; }
-  .date-heading, .section-heading { @apply flex items-end justify-between gap-4; }
-  .date-heading h2, .section-heading h2 { @apply font-display text-2xl font-bold leading-none; }
-  .day-title-row { @apply flex items-center gap-3; }
-  .weather { @apply flex items-center gap-1 text-primary leading-none; margin-bottom: 4px; }
-  .weather span { @apply text-lg font-black; }
-  .weather small { @apply text-[10px] font-bold text-muted-foreground; }
-  .timeline { @apply mt-6; }
-  .stop-card { @apply grid grid-cols-[34px_minmax(0,1fr)] items-stretch sm:grid-cols-[52px_18px_minmax(0,1fr)]; }
-  .time { @apply col-start-2 row-start-1 mb-1 self-end text-[11px] font-extrabold uppercase text-muted-foreground sm:col-start-1 sm:mb-0 sm:pt-5 sm:normal-case; }
-  .timeline-dot { @apply relative flex justify-center before:absolute before:inset-y-0 before:w-px before:bg-border; }
-  .timeline-dot { @apply col-start-1 row-span-2 row-start-1 sm:col-start-2 sm:row-span-1 sm:row-start-1; }
-  .timeline-dot span { @apply z-10 mt-1.5 size-3 rounded-full border-[3px] border-background bg-primary sm:mt-6; }
-  .stop-body { @apply col-start-2 row-start-2 mb-4 min-w-0 overflow-hidden rounded-2xl border border-primary/10 bg-surface/80 p-4 shadow-lg backdrop-blur-xl sm:col-start-3 sm:row-start-1; }
-  .stop-icon { @apply grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary; }
-  .stop-body h3 { @apply font-display text-base font-bold leading-none; }
-  .stop-body p { @apply mt-1 flex items-center gap-1 text-xs text-muted-foreground; }
-  .stop-card-head { @apply grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2; }
-  .stop-title-row { @apply flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1; }
-  .spot-badge { @apply inline-flex shrink-0 rounded-md bg-sky px-2 py-1 text-[10px] font-extrabold text-sky-foreground; }
-  .stop-actions { @apply flex shrink-0 items-center gap-1; }
-  .stop-actions .icon-button { @apply size-9; }
-  .stop-summary { @apply mt-3 grid min-h-20 grid-cols-[minmax(0,1fr)_80px] gap-3; }
-  .stop-place { @apply flex min-w-0 items-start gap-2; }
-  .stop-place p { @apply mt-1 break-words leading-5; }
-  .stop-photo-preview { @apply relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-muted text-left cursor-pointer border-0 p-0 transition hover:opacity-90 active:scale-[0.98]; }
-  .stop-photo-preview img { @apply h-full w-full object-cover; }
-  .stop-photo-preview > span { @apply absolute right-1 top-1 rounded-md bg-foreground/75 px-1.5 py-0.5 text-[9px] font-black text-background; }
-  .stop-photo-preview > small { @apply absolute inset-x-1 bottom-1 rounded-md bg-primary/90 px-1 py-0.5 text-center text-[9px] font-extrabold text-primary-foreground backdrop-blur; }
-  .stop-photo-preview.fresh { @apply ring-2 ring-money; }
-  .stop-photo-preview.fresh > span { @apply bg-money text-white; }
-  .stop-card.has-new { }
-  .new-badge { @apply inline-flex shrink-0 rounded-md bg-money px-2 py-1 text-[10px] font-extrabold text-white; }
-  .new-photos-note { @apply mt-4 flex items-center gap-3 rounded-2xl border border-money/30 bg-money/10 px-3 py-3; }
-  .new-photos-note p { @apply min-w-0 flex-1; }
-  .new-photos-note b { @apply block text-sm font-extrabold text-foreground; }
-  .new-photos-note small { @apply block text-xs text-muted-foreground; }
-  .new-photos-note > button:not(.icon-button) { @apply shrink-0 rounded-full bg-money px-3 py-1.5 text-xs font-extrabold text-white; }
-  .day-strip button { @apply relative; }
-  .day-dot { @apply absolute right-2 top-2 size-2 rounded-full bg-money; }
-  .nav-badge { @apply absolute right-3 top-1 min-w-4 rounded-full bg-money px-1 text-[10px] font-black not-italic leading-4 text-white; }
-  .bottom-nav button { @apply relative; }
+  .app-frame {
+    @apply relative mx-auto min-h-screen w-full max-w-[1180px] overflow-x-hidden bg-background;
+    isolation: isolate;
+  }
+  .app-frame::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        circle at 12% 6%,
+        color-mix(in oklab, var(--cyan) 55%, transparent) 0 8rem,
+        transparent 20rem
+      ),
+      radial-gradient(
+        circle at 92% 88%,
+        color-mix(in oklab, var(--sun) 60%, transparent) 0 9rem,
+        transparent 22rem
+      ),
+      radial-gradient(
+        circle at 88% 20%,
+        color-mix(in oklab, var(--sky) 40%, transparent) 0 6rem,
+        transparent 16rem
+      );
+  }
+  .page-pad {
+    @apply px-5 pt-7 sm:px-8 lg:px-12 lg:pt-10;
+  }
+  .topbar {
+    @apply sticky top-0 z-30 grid grid-cols-[minmax(0,1fr)_auto] items-center border-b border-primary-foreground/10 bg-primary px-5 py-4 backdrop-blur-xl sm:px-8 lg:px-12;
+  }
+  .brand {
+    @apply flex min-w-0 items-center gap-2 font-display text-xl font-bold leading-none text-primary-foreground;
+  }
+  .brand-mark {
+    @apply grid size-9 shrink-0 rotate-3 place-items-center rounded-xl bg-accent text-accent-foreground shadow-lg;
+  }
+  .avatar {
+    @apply grid size-10 shrink-0 place-items-center rounded-xl bg-primary-foreground text-xs font-extrabold text-primary shadow-lg;
+  }
+  .icon-button {
+    @apply grid size-10 shrink-0 place-items-center rounded-xl border border-primary/20 bg-surface text-primary shadow-sm transition hover:border-primary/40 hover:bg-secondary;
+  }
+  .topbar .icon-button,
+  .lightbox-stage .icon-button,
+  .memory-preview .icon-button {
+    @apply border-primary-foreground/25 bg-primary-foreground/15 text-primary-foreground backdrop-blur-xl hover:bg-primary-foreground/25;
+  }
+  .lightbox-bar .icon-button {
+    @apply border-primary/20 bg-surface text-primary;
+  }
+  .eyebrow {
+    @apply text-[11px] font-extrabold uppercase text-muted-foreground;
+    letter-spacing: 0.12em;
+  }
+  .page-title {
+    @apply mt-2 max-w-3xl font-display text-4xl font-bold leading-none sm:text-6xl;
+  }
+  .hero-row {
+    @apply flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between;
+  }
+  .dashboard-page {
+    @apply pt-5 lg:pt-8;
+  }
+  .dashboard-intro {
+    @apply items-start sm:items-end;
+  }
+  .dashboard-intro .primary-action {
+    @apply bg-accent text-accent-foreground shadow-lg shadow-accent/20;
+  }
+  .primary-action,
+  .secondary-action {
+    @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-5 text-sm font-extrabold transition active:scale-[.98];
+  }
+  .primary-action {
+    @apply bg-primary text-primary-foreground hover:brightness-95;
+  }
+  .secondary-action {
+    @apply border border-border bg-surface text-foreground;
+  }
+  .primary-action.wide {
+    @apply w-full;
+  }
+  .segmented {
+    @apply mt-10 inline-grid grid-cols-2 rounded-full bg-secondary p-1;
+  }
+  .segmented button {
+    @apply rounded-full px-5 py-2 text-sm font-bold text-secondary-foreground/80;
+  }
+  .segmented button.active {
+    @apply bg-surface text-foreground shadow-sm;
+  }
+  .segmented span {
+    @apply ml-1 text-xs;
+  }
+  .trip-grid {
+    @apply mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-[1.45fr_.9fr];
+  }
+  .home-trip-grid {
+    @apply mt-5 lg:grid-cols-[1.35fr_.8fr];
+  }
+  .home-side-stack {
+    @apply grid gap-4;
+  }
+  .upcoming-grid,
+  .past-grid {
+    @apply mt-5 grid-cols-2 sm:grid-cols-2 lg:grid-cols-2 lg:grid-cols-[1fr_1fr];
+  }
+  .section-label {
+    @apply mt-8 mb-1 flex items-center gap-2 text-sm font-extrabold text-foreground;
+  }
+  .section-label:first-of-type {
+    @apply mt-7;
+  }
+  .section-dot {
+    @apply size-2.5 rounded-full;
+  }
+  .section-dot.live {
+    @apply bg-accent shadow-[0_0_0_4px] shadow-accent/25;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+  .section-dot.upcoming {
+    @apply bg-primary;
+  }
+  .section-dot.past {
+    @apply bg-muted-foreground/50;
+  }
+  @keyframes pulse-dot {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+  }
+  .current-stats {
+    @apply grid grid-cols-3 gap-2 self-stretch rounded-[2rem] border border-primary/15 bg-surface/60 p-5 backdrop-blur-xl;
+  }
+  .current-stats > div {
+    @apply flex flex-col gap-1 text-center;
+  }
+  .current-stats strong {
+    @apply text-lg font-extrabold text-primary;
+  }
+  .current-stats small {
+    @apply text-[10px] font-bold uppercase text-muted-foreground;
+    letter-spacing: 0.08em;
+  }
+  .past-card img {
+    @apply grayscale-[.35] saturate-[.8];
+  }
+  .past-card:hover img {
+    @apply grayscale-0 saturate-100;
+  }
+  .trip-country {
+    @apply mb-1 text-primary-foreground/90;
+  }
+  .trip-dates {
+    @apply mt-2 text-sm font-semibold text-primary-foreground/90;
+  }
+  .compact-card {
+    @apply min-h-64;
+  }
+  .quick-panel {
+    @apply grid grid-cols-2 gap-2 rounded-[2rem] border border-primary/10 bg-surface/45 p-3 shadow-xl backdrop-blur-xl;
+  }
+  .quick-panel button {
+    @apply grid min-h-28 grid-cols-[auto_1fr] content-center items-center gap-x-2 rounded-2xl border border-primary/10 bg-surface/80 p-3 text-left shadow-sm backdrop-blur-xl transition hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-lg;
+  }
+  .quick-panel button > span {
+    @apply row-span-2 grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground shadow-md;
+  }
+  .quick-panel button b {
+    @apply self-end text-sm font-extrabold;
+  }
+  .quick-panel button small {
+    @apply self-start text-[10px] font-bold text-muted-foreground;
+  }
+  .quick-panel .support-shortcut {
+    @apply bg-cyan/80;
+  }
+  .quick-panel button:nth-child(2) > span {
+    @apply bg-accent;
+  }
+  .quick-panel button:nth-child(3) > span {
+    @apply bg-cyan text-sky-foreground;
+  }
+  .memory-preview {
+    @apply relative mt-5 flex min-h-36 items-end justify-between gap-4 overflow-hidden rounded-[2rem] bg-primary p-6 text-primary-foreground shadow-xl;
+    background-image:
+      linear-gradient(
+        90deg,
+        var(--primary) 20%,
+        color-mix(in oklab, var(--primary) 78%, transparent)
+      ),
+      url("/src/assets/kyoto.jpg");
+    background-position: center;
+    background-size: cover;
+  }
+  .memory-preview h2 {
+    @apply mt-1 font-display text-2xl font-bold;
+  }
+  .memory-preview p:not(.eyebrow) {
+    @apply mt-1 text-xs text-primary-foreground/85;
+  }
+  .memory-preview .eyebrow {
+    @apply text-cyan;
+  }
+  .memory-preview button {
+    @apply inline-flex shrink-0 items-center gap-2 rounded-xl bg-surface px-4 py-2 text-xs font-extrabold text-primary;
+  }
+  .home-filter {
+    @apply sticky bottom-5 left-1/2 z-30 mt-7 -translate-x-1/2 bg-primary/90 p-1.5 shadow-xl backdrop-blur-xl flex items-center;
+  }
+  .home-filter button {
+    @apply text-primary-foreground/80;
+  }
+  .home-filter button.active {
+    @apply bg-surface text-primary;
+  }
+  .trip-card {
+    @apply relative min-h-72 overflow-hidden rounded-[2rem] border border-primary-foreground/15 text-left text-primary-foreground shadow-2xl;
+  }
+  .trip-card.featured {
+    @apply md:row-span-2 md:min-h-[540px];
+  }
+  .trip-card img {
+    @apply absolute inset-0 h-full w-full object-cover transition duration-500;
+  }
+  .trip-card:hover img {
+    @apply scale-[1.03];
+  }
+  .trip-overlay {
+    @apply absolute inset-0 flex flex-col justify-between bg-gradient-to-t from-primary via-primary/35 to-primary/45 p-5 sm:p-7;
+  }
+  .trip-overlay.compact {
+    @apply p-5;
+  }
+  .trip-overlay h2 {
+    @apply font-display text-4xl font-bold leading-none sm:text-5xl;
+  }
+  .compact h2 {
+    @apply text-2xl;
+  }
+  .status-pill {
+    @apply flex w-fit items-center gap-2 rounded-xl border border-primary-foreground/20 bg-surface/20 px-3 py-1.5 text-[10px] font-extrabold uppercase text-primary-foreground shadow-sm backdrop-blur-xl;
+  }
+  .status-pill span {
+    @apply size-2 rounded-full bg-cyan;
+  }
+  .status-pill.muted {
+    @apply text-primary-foreground/85;
+  }
+  .avatar-stack {
+    @apply flex items-center;
+  }
+  .avatar-stack > span {
+    @apply -ml-1 grid size-8 place-items-center rounded-full border-2 border-surface text-[10px] font-black first:ml-0;
+  }
+  .open-label {
+    @apply inline-flex items-center gap-2 text-sm font-extrabold;
+  }
+  .budget-card {
+    @apply flex min-h-48 flex-col justify-between rounded-2xl border border-border bg-surface p-5;
+  }
+  .budget-card h3 {
+    @apply mt-1 font-display text-2xl font-bold leading-none;
+  }
+  .budget-card h3 span {
+    @apply text-sm font-semibold text-muted-foreground;
+  }
+  .money-icon {
+    @apply grid size-10 place-items-center rounded-xl bg-money/20 text-money-ink;
+  }
+  .progress {
+    @apply h-2 overflow-hidden rounded-full bg-muted;
+  }
+  .progress span {
+    @apply block h-full w-[69%] rounded-full bg-money;
+  }
+  .offline-banner {
+    @apply sticky top-0 z-50 flex w-full items-center gap-2 bg-foreground px-5 py-2 text-left text-xs font-bold text-background;
+  }
+  .trip-heading {
+    @apply grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4;
+  }
+  .trip-heading h1 {
+    margin-top: 0.25rem;
+  }
+  .section-tabs {
+    @apply mt-8 flex gap-6 border-b border-border;
+  }
+  .section-tabs button {
+    @apply relative pb-3 text-sm font-bold text-foreground/65;
+  }
+  .section-tabs button.active {
+    @apply text-foreground after:absolute after:inset-x-0 after:-bottom-px after:h-0.5 after:bg-primary;
+  }
+  .day-strip {
+    @apply -mx-5 mt-5 flex gap-2 overflow-x-auto px-5 pb-2 sm:mx-0 sm:px-0;
+    scrollbar-width: none;
+  }
+  .day-strip button {
+    @apply min-w-24 rounded-2xl border border-primary/15 bg-surface px-4 py-3 text-sm font-extrabold;
+  }
+  .day-strip button span {
+    @apply mb-1 block text-[10px] uppercase text-muted-foreground;
+  }
+  .day-strip button.active {
+    @apply border-primary bg-primary text-primary-foreground;
+  }
+  .day-strip button.active span {
+    @apply text-primary-foreground/80;
+  }
+  .content-grid {
+    @apply mt-7 grid gap-8 lg:grid-cols-[1fr_300px];
+  }
+  .date-heading,
+  .section-heading {
+    @apply flex items-end justify-between gap-4;
+  }
+  .date-heading h2,
+  .section-heading h2 {
+    @apply font-display text-2xl font-bold leading-none;
+  }
+  .day-title-row {
+    @apply flex items-center gap-3;
+  }
+  .weather {
+    @apply flex items-center gap-1 text-primary leading-none;
+    margin-bottom: 4px;
+  }
+  .weather span {
+    @apply text-lg font-black;
+  }
+  .weather small {
+    @apply text-[10px] font-bold text-muted-foreground;
+  }
+  .timeline {
+    @apply mt-6;
+  }
+  .stop-card {
+    @apply grid grid-cols-[34px_minmax(0,1fr)] items-stretch sm:grid-cols-[52px_18px_minmax(0,1fr)];
+  }
+  .time {
+    @apply col-start-2 row-start-1 mb-1 self-end text-[11px] font-extrabold uppercase text-muted-foreground sm:col-start-1 sm:mb-0 sm:pt-5 sm:normal-case;
+  }
+  .timeline-dot {
+    @apply relative flex justify-center before:absolute before:inset-y-0 before:w-px before:bg-border;
+  }
+  .timeline-dot {
+    @apply col-start-1 row-span-2 row-start-1 sm:col-start-2 sm:row-span-1 sm:row-start-1;
+  }
+  .timeline-dot span {
+    @apply z-10 mt-1.5 size-3 rounded-full border-[3px] border-background bg-primary sm:mt-6;
+  }
+  .stop-body {
+    @apply col-start-2 row-start-2 mb-4 min-w-0 overflow-hidden rounded-2xl border border-primary/10 bg-surface/80 p-4 shadow-lg backdrop-blur-xl sm:col-start-3 sm:row-start-1;
+  }
+  .stop-icon {
+    @apply grid size-9 shrink-0 place-items-center rounded-lg bg-primary/10 text-primary;
+  }
+  .stop-body h3 {
+    @apply font-display text-base font-bold leading-none;
+  }
+  .stop-body p {
+    @apply mt-1 flex items-center gap-1 text-xs text-muted-foreground;
+  }
+  .stop-card-head {
+    @apply grid grid-cols-[minmax(0,1fr)_auto] items-start gap-2;
+  }
+  .stop-title-row {
+    @apply flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1;
+  }
+  .spot-badge {
+    @apply inline-flex shrink-0 rounded-md bg-sky px-2 py-1 text-[10px] font-extrabold text-sky-foreground;
+  }
+  .stop-actions {
+    @apply flex shrink-0 items-center gap-1;
+  }
+  .stop-actions .icon-button {
+    @apply size-9;
+  }
+  .stop-summary {
+    @apply mt-3 grid min-h-20 grid-cols-[minmax(0,1fr)_80px] gap-3;
+  }
+  .stop-place {
+    @apply flex min-w-0 items-start gap-2;
+  }
+  .stop-place p {
+    @apply mt-1 break-words leading-5;
+  }
+  .stop-photo-preview {
+    @apply relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-muted text-left cursor-pointer border-0 p-0 transition hover:opacity-90 active:scale-[0.98];
+  }
+  .stop-photo-preview img {
+    @apply h-full w-full object-cover;
+  }
+  .stop-photo-preview > span {
+    @apply absolute right-1 top-1 rounded-md bg-foreground/75 px-1.5 py-0.5 text-[9px] font-black text-background;
+  }
+  .stop-photo-preview > small {
+    @apply absolute inset-x-1 bottom-1 rounded-md bg-primary/90 px-1 py-0.5 text-center text-[9px] font-extrabold text-primary-foreground backdrop-blur;
+  }
+  .stop-photo-preview.fresh {
+    @apply ring-2 ring-money;
+  }
+  .stop-photo-preview.fresh > span {
+    @apply bg-money text-white;
+  }
+  .stop-card.has-new {
+  }
+  .new-badge {
+    @apply inline-flex shrink-0 rounded-md bg-money px-2 py-1 text-[10px] font-extrabold text-white;
+  }
+  .new-photos-note {
+    @apply mt-4 flex items-center gap-3 rounded-2xl border border-money/30 bg-money/10 px-3 py-3;
+  }
+  .new-photos-note p {
+    @apply min-w-0 flex-1;
+  }
+  .new-photos-note b {
+    @apply block text-sm font-extrabold text-foreground;
+  }
+  .new-photos-note small {
+    @apply block text-xs text-muted-foreground;
+  }
+  .new-photos-note > button:not(.icon-button) {
+    @apply shrink-0 rounded-full bg-money px-3 py-1.5 text-xs font-extrabold text-white;
+  }
+  .day-strip button {
+    @apply relative;
+  }
+  .day-dot {
+    @apply absolute right-2 top-2 size-2 rounded-full bg-money;
+  }
+  .nav-badge {
+    @apply absolute right-3 top-1 min-w-4 rounded-full bg-money px-1 text-[10px] font-black not-italic leading-4 text-white;
+  }
+  .bottom-nav button {
+    @apply relative;
+  }
 
-  .stop-footer { @apply mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-2 border-t border-border/60 pt-3; }
-  .empty-day { @apply rounded-2xl border border-dashed border-border bg-surface p-8 text-center text-sm font-semibold text-muted-foreground; }
-  .day-note { @apply relative h-fit overflow-hidden rounded-[2rem] p-6 shadow-xl; background: oklch(0.52 0.19 255); color: oklch(0.99 0.01 240); }
-  .day-note::after { content: ""; position: absolute; width: 8rem; height: 8rem; right: -3rem; top: -3rem; border-radius: 2rem; transform: rotate(35deg); background: linear-gradient(135deg, color-mix(in oklab, oklch(0.86 0.14 92) 75%, transparent), color-mix(in oklab, oklch(0.7 0.16 255) 65%, transparent)); opacity: .7; }
-  .day-note .eyebrow { color: color-mix(in oklab, oklch(0.86 0.14 92) 85%, white); }.day-note h3 { @apply mt-2 font-display text-2xl font-bold leading-none; }.day-note > p:not(.eyebrow) { @apply mt-2 text-sm leading-6; color: color-mix(in oklab, oklch(0.86 0.14 92) 70%, white 30%); }
-  .mini-map { @apply mt-7 flex h-32 flex-col items-center justify-center gap-2 rounded-xl text-sm font-bold; background: color-mix(in oklab, oklch(0.86 0.14 92) 30%, transparent); color: oklch(0.99 0.01 240); }
-  .mini-map svg { color: oklch(0.86 0.14 92); }
-  .bottom-nav { @apply fixed inset-x-4 bottom-4 z-40 mx-auto grid max-w-lg grid-cols-4 rounded-[1.5rem] border border-primary-foreground/10 bg-primary px-3 pb-[max(10px,env(safe-area-inset-bottom))] pt-2 shadow-2xl backdrop-blur-xl; }
-  .bottom-nav button { @apply flex flex-col items-center gap-1 rounded-[1.5rem] py-2 text-[11px] font-bold text-primary-foreground/75 transition; }.bottom-nav svg { @apply size-5; }.bottom-nav button.active { @apply bg-surface/15 text-cyan; }
-  .support-intro { @apply mt-8 flex items-center gap-4; }.support-intro > span { @apply grid size-12 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary; }.support-intro h2 { @apply font-display text-2xl font-bold leading-none; }.support-intro p { @apply text-sm text-muted-foreground; }
-  .support-grid { @apply mt-6 grid gap-3 md:grid-cols-2; }.support-card { @apply flex gap-4 rounded-[2rem] border border-primary/10 bg-surface p-5 shadow-sm; }.support-icon { @apply grid size-11 shrink-0 place-items-center rounded-full bg-accent text-accent-foreground; }.support-card h3 { @apply mt-1 font-display text-lg font-bold leading-none; }.support-card p:not(.eyebrow) { @apply mt-1 text-sm text-muted-foreground; }.support-card a { @apply mt-4 inline-flex items-center gap-2 font-bold leading-none text-primary; }
-  .support-section-title { @apply mt-6 font-display text-lg font-bold leading-none; }
-  .tool-grid { @apply mt-6 grid grid-cols-2 gap-3; }
-  .tool-card { @apply flex w-full flex-col items-start gap-3 rounded-[1.5rem] border border-primary/10 bg-surface p-4 text-left shadow-sm transition active:scale-[.99]; }
-  .tool-card strong { @apply block font-display text-sm font-bold leading-tight; }.tool-card small { @apply mt-0.5 block text-xs text-muted-foreground; }
-  .tool-loading { @apply flex items-center gap-3 rounded-2xl bg-primary/5 p-5 text-sm font-bold text-primary; }
-  .tool-done { @apply mt-5 grid justify-items-center gap-2 rounded-3xl bg-primary/5 p-6 text-center; }.tool-done > span { @apply grid size-12 place-items-center rounded-full bg-accent text-accent-foreground; }.tool-done h3 { @apply font-display text-xl font-bold leading-tight; }.tool-done p { @apply text-sm text-muted-foreground; }.tool-done .secondary-action { @apply mt-3; }
-  .tool-filter { @apply flex flex-wrap gap-2; }.tool-filter button { @apply inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-bold text-muted-foreground; }.tool-filter button.on { @apply border-transparent bg-primary text-primary-foreground; }
-  .tool-list { @apply mt-4 grid gap-3; }.tool-list li { @apply flex items-center gap-3 rounded-2xl border border-primary/10 bg-surface p-4; }
-  .tool-list-icon { @apply grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary; }
-  .tool-list strong { @apply block text-sm font-extrabold leading-tight; }.tool-list small { @apply mt-1 block text-xs text-muted-foreground; }
-  .tool-tags { @apply mt-2 flex flex-wrap gap-1.5; }.tool-tags i { @apply inline-flex items-center gap-1 rounded-md bg-money/20 px-2 py-0.5 text-[11px] font-bold not-italic text-money-ink; }
-  .tool-field { @apply block text-xs font-extrabold uppercase tracking-wide text-muted-foreground; }.tool-field textarea { @apply mt-2 w-full rounded-2xl border border-border bg-surface p-4 text-base font-medium normal-case tracking-normal text-foreground; }
-  .tool-actions { @apply mt-3 flex flex-wrap items-center gap-2; }
-  .tool-result { @apply mt-5 rounded-3xl border border-primary/10 bg-surface p-5; }.tool-result h3 { @apply mt-1 font-display text-xl font-bold leading-snug; }.tool-result small { @apply mt-1 block text-sm text-muted-foreground; }
-  .tool-hint { @apply mt-3 flex items-center gap-2 text-xs font-bold text-primary; }
-  .tool-chips { @apply mt-4 flex flex-wrap gap-2; }.tool-chips button { @apply rounded-full border border-border bg-surface px-4 py-2 text-left text-sm font-bold; }
-  .locate-toggle { @apply mt-5 flex items-center gap-4 rounded-3xl border border-primary/10 bg-surface p-5; }.locate-toggle.on { @apply bg-money/15; }.locate-toggle strong { @apply block font-display text-base font-bold leading-tight; }.locate-toggle small { @apply mt-1 block text-sm text-muted-foreground; }
-  .traveler-dot { @apply grid size-10 shrink-0 place-items-center rounded-full bg-primary text-sm font-extrabold text-primary-foreground; }
-  .cost-hero { @apply mt-8 grid gap-6 rounded-2xl bg-money/20 p-6 md:grid-cols-[1fr_1.2fr] md:items-center md:p-9; }.cost-hero h2 { @apply mt-2 font-display text-4xl font-bold leading-none; }.cost-hero > div > p:last-child { @apply mt-3 text-sm text-muted-foreground; }
-  .scan-button { @apply grid min-h-28 grid-cols-[auto_1fr_auto] items-center gap-x-4 rounded-2xl bg-money p-5 text-left text-money-foreground transition hover:brightness-95; }.scan-button > span { @apply row-span-2 grid size-14 place-items-center rounded-xl bg-surface/40; }.scan-button b { @apply self-end text-lg; }.scan-button small { @apply self-start opacity-90; }.scan-button > svg { @apply row-span-2; }
-  .timeline-head-actions { @apply flex items-center gap-2; }.scan-chip { @apply inline-flex items-center gap-2 rounded-full bg-money px-4 py-2 text-sm font-bold text-money-foreground transition hover:brightness-95; }.scan-chip-ink { @apply inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-sm font-bold text-background transition hover:brightness-110; }
-  .cost-layout { @apply mt-9 grid gap-8 lg:grid-cols-[1fr_280px]; }.settled-pill { @apply rounded-full bg-money/15 px-3 py-1 text-xs font-bold text-money-ink; }.balance-list { @apply mt-4 overflow-hidden rounded-[2rem] border border-primary/10 bg-surface shadow-sm; }.balance-list article { @apply grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border p-4 last:border-0; }.balance-list article > span { @apply grid size-10 place-items-center rounded-full text-xs font-black; }.balance-list h3 { @apply font-extrabold; }.balance-list p { @apply text-xs text-muted-foreground; }.balance-list strong { @apply text-sm; }.balance-list .positive { @apply text-primary; }.muted-amount { @apply text-muted-foreground; }
-  .future-space { @apply rounded-2xl border border-dashed border-money/50 p-6; }.future-space > svg { @apply mb-8 text-money-ink; }.future-space h3 { @apply mt-1 font-display text-xl font-bold leading-none; }.future-space > p:last-child { @apply mt-2 text-sm text-muted-foreground; }
-  .photo-heading { @apply mt-8 items-end; }.photo-days { @apply mt-6 space-y-8; }.photo-day-title { @apply flex w-full items-center justify-between py-2 text-left; }.photo-day-title.static { @apply cursor-default; }.photo-day-title span { @apply flex flex-col; }.photo-day-title b { @apply font-display text-lg; }.photo-day-title small { @apply text-xs text-muted-foreground; }.photo-day-title svg { @apply transition; }
-  .photo-grid { @apply grid grid-cols-3 gap-1 sm:grid-cols-4; }.photo-tile { @apply relative aspect-square overflow-hidden rounded-lg border border-primary/10 shadow-lg; }.photo-tile img { @apply h-full w-full object-cover transition hover:scale-105; }.photo-tile > span { @apply absolute inset-0 grid place-items-center bg-foreground/55 text-xl font-black text-background; }.photo-tile > small { @apply absolute inset-x-1 bottom-1 flex items-center justify-center gap-1 rounded-lg bg-primary/90 px-1 py-1 text-[9px] font-bold text-primary-foreground backdrop-blur; }.gesture-hint { @apply mt-3 text-xs text-muted-foreground; }
-  .modal-backdrop { @apply fixed inset-0 z-[60] flex items-end justify-center bg-primary/55 p-0 backdrop-blur-md sm:items-center sm:p-5; }.modal-sheet { @apply max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-3xl border border-primary/10 bg-background/95 p-6 shadow-2xl backdrop-blur-xl sm:rounded-3xl; }.modal-head, .scan-success { @apply flex items-center justify-between gap-4; }.modal-head h2, .scan-success h2 { @apply font-display text-2xl font-bold leading-none; }
-  .form-grid { @apply my-6 space-y-4; }.form-grid label, .amount-edit label, .two-cols label { @apply block text-xs font-extrabold text-muted-foreground; }.form-grid input, .amount-edit input, .two-cols input { @apply mt-2 w-full rounded-xl border border-input bg-surface px-4 py-3 text-sm font-semibold text-foreground outline-none focus:border-primary; }.two-cols { @apply grid grid-cols-2 gap-3; margin-top: 1rem; }.input-icon { @apply relative; }.input-icon svg { @apply absolute left-4 top-1/2 mt-1 -translate-y-1/2 text-muted-foreground; }.input-icon input { @apply pl-11; }.invite-row { @apply mt-2 flex items-center justify-between rounded-xl border border-input bg-surface p-3; }.invite-button { @apply inline-flex items-center gap-1 text-sm font-extrabold text-primary; }
-  .scan-success > span { @apply grid size-12 shrink-0 place-items-center rounded-xl bg-money/20 text-money-ink; }.scan-success > button { @apply ml-auto; }.amount-edit { @apply my-6 rounded-2xl bg-white p-5; }.amount-edit > div { @apply relative flex items-baseline; }.amount-input-wrap span { @apply pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-display text-3xl font-bold text-muted-foreground; }.amount-edit > div input { @apply w-full min-w-0 rounded-lg border border-input bg-surface px-3 py-1 pl-10 font-display text-5xl font-bold leading-none focus:border-primary focus:outline-none; }.expense-name-field { @apply mt-4 block text-xs font-extrabold text-muted-foreground; }.expense-name-field input { @apply mt-2 w-full rounded-xl border border-input bg-surface px-4 py-3 text-sm font-semibold text-foreground outline-none focus:border-primary; }.member-picker { @apply mb-6; }.member-picker > div { @apply mt-3 flex gap-2 overflow-x-auto pb-2; }.member-picker button { @apply relative flex min-w-16 flex-col items-center gap-1 rounded-xl border border-border p-2 text-xs font-bold; }.member-picker button > span { @apply grid size-10 place-items-center rounded-full text-xs font-black; }.member-picker button.selected { @apply border-money bg-money/10; }.member-picker i { @apply absolute right-1 top-1 grid size-4 place-items-center rounded-full bg-money text-money-foreground; }.money-action { @apply flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-money font-bold leading-none text-white; }.confirmation { @apply py-10 text-center; }.confirmation > span { @apply mx-auto mb-4 grid size-20 place-items-center rounded-full bg-primary/15 text-primary; }.confirmation p { @apply mb-8 font-bold; }
-  .summary-wrap { @apply mx-auto mt-8 grid max-w-4xl overflow-hidden rounded-2xl bg-surface shadow-xl md:grid-cols-2; }.summary-photo { @apply relative min-h-[350px] text-primary-foreground; }.summary-photo img { @apply absolute inset-0 h-full w-full object-cover; }.summary-photo > div { @apply absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-foreground/90 via-transparent p-7; }.summary-photo p { @apply mt-6 text-sm font-bold; }.summary-photo h2 { @apply font-display text-4xl font-bold leading-none; }.summary-content { @apply flex flex-col justify-center p-7; }.summary-content > h2 { @apply mt-1 font-display text-3xl font-bold leading-none; }.summary-stats { @apply my-7 grid grid-cols-3 gap-2; }.summary-stats article { @apply flex min-w-0 flex-col rounded-xl bg-muted p-3; }.summary-stats svg { @apply mb-4 size-5 text-primary; }.summary-stats strong { @apply text-lg; }.summary-stats span { @apply text-[10px] font-bold text-muted-foreground; }.summary-back { @apply mx-auto mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-primary; }
-  .recap { @apply mx-auto mt-8 max-w-4xl space-y-6; }.recap-card { @apply rounded-2xl border border-primary/10 bg-surface/80 p-6 shadow-lg backdrop-blur-xl; }.recap-card > h3 { @apply mt-1 font-display text-2xl font-bold leading-none; }.recap-days { @apply mt-4 space-y-3; }.recap-days article { @apply flex items-start gap-3 rounded-xl bg-muted p-4; }.recap-days b { @apply grid size-10 shrink-0 place-items-center rounded-xl bg-primary/15 text-xs font-black text-primary; }.recap-days h4 { @apply text-sm font-bold leading-none; }.recap-days p { @apply text-xs font-semibold text-muted-foreground; }
-  .recap-spend { @apply mt-4 space-y-3; }.recap-spend article { @apply space-y-1.5; }.recap-spend header { @apply flex items-center justify-between text-sm font-extrabold; }.recap-spend header span { @apply text-muted-foreground; }.recap-bar { @apply h-2 w-full overflow-hidden rounded-full bg-muted; }.recap-bar span { @apply block h-full rounded-full bg-money; }.recap-photos { @apply mt-4 grid grid-cols-3 gap-2; }.recap-photos img { @apply aspect-square w-full rounded-xl object-cover; }.recap-people { @apply mt-4 space-y-2; }.recap-people article { @apply flex items-center gap-3 rounded-xl bg-muted p-3 text-sm font-bold; }.recap-people > article > span:first-child { @apply grid size-9 shrink-0 place-items-center rounded-full text-xs font-black; }.recap-people strong { @apply ml-auto; }
+  .stop-footer {
+    @apply mt-3 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-2 border-t border-border/60 pt-3;
+  }
+  .empty-day {
+    @apply rounded-2xl border border-dashed border-border bg-surface p-8 text-center text-sm font-semibold text-muted-foreground;
+  }
+  .day-note {
+    @apply relative h-fit overflow-hidden rounded-[2rem] p-6 shadow-xl;
+    background: oklch(0.52 0.19 255);
+    color: oklch(0.99 0.01 240);
+  }
+  .day-note::after {
+    content: "";
+    position: absolute;
+    width: 8rem;
+    height: 8rem;
+    right: -3rem;
+    top: -3rem;
+    border-radius: 2rem;
+    transform: rotate(35deg);
+    background: linear-gradient(
+      135deg,
+      color-mix(in oklab, oklch(0.86 0.14 92) 75%, transparent),
+      color-mix(in oklab, oklch(0.7 0.16 255) 65%, transparent)
+    );
+    opacity: 0.7;
+  }
+  .day-note .eyebrow {
+    color: color-mix(in oklab, oklch(0.86 0.14 92) 85%, white);
+  }
+  .day-note h3 {
+    @apply mt-2 font-display text-2xl font-bold leading-none;
+  }
+  .day-note > p:not(.eyebrow) {
+    @apply mt-2 text-sm leading-6;
+    color: color-mix(in oklab, oklch(0.86 0.14 92) 70%, white 30%);
+  }
+  .mini-map {
+    @apply mt-7 flex h-32 flex-col items-center justify-center gap-2 rounded-xl text-sm font-bold;
+    background: color-mix(in oklab, oklch(0.86 0.14 92) 30%, transparent);
+    color: oklch(0.99 0.01 240);
+  }
+  .mini-map svg {
+    color: oklch(0.86 0.14 92);
+  }
+  .bottom-nav {
+    @apply fixed inset-x-4 bottom-4 z-40 mx-auto grid max-w-lg grid-cols-4 rounded-[1.5rem] border border-primary-foreground/10 bg-primary px-3 pb-[max(10px,env(safe-area-inset-bottom))] pt-2 shadow-2xl backdrop-blur-xl;
+  }
+  .bottom-nav button {
+    @apply flex flex-col items-center gap-1 rounded-[1.5rem] py-2 text-[11px] font-bold text-primary-foreground/75 transition;
+  }
+  .bottom-nav svg {
+    @apply size-5;
+  }
+  .bottom-nav button.active {
+    @apply bg-surface/15 text-cyan;
+  }
+  .support-intro {
+    @apply mt-8 flex items-center gap-4;
+  }
+  .support-intro > span {
+    @apply grid size-12 shrink-0 place-items-center rounded-xl bg-primary/10 text-primary;
+  }
+  .support-intro h2 {
+    @apply font-display text-2xl font-bold leading-none;
+  }
+  .support-intro p {
+    @apply text-sm text-muted-foreground;
+  }
+  .support-grid {
+    @apply mt-6 grid gap-3 md:grid-cols-2;
+  }
+  .support-card {
+    @apply flex gap-4 rounded-[2rem] border border-primary/10 bg-surface p-5 shadow-sm;
+  }
+  .support-icon {
+    @apply grid size-11 shrink-0 place-items-center rounded-full bg-accent text-accent-foreground;
+  }
+  .support-card h3 {
+    @apply mt-1 font-display text-lg font-bold leading-none;
+  }
+  .support-card p:not(.eyebrow) {
+    @apply mt-1 text-sm text-muted-foreground;
+  }
+  .support-card a {
+    @apply mt-4 inline-flex items-center gap-2 font-bold leading-none text-primary;
+  }
+  .support-section-title {
+    @apply mt-6 font-display text-lg font-bold leading-none;
+  }
+  .tool-grid {
+    @apply mt-6 grid grid-cols-2 gap-3;
+  }
+  .tool-card {
+    @apply flex w-full flex-col items-start gap-3 rounded-[1.5rem] border border-primary/10 bg-surface p-4 text-left shadow-sm transition active:scale-[.99];
+  }
+  .tool-card strong {
+    @apply block font-display text-sm font-bold leading-tight;
+  }
+  .tool-card small {
+    @apply mt-0.5 block text-xs text-muted-foreground;
+  }
+  .tool-loading {
+    @apply flex items-center gap-3 rounded-2xl bg-primary/5 p-5 text-sm font-bold text-primary;
+  }
+  .tool-done {
+    @apply mt-5 grid justify-items-center gap-2 rounded-3xl bg-primary/5 p-6 text-center;
+  }
+  .tool-done > span {
+    @apply grid size-12 place-items-center rounded-full bg-accent text-accent-foreground;
+  }
+  .tool-done h3 {
+    @apply font-display text-xl font-bold leading-tight;
+  }
+  .tool-done p {
+    @apply text-sm text-muted-foreground;
+  }
+  .tool-done .secondary-action {
+    @apply mt-3;
+  }
+  .tool-filter {
+    @apply flex flex-wrap gap-2;
+  }
+  .tool-filter button {
+    @apply inline-flex items-center gap-2 rounded-full border border-border bg-surface px-4 py-2 text-sm font-bold text-muted-foreground;
+  }
+  .tool-filter button.on {
+    @apply border-transparent bg-primary text-primary-foreground;
+  }
+  .tool-list {
+    @apply mt-4 grid gap-3;
+  }
+  .tool-list li {
+    @apply flex items-center gap-3 rounded-2xl border border-primary/10 bg-surface p-4;
+  }
+  .tool-list-icon {
+    @apply grid size-10 shrink-0 place-items-center rounded-full bg-primary/10 text-primary;
+  }
+  .tool-list strong {
+    @apply block text-sm font-extrabold leading-tight;
+  }
+  .tool-list small {
+    @apply mt-1 block text-xs text-muted-foreground;
+  }
+  .tool-tags {
+    @apply mt-2 flex flex-wrap gap-1.5;
+  }
+  .tool-tags i {
+    @apply inline-flex items-center gap-1 rounded-md bg-money/20 px-2 py-0.5 text-[11px] font-bold not-italic text-money-ink;
+  }
+  .tool-field {
+    @apply block text-xs font-extrabold uppercase tracking-wide text-muted-foreground;
+  }
+  .tool-field textarea {
+    @apply mt-2 w-full rounded-2xl border border-border bg-surface p-4 text-base font-medium normal-case tracking-normal text-foreground;
+  }
+  .tool-actions {
+    @apply mt-3 flex flex-wrap items-center gap-2;
+  }
+  .tool-result {
+    @apply mt-5 rounded-3xl border border-primary/10 bg-surface p-5;
+  }
+  .tool-result h3 {
+    @apply mt-1 font-display text-xl font-bold leading-snug;
+  }
+  .tool-result small {
+    @apply mt-1 block text-sm text-muted-foreground;
+  }
+  .tool-hint {
+    @apply mt-3 flex items-center gap-2 text-xs font-bold text-primary;
+  }
+  .tool-chips {
+    @apply mt-4 flex flex-wrap gap-2;
+  }
+  .tool-chips button {
+    @apply rounded-full border border-border bg-surface px-4 py-2 text-left text-sm font-bold;
+  }
+  .locate-toggle {
+    @apply mt-5 flex items-center gap-4 rounded-3xl border border-primary/10 bg-surface p-5;
+  }
+  .locate-toggle.on {
+    @apply bg-money/15;
+  }
+  .locate-toggle strong {
+    @apply block font-display text-base font-bold leading-tight;
+  }
+  .locate-toggle small {
+    @apply mt-1 block text-sm text-muted-foreground;
+  }
+  .traveler-dot {
+    @apply grid size-10 shrink-0 place-items-center rounded-full bg-primary text-sm font-extrabold text-primary-foreground;
+  }
+  .cost-hero {
+    @apply mt-8 grid gap-6 rounded-2xl bg-money/20 p-6 md:grid-cols-[1fr_1.2fr] md:items-center md:p-9;
+  }
+  .cost-hero h2 {
+    @apply mt-2 font-display text-4xl font-bold leading-none;
+  }
+  .cost-hero > div > p:last-child {
+    @apply mt-3 text-sm text-muted-foreground;
+  }
+  .scan-button {
+    @apply grid min-h-28 grid-cols-[auto_1fr_auto] items-center gap-x-4 rounded-2xl bg-money p-5 text-left text-money-foreground transition hover:brightness-95;
+  }
+  .scan-button > span {
+    @apply row-span-2 grid size-14 place-items-center rounded-xl bg-surface/40;
+  }
+  .scan-button b {
+    @apply self-end text-lg;
+  }
+  .scan-button small {
+    @apply self-start opacity-90;
+  }
+  .scan-button > svg {
+    @apply row-span-2;
+  }
+  .timeline-head-actions {
+    @apply flex items-center gap-2;
+  }
+  .scan-chip {
+    @apply inline-flex items-center gap-2 rounded-full bg-money px-4 py-2 text-sm font-bold text-money-foreground transition hover:brightness-95;
+  }
+  .scan-chip-ink {
+    @apply inline-flex items-center gap-2 rounded-full bg-foreground px-4 py-2 text-sm font-bold text-background transition hover:brightness-110;
+  }
+  .cost-layout {
+    @apply mt-9 grid gap-8 lg:grid-cols-[1fr_280px];
+  }
+  .settled-pill {
+    @apply rounded-full bg-money/15 px-3 py-1 text-xs font-bold text-money-ink;
+  }
+  .balance-list {
+    @apply mt-4 overflow-hidden rounded-[2rem] border border-primary/10 bg-surface shadow-sm;
+  }
+  .balance-list article {
+    @apply grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-3 border-b border-border p-4 last:border-0;
+  }
+  .balance-list article > span {
+    @apply grid size-10 place-items-center rounded-full text-xs font-black;
+  }
+  .balance-list h3 {
+    @apply font-extrabold;
+  }
+  .balance-list p {
+    @apply text-xs text-muted-foreground;
+  }
+  .balance-list strong {
+    @apply text-sm;
+  }
+  .balance-list .positive {
+    @apply text-primary;
+  }
+  .muted-amount {
+    @apply text-muted-foreground;
+  }
+  .future-space {
+    @apply rounded-2xl border border-dashed border-money/50 p-6;
+  }
+  .future-space > svg {
+    @apply mb-8 text-money-ink;
+  }
+  .future-space h3 {
+    @apply mt-1 font-display text-xl font-bold leading-none;
+  }
+  .future-space > p:last-child {
+    @apply mt-2 text-sm text-muted-foreground;
+  }
+  .photo-heading {
+    @apply mt-8 items-end;
+  }
+  .photo-days {
+    @apply mt-6 space-y-8;
+  }
+  .photo-day-title {
+    @apply flex w-full items-center justify-between py-2 text-left;
+  }
+  .photo-day-title.static {
+    @apply cursor-default;
+  }
+  .photo-day-title span {
+    @apply flex flex-col;
+  }
+  .photo-day-title b {
+    @apply font-display text-lg;
+  }
+  .photo-day-title small {
+    @apply text-xs text-muted-foreground;
+  }
+  .photo-day-title svg {
+    @apply transition;
+  }
+  .photo-grid {
+    @apply grid grid-cols-3 gap-1 sm:grid-cols-4;
+  }
+  .photo-tile {
+    @apply relative aspect-square overflow-hidden rounded-lg border border-primary/10 shadow-lg;
+  }
+  .photo-tile img {
+    @apply h-full w-full object-cover transition hover:scale-105;
+  }
+  .photo-tile > span {
+    @apply absolute inset-0 grid place-items-center bg-foreground/55 text-xl font-black text-background;
+  }
+  .photo-tile > small {
+    @apply absolute inset-x-1 bottom-1 flex items-center justify-center gap-1 rounded-lg bg-primary/90 px-1 py-1 text-[9px] font-bold text-primary-foreground backdrop-blur;
+  }
+  .gesture-hint {
+    @apply mt-3 text-xs text-muted-foreground;
+  }
+  .modal-backdrop {
+    @apply fixed inset-0 z-[60] flex items-end justify-center bg-primary/55 p-0 backdrop-blur-md sm:items-center sm:p-5;
+  }
+  .modal-sheet {
+    @apply max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-t-3xl border border-primary/10 bg-background/95 p-6 shadow-2xl backdrop-blur-xl sm:rounded-3xl;
+  }
+  .modal-head,
+  .scan-success {
+    @apply flex items-center justify-between gap-4;
+  }
+  .modal-head h2,
+  .scan-success h2 {
+    @apply font-display text-2xl font-bold leading-none;
+  }
+  .form-grid {
+    @apply my-6 space-y-4;
+  }
+  .form-grid label,
+  .amount-edit label,
+  .two-cols label {
+    @apply block text-xs font-extrabold text-muted-foreground;
+  }
+  .form-grid input,
+  .amount-edit input,
+  .two-cols input {
+    @apply mt-2 w-full rounded-xl border border-input bg-surface px-4 py-3 text-sm font-semibold text-foreground outline-none focus:border-primary;
+  }
+  .two-cols {
+    @apply grid grid-cols-2 gap-3;
+    margin-top: 1rem;
+  }
+  .input-icon {
+    @apply relative;
+  }
+  .input-icon svg {
+    @apply absolute left-4 top-1/2 mt-1 -translate-y-1/2 text-muted-foreground;
+  }
+  .input-icon input {
+    @apply pl-11;
+  }
+  .invite-row {
+    @apply mt-2 flex items-center justify-between rounded-xl border border-input bg-surface p-3;
+  }
+  .invite-button {
+    @apply inline-flex items-center gap-1 text-sm font-extrabold text-primary;
+  }
+  .scan-success > span {
+    @apply grid size-12 shrink-0 place-items-center rounded-xl bg-money/20 text-money-ink;
+  }
+  .scan-success > button {
+    @apply ml-auto;
+  }
+  .amount-edit {
+    @apply my-6 rounded-2xl bg-white p-5;
+  }
+  .amount-edit > div {
+    @apply relative flex items-baseline;
+  }
+  .amount-input-wrap span {
+    @apply pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 font-display text-3xl font-bold text-muted-foreground;
+  }
+  .amount-edit > div input {
+    @apply w-full min-w-0 rounded-lg border border-input bg-surface px-3 py-1 pl-10 font-display text-5xl font-bold leading-none focus:border-primary focus:outline-none;
+  }
+  .expense-name-field {
+    @apply mt-4 block text-xs font-extrabold text-muted-foreground;
+  }
+  .expense-name-field input {
+    @apply mt-2 w-full rounded-xl border border-input bg-surface px-4 py-3 text-sm font-semibold text-foreground outline-none focus:border-primary;
+  }
+  .member-picker {
+    @apply mb-6;
+  }
+  .member-picker > div {
+    @apply mt-3 flex gap-2 overflow-x-auto pb-2;
+  }
+  .member-picker button {
+    @apply relative flex min-w-16 flex-col items-center gap-1 rounded-xl border border-border p-2 text-xs font-bold;
+  }
+  .member-picker button > span {
+    @apply grid size-10 place-items-center rounded-full text-xs font-black;
+  }
+  .member-picker button.selected {
+    @apply border-money bg-money/10;
+  }
+  .member-picker i {
+    @apply absolute right-1 top-1 grid size-4 place-items-center rounded-full bg-money text-money-foreground;
+  }
+  .money-action {
+    @apply flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-money font-bold leading-none text-white;
+  }
+  .confirmation {
+    @apply py-10 text-center;
+  }
+  .confirmation > span {
+    @apply mx-auto mb-4 grid size-20 place-items-center rounded-full bg-primary/15 text-primary;
+  }
+  .confirmation p {
+    @apply mb-8 font-bold;
+  }
+  .summary-wrap {
+    @apply mx-auto mt-8 grid max-w-4xl overflow-hidden rounded-2xl bg-surface shadow-xl md:grid-cols-2;
+  }
+  .summary-photo {
+    @apply relative min-h-[350px] text-primary-foreground;
+  }
+  .summary-photo img {
+    @apply absolute inset-0 h-full w-full object-cover;
+  }
+  .summary-photo > div {
+    @apply absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-foreground/90 via-transparent p-7;
+  }
+  .summary-photo p {
+    @apply mt-6 text-sm font-bold;
+  }
+  .summary-photo h2 {
+    @apply font-display text-4xl font-bold leading-none;
+  }
+  .summary-content {
+    @apply flex flex-col justify-center p-7;
+  }
+  .summary-content > h2 {
+    @apply mt-1 font-display text-3xl font-bold leading-none;
+  }
+  .summary-stats {
+    @apply my-7 grid grid-cols-3 gap-2;
+  }
+  .summary-stats article {
+    @apply flex min-w-0 flex-col rounded-xl bg-muted p-3;
+  }
+  .summary-stats svg {
+    @apply mb-4 size-5 text-primary;
+  }
+  .summary-stats strong {
+    @apply text-lg;
+  }
+  .summary-stats span {
+    @apply text-[10px] font-bold text-muted-foreground;
+  }
+  .summary-back {
+    @apply mx-auto mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-primary;
+  }
+  .recap {
+    @apply mx-auto mt-8 max-w-4xl space-y-6;
+  }
+  .recap-card {
+    @apply rounded-2xl border border-primary/10 bg-surface/80 p-6 shadow-lg backdrop-blur-xl;
+  }
+  .recap-card > h3 {
+    @apply mt-1 font-display text-2xl font-bold leading-none;
+  }
+  .recap-days {
+    @apply mt-4 space-y-3;
+  }
+  .recap-days article {
+    @apply flex items-start gap-3 rounded-xl bg-muted p-4;
+  }
+  .recap-days b {
+    @apply grid size-10 shrink-0 place-items-center rounded-xl bg-primary/15 text-xs font-black text-primary;
+  }
+  .recap-days h4 {
+    @apply text-sm font-bold leading-none;
+  }
+  .recap-days p {
+    @apply text-xs font-semibold text-muted-foreground;
+  }
+  .recap-spend {
+    @apply mt-4 space-y-3;
+  }
+  .recap-spend article {
+    @apply space-y-1.5;
+  }
+  .recap-spend header {
+    @apply flex items-center justify-between text-sm font-extrabold;
+  }
+  .recap-spend header span {
+    @apply text-muted-foreground;
+  }
+  .recap-bar {
+    @apply h-2 w-full overflow-hidden rounded-full bg-muted;
+  }
+  .recap-bar span {
+    @apply block h-full rounded-full bg-money;
+  }
+  .recap-photos {
+    @apply mt-4 grid grid-cols-3 gap-2;
+  }
+  .recap-photos img {
+    @apply aspect-square w-full rounded-xl object-cover;
+  }
+  .recap-people {
+    @apply mt-4 space-y-2;
+  }
+  .recap-people article {
+    @apply flex items-center gap-3 rounded-xl bg-muted p-3 text-sm font-bold;
+  }
+  .recap-people > article > span:first-child {
+    @apply grid size-9 shrink-0 place-items-center rounded-full text-xs font-black;
+  }
+  .recap-people strong {
+    @apply ml-auto;
+  }
 }
 
-
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; } }
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 @layer components {
-  .activity-cluster { @apply mt-1; }
-  .cluster-label { @apply mb-2 flex items-center gap-1 text-xs font-extrabold text-muted-foreground; }
-  .photo-tile .photo-meta { @apply bg-foreground/70 text-background; }
-  .manual-badge { @apply absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-primary text-primary-foreground; }
-  .lightbox { @apply flex-col items-stretch justify-start p-0; }
-  .lightbox-bar { @apply flex items-center gap-3 bg-background/95 px-4 py-3; }
-  .lightbox-bar .eyebrow { @apply text-[11px]; }
-  .lightbox-stop { @apply flex items-center gap-1 text-xs font-bold; }
-  .lightbox-stage { @apply relative flex flex-1 items-center justify-center overflow-hidden bg-black p-3; }
-  .lightbox-stage img { @apply max-h-[78vh] max-w-full rounded-xl object-contain; }
-  .lightbox-nav { @apply absolute top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-background/85 text-foreground shadow-lg transition hover:bg-background; }
-  .lightbox-nav.prev { @apply left-3; }
-  .lightbox-nav.next { @apply right-3; }
-  .stop-costs { @apply grid min-w-0 gap-1.5 mt-3; }
-  .cost-chip { @apply grid min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 rounded-xl bg-money/12 px-3 py-2 text-left transition hover:bg-money/20; }
-  .cost-chip > span { @apply min-w-0; }
-  .cost-chip b { @apply block truncate text-xs font-extrabold text-foreground; }
-  .cost-chip small { @apply block truncate text-[10px] font-bold text-muted-foreground; }
-  .cost-chip strong { @apply text-xs font-extrabold text-money-ink; }
-  .no-cost { @apply self-center text-[10px] font-bold text-muted-foreground; }
-  .add-cost { @apply flex min-h-9 shrink-0 items-center gap-1 rounded-xl border border-dashed border-money/50 px-3 py-2 text-xs font-extrabold text-money-ink transition hover:bg-money/12; }
-  .match-hint { @apply mt-3 flex items-center gap-2 rounded-xl bg-muted px-3 py-2 text-xs font-bold text-muted-foreground; }
-  .spend-timeline { @apply mt-4 grid gap-4; }
-  .spend-timeline > section { @apply rounded-3xl bg-card p-6 shadow-sm; }
-  .spend-timeline header { @apply mb-3 flex items-center justify-between gap-2; }
-  .spend-timeline header h3 { @apply whitespace-nowrap text-sm font-extrabold uppercase tracking-wide text-muted-foreground; }
-  .spend-timeline header strong { @apply whitespace-nowrap text-base font-extrabold text-money-ink; }
-  .spend-timeline article { @apply border-t border-border/60 py-3 first-of-type:border-t-0; }
-  .cost-card-head { @apply flex min-w-0 items-center gap-3; }
-  .cost-title-row { @apply flex min-w-0 items-start justify-between gap-3; }
-  .cost-title-row strong { @apply shrink-0 text-sm font-extrabold text-money-ink; }
-  .spend-timeline article h4 { @apply mt-1 min-w-0 break-words text-sm font-extrabold leading-5; }
-  .cost-details { @apply mt-3 grid w-full min-w-0 grid-cols-2 gap-x-3 gap-y-2 rounded-lg border-t border-border/60 bg-muted/40 p-3 pt-3; }
-  .cost-detail-full { @apply col-span-2; }
-  .cost-details > div { @apply flex min-w-0 flex-col gap-0.5; }
-  .cost-details dt { @apply flex items-center gap-1 text-xs font-bold text-muted-foreground; }
-  .cost-details dt svg { @apply shrink-0; }
-  .cost-details dd { @apply min-w-0 break-words text-xs font-semibold leading-5 text-foreground; }
-  .cost-place { @apply mt-2 flex min-w-0 items-start gap-1.5 text-xs font-semibold leading-5 text-muted-foreground sm:pl-[3.25rem]; }
-  .cost-place svg { @apply mt-0.5 shrink-0; }
-  .cost-place span { @apply min-w-0 break-words; }
-  .cost-foot { @apply mt-2 grid min-w-0 gap-1.5 sm:flex sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-3 sm:pl-[3.25rem]; }
-  .cost-foot small { @apply text-[10px] font-bold uppercase tracking-wide text-muted-foreground; }
-  .cost-time { @apply w-12 shrink-0 text-xs font-extrabold text-muted-foreground; }
-  .cost-meta { @apply shrink-0 text-right; }
-  .cost-meta strong { @apply block text-sm font-extrabold; }
-  .cost-meta small { @apply text-[10px] font-bold text-muted-foreground; }
-  .assign-list { @apply my-5 max-h-[52vh] space-y-2 overflow-y-auto; }
-  .assign-list button { @apply flex w-full items-center gap-3 rounded-xl border border-border bg-surface p-3 text-left text-sm font-bold; }
-  .assign-list button.selected { @apply border-primary bg-primary/10; }
-  .assign-list button b { @apply shrink-0 text-xs font-black text-primary; }
-  .assign-list button span { @apply min-w-0 flex-1; }
-  .assign-list button small { @apply block truncate text-xs font-semibold text-muted-foreground; }
-  .scan-inline { @apply mb-5 mt-3 flex w-full items-center gap-3 rounded-2xl border border-money/40 bg-money/10 p-4 text-left disabled:opacity-70; }
-  .scan-inline > span { @apply grid size-10 shrink-0 place-items-center rounded-xl bg-money text-money-foreground; }
-  .scan-inline b { @apply block text-sm font-extrabold; }
-  .scan-inline small { @apply block text-xs font-semibold text-muted-foreground; }
-  .scan-inline > div { @apply min-w-0 flex-1; }
-  .split-block { @apply mb-6 mt-6 rounded-2xl p-4; background: #FDFDFE; }
-  .split-modes { @apply mt-3 grid grid-cols-3 gap-1 rounded-xl bg-background p-1; }
-  .split-modes button { @apply min-h-9 rounded-lg text-xs font-extrabold text-foreground/70; }
-  .split-modes button.active { @apply bg-money text-money-foreground; }
-  .split-rows { @apply mt-3 space-y-2; }
-  .split-row { @apply flex items-center gap-2 rounded-xl border border-transparent bg-background/60 p-2; }
-  .split-row.on { @apply border-money/40 bg-background; }
-  .split-person { @apply flex min-w-0 flex-1 items-center gap-2 text-sm font-bold; }
-  .split-person > span { @apply grid size-8 shrink-0 place-items-center rounded-full text-[11px] font-black; }
-  .split-person i { @apply grid size-4 place-items-center rounded-full bg-money text-money-foreground; }
-  .split-value { @apply flex items-center gap-1; }
-  .split-value input { @apply h-9 w-14 rounded-lg border border-border bg-background text-center text-sm font-bold; }
-  .split-value small { @apply text-xs font-bold text-muted-foreground; }
-  .split-row strong { @apply w-16 shrink-0 text-right text-sm font-extrabold; }
-  .split-hint { @apply mt-3 text-xs font-semibold text-muted-foreground; }
-  .split-hint.warn { @apply text-money-ink; }
-  .split-tag { @apply flex min-w-0 items-start gap-1 text-xs font-semibold leading-5 text-muted-foreground; }
-  .split-tag svg { @apply mt-0.5 shrink-0; }
+  .activity-cluster {
+    @apply mt-1;
+  }
+  .cluster-label {
+    @apply mb-2 flex items-center gap-1 text-xs font-extrabold text-muted-foreground;
+  }
+  .photo-tile .photo-meta {
+    @apply bg-foreground/70 text-background;
+  }
+  .manual-badge {
+    @apply absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-primary text-primary-foreground;
+  }
+  .lightbox {
+    @apply flex-col items-stretch justify-start p-0;
+  }
+  .lightbox-bar {
+    @apply flex items-center gap-3 bg-background/95 px-4 py-3;
+  }
+  .lightbox-bar .eyebrow {
+    @apply text-[11px];
+  }
+  .lightbox-stop {
+    @apply flex items-center gap-1 text-xs font-bold;
+  }
+  .lightbox-stage {
+    @apply relative flex flex-1 items-center justify-center overflow-hidden bg-black p-3;
+  }
+  .lightbox-stage img {
+    @apply max-h-[78vh] max-w-full rounded-xl object-contain;
+  }
+  .lightbox-nav {
+    @apply absolute top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full bg-background/85 text-foreground shadow-lg transition hover:bg-background;
+  }
+  .lightbox-nav.prev {
+    @apply left-3;
+  }
+  .lightbox-nav.next {
+    @apply right-3;
+  }
+  .stop-costs {
+    @apply grid min-w-0 gap-1.5 mt-3;
+  }
+  .cost-chip {
+    @apply grid min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2 rounded-xl bg-money/12 px-3 py-2 text-left transition hover:bg-money/20;
+  }
+  .cost-chip > span {
+    @apply min-w-0;
+  }
+  .cost-chip b {
+    @apply block truncate text-xs font-extrabold text-foreground;
+  }
+  .cost-chip small {
+    @apply block truncate text-[10px] font-bold text-muted-foreground;
+  }
+  .cost-chip strong {
+    @apply text-xs font-extrabold text-money-ink;
+  }
+  .no-cost {
+    @apply self-center text-[10px] font-bold text-muted-foreground;
+  }
+  .add-cost {
+    @apply flex min-h-9 shrink-0 items-center gap-1 rounded-xl border border-dashed border-money/50 px-3 py-2 text-xs font-extrabold text-money-ink transition hover:bg-money/12;
+  }
+  .match-hint {
+    @apply mt-3 flex items-center gap-2 rounded-xl bg-muted px-3 py-2 text-xs font-bold text-muted-foreground;
+  }
+  .spend-timeline {
+    @apply mt-4 grid gap-4;
+  }
+  .spend-timeline > section {
+    @apply rounded-3xl bg-card p-6 shadow-sm;
+  }
+  .spend-timeline header {
+    @apply mb-3 flex items-center justify-between gap-2;
+  }
+  .spend-timeline header h3 {
+    @apply whitespace-nowrap text-sm font-extrabold uppercase tracking-wide text-muted-foreground;
+  }
+  .spend-timeline header strong {
+    @apply whitespace-nowrap text-base font-extrabold text-money-ink;
+  }
+  .spend-timeline article {
+    @apply border-t border-border/60 py-3 first-of-type:border-t-0;
+  }
+  .cost-card-head {
+    @apply flex min-w-0 items-center gap-3;
+  }
+  .cost-title-row {
+    @apply flex min-w-0 items-start justify-between gap-3;
+  }
+  .cost-title-row strong {
+    @apply shrink-0 text-sm font-extrabold text-money-ink;
+  }
+  .spend-timeline article h4 {
+    @apply mt-1 min-w-0 break-words text-sm font-extrabold leading-5;
+  }
+  .cost-details {
+    @apply mt-3 grid w-full min-w-0 grid-cols-2 gap-x-3 gap-y-2 rounded-lg border-t border-border/60 bg-muted/40 p-3 pt-3;
+  }
+  .cost-detail-full {
+    @apply col-span-2;
+  }
+  .cost-details > div {
+    @apply flex min-w-0 flex-col gap-0.5;
+  }
+  .cost-details dt {
+    @apply flex items-center gap-1 text-xs font-bold text-muted-foreground;
+  }
+  .cost-details dt svg {
+    @apply shrink-0;
+  }
+  .cost-details dd {
+    @apply min-w-0 break-words text-xs font-semibold leading-5 text-foreground;
+  }
+  .cost-place {
+    @apply mt-2 flex min-w-0 items-start gap-1.5 text-xs font-semibold leading-5 text-muted-foreground sm:pl-[3.25rem];
+  }
+  .cost-place svg {
+    @apply mt-0.5 shrink-0;
+  }
+  .cost-place span {
+    @apply min-w-0 break-words;
+  }
+  .cost-foot {
+    @apply mt-2 grid min-w-0 gap-1.5 sm:flex sm:flex-wrap sm:items-center sm:justify-between sm:gap-x-3 sm:pl-[3.25rem];
+  }
+  .cost-foot small {
+    @apply text-[10px] font-bold uppercase tracking-wide text-muted-foreground;
+  }
+  .cost-time {
+    @apply w-12 shrink-0 text-xs font-extrabold text-muted-foreground;
+  }
+  .cost-meta {
+    @apply shrink-0 text-right;
+  }
+  .cost-meta strong {
+    @apply block text-sm font-extrabold;
+  }
+  .cost-meta small {
+    @apply text-[10px] font-bold text-muted-foreground;
+  }
+  .assign-list {
+    @apply my-5 max-h-[52vh] space-y-2 overflow-y-auto;
+  }
+  .assign-list button {
+    @apply flex w-full items-center gap-3 rounded-xl border border-border bg-surface p-3 text-left text-sm font-bold;
+  }
+  .assign-list button.selected {
+    @apply border-primary bg-primary/10;
+  }
+  .assign-list button b {
+    @apply shrink-0 text-xs font-black text-primary;
+  }
+  .assign-list button span {
+    @apply min-w-0 flex-1;
+  }
+  .assign-list button small {
+    @apply block truncate text-xs font-semibold text-muted-foreground;
+  }
+  .scan-inline {
+    @apply mb-5 mt-3 flex w-full items-center gap-3 rounded-2xl border border-money/40 bg-money/10 p-4 text-left disabled:opacity-70;
+  }
+  .scan-inline > span {
+    @apply grid size-10 shrink-0 place-items-center rounded-xl bg-money text-money-foreground;
+  }
+  .scan-inline b {
+    @apply block text-sm font-extrabold;
+  }
+  .scan-inline small {
+    @apply block text-xs font-semibold text-muted-foreground;
+  }
+  .scan-inline > div {
+    @apply min-w-0 flex-1;
+  }
+  .split-block {
+    @apply mb-6 mt-6 rounded-2xl p-4;
+    background: #fdfdfe;
+  }
+  .split-modes {
+    @apply mt-3 grid grid-cols-3 gap-1 rounded-xl bg-background p-1;
+  }
+  .split-modes button {
+    @apply min-h-9 rounded-lg text-xs font-extrabold text-foreground/70;
+  }
+  .split-modes button.active {
+    @apply bg-money text-money-foreground;
+  }
+  .split-rows {
+    @apply mt-3 space-y-2;
+  }
+  .split-row {
+    @apply flex items-center gap-2 rounded-xl border border-transparent bg-background/60 p-2;
+  }
+  .split-row.on {
+    @apply border-money/40 bg-background;
+  }
+  .split-person {
+    @apply flex min-w-0 flex-1 items-center gap-2 text-sm font-bold;
+  }
+  .split-person > span {
+    @apply grid size-8 shrink-0 place-items-center rounded-full text-[11px] font-black;
+  }
+  .split-person i {
+    @apply grid size-4 place-items-center rounded-full bg-money text-money-foreground;
+  }
+  .split-value {
+    @apply flex items-center gap-1;
+  }
+  .split-value input {
+    @apply h-9 w-14 rounded-lg border border-border bg-background text-center text-sm font-bold;
+  }
+  .split-value small {
+    @apply text-xs font-bold text-muted-foreground;
+  }
+  .split-row strong {
+    @apply w-16 shrink-0 text-right text-sm font-extrabold;
+  }
+  .split-hint {
+    @apply mt-3 text-xs font-semibold text-muted-foreground;
+  }
+  .split-hint.warn {
+    @apply text-money-ink;
+  }
+  .split-tag {
+    @apply flex min-w-0 items-start gap-1 text-xs font-semibold leading-5 text-muted-foreground;
+  }
+  .split-tag svg {
+    @apply mt-0.5 shrink-0;
+  }
 }
 
-.add-menu-wrap { @apply relative; }
-.add-menu { @apply absolute right-0 top-[calc(100%+0.5rem)] z-30 w-64 overflow-hidden rounded-2xl border border-border bg-card p-1.5 shadow-xl; }
-.add-menu button { @apply flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left text-foreground transition-colors hover:bg-secondary; }
-.add-menu button svg { @apply mt-0.5 text-primary; }
-.add-menu button span { @apply flex flex-col text-sm font-semibold; }
-.add-menu button small { @apply text-xs font-normal text-muted-foreground; }
+.add-menu-wrap {
+  @apply relative;
+}
+.add-menu {
+  @apply absolute right-0 top-[calc(100%+0.5rem)] z-30 w-64 overflow-hidden rounded-2xl border border-border bg-card p-1.5 shadow-xl;
+}
+.add-menu button {
+  @apply flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left text-foreground transition-colors hover:bg-secondary;
+}
+.add-menu button svg {
+  @apply mt-0.5 text-primary;
+}
+.add-menu button span {
+  @apply flex flex-col text-sm font-semibold;
+}
+.add-menu button small {
+  @apply text-xs font-normal text-muted-foreground;
+}
 
-.budget-progress { @apply mt-6 rounded-[2rem] border border-primary/10 bg-surface p-5 shadow-sm; }
-.budget-progress header { @apply flex items-start justify-between gap-3; }
-.budget-progress h3 { @apply mt-1 font-display text-2xl font-bold leading-none; }
-.budget-progress h3 span { @apply text-sm font-semibold text-muted-foreground; }
-.budget-progress .settled-pill.over { @apply bg-destructive/10 text-destructive; }
-.budget-bar { @apply mt-4 h-3 w-full overflow-hidden rounded-full bg-secondary; }
-.budget-bar span { @apply block h-full rounded-full bg-money transition-[width] duration-500; }
-.budget-bar span.over { @apply bg-destructive; }
-.budget-progress footer { @apply mt-3 flex items-center justify-between text-sm font-semibold text-foreground; }
-.budget-progress footer small { @apply text-xs font-medium text-muted-foreground; }
+.budget-progress {
+  @apply mt-6 rounded-[2rem] border border-primary/10 bg-surface p-5 shadow-sm;
+}
+.budget-progress header {
+  @apply flex items-start justify-between gap-3;
+}
+.budget-progress h3 {
+  @apply mt-1 font-display text-2xl font-bold leading-none;
+}
+.budget-progress h3 span {
+  @apply text-sm font-semibold text-muted-foreground;
+}
+.budget-progress .settled-pill.over {
+  @apply bg-destructive/10 text-destructive;
+}
+.budget-bar {
+  @apply mt-4 h-3 w-full overflow-hidden rounded-full bg-secondary;
+}
+.budget-bar span {
+  @apply block h-full rounded-full bg-money transition-[width] duration-500;
+}
+.budget-bar span.over {
+  @apply bg-destructive;
+}
+.budget-progress footer {
+  @apply mt-3 flex items-center justify-between text-sm font-semibold text-foreground;
+}
+.budget-progress footer small {
+  @apply text-xs font-medium text-muted-foreground;
+}
 
 @media (max-width: 639px) {
-  .dashboard-intro { @apply flex-row items-end justify-between gap-3; }
-  .dashboard-intro .page-title { @apply text-[2.15rem]; }
-  .dashboard-intro .primary-action { @apply size-12 shrink-0 gap-0 p-0 text-[0px]; }
-  .dashboard-intro .primary-action svg { @apply size-5; }
-  .home-trip-grid { @apply mt-5; }
-  .home-trip-grid .trip-card.featured { @apply min-h-[440px]; }
-  .quick-panel button { @apply min-h-24; }
-  .memory-preview { @apply min-h-32 p-5; }
-  .memory-preview button { @apply size-10 p-0 text-[0px]; }
-  .section-heading { @apply flex items-center justify-between gap-3; }.heading-actions { @apply flex items-center gap-2; }.photo-heading .heading-actions { @apply mt-6; }
-  .timeline-head-actions { @apply flex items-center gap-2; }
-  .spend-timeline { @apply min-w-0; }
-  .spend-timeline > section { @apply min-w-0 overflow-hidden rounded-2xl p-4; }
-  .spend-timeline header { @apply flex items-center justify-between gap-2; }
+  .dashboard-intro {
+    @apply flex-row items-end justify-between gap-3;
+  }
+  .dashboard-intro .page-title {
+    @apply text-[2.15rem];
+  }
+  .dashboard-intro .primary-action {
+    @apply size-12 shrink-0 gap-0 p-0 text-[0px];
+  }
+  .dashboard-intro .primary-action svg {
+    @apply size-5;
+  }
+  .home-trip-grid {
+    @apply mt-5;
+  }
+  .home-trip-grid .trip-card.featured {
+    @apply min-h-[440px];
+  }
+  .quick-panel button {
+    @apply min-h-24;
+  }
+  .memory-preview {
+    @apply min-h-32 p-5;
+  }
+  .memory-preview button {
+    @apply size-10 p-0 text-[0px];
+  }
+  .section-heading {
+    @apply flex items-center justify-between gap-3;
+  }
+  .heading-actions {
+    @apply flex items-center gap-2;
+  }
+  .photo-heading .heading-actions {
+    @apply mt-6;
+  }
+  .timeline-head-actions {
+    @apply flex items-center gap-2;
+  }
+  .spend-timeline {
+    @apply min-w-0;
+  }
+  .spend-timeline > section {
+    @apply min-w-0 overflow-hidden rounded-2xl p-4;
+  }
+  .spend-timeline header {
+    @apply flex items-center justify-between gap-2;
+  }
   .spend-timeline header h3,
-  .spend-timeline header strong { @apply whitespace-nowrap; }
-  .spend-timeline article { @apply block w-full min-w-0 py-3.5; }
-  .cost-card-head { @apply w-full; }
-  .cost-time { @apply w-auto; }
-  .cost-title-row { @apply w-full items-start; }
-  .spend-timeline article h4 { @apply w-full; }
-  .cost-details > div { @apply gap-0.5; }
-  .cost-details dd { @apply w-full; }
-  .balance-list article { @apply items-start; }
-  .budget-progress header { @apply grid grid-cols-[minmax(0,1fr)_auto]; }
-  .budget-progress h3 span { @apply mt-1 block; }
-  .budget-progress footer { @apply items-start gap-3; }
+  .spend-timeline header strong {
+    @apply whitespace-nowrap;
+  }
+  .spend-timeline article {
+    @apply block w-full min-w-0 py-3.5;
+  }
+  .cost-card-head {
+    @apply w-full;
+  }
+  .cost-time {
+    @apply w-auto;
+  }
+  .cost-title-row {
+    @apply w-full items-start;
+  }
+  .spend-timeline article h4 {
+    @apply w-full;
+  }
+  .cost-details > div {
+    @apply gap-0.5;
+  }
+  .cost-details dd {
+    @apply w-full;
+  }
+  .balance-list article {
+    @apply items-start;
+  }
+  .budget-progress header {
+    @apply grid grid-cols-[minmax(0,1fr)_auto];
+  }
+  .budget-progress h3 span {
+    @apply mt-1 block;
+  }
+  .budget-progress footer {
+    @apply items-start gap-3;
+  }
 }
 
 @layer components {
-  .import-grid { @apply mt-4 grid grid-cols-3 gap-2; }
-  .import-tile { @apply relative aspect-square overflow-hidden rounded-lg border-2 border-border; }
-  .import-tile img { @apply h-full w-full object-cover; }
-  .import-tile > small { @apply absolute inset-x-1 bottom-1 rounded-md bg-primary/90 py-0.5 text-center text-[9px] font-bold text-primary-foreground; }
-  .import-tile > i { @apply absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-white/85 text-primary; }
-  .import-tile.on { @apply border-money; }
-  .import-tile.on > i { @apply bg-money text-white; }
-  .match-progress { @apply mt-4; }
-  .match-bar { @apply h-2 w-full overflow-hidden rounded-full bg-muted; }
-  .match-bar > span { @apply block h-full rounded-full bg-money transition-all duration-300; }
-  .match-list { @apply my-4 flex flex-col gap-2; }
-  .match-list li { @apply flex items-center gap-3 rounded-xl border border-border p-2; }
-  .match-list li img { @apply size-11 shrink-0 rounded-md object-cover; }
-  .match-list li > span { @apply flex min-w-0 flex-col; }
-  .match-list li b { @apply truncate text-sm font-bold; }
-  .match-list li small { @apply text-xs text-muted-foreground; }
-  .match-list li em { @apply ml-auto inline-flex shrink-0 items-center gap-1 rounded-full bg-muted px-2 py-1 text-[11px] font-bold not-italic text-muted-foreground; }
-  .match-list li em.ok { @apply bg-money/15 text-money-ink; }
-  .match-list li.pending { @apply opacity-60; }
+  .import-grid {
+    @apply mt-4 grid grid-cols-3 gap-2;
+  }
+  .import-tile {
+    @apply relative aspect-square overflow-hidden rounded-lg border-2 border-border;
+  }
+  .import-tile img {
+    @apply h-full w-full object-cover;
+  }
+  .import-tile > small {
+    @apply absolute inset-x-1 bottom-1 rounded-md bg-primary/90 py-0.5 text-center text-[9px] font-bold text-primary-foreground;
+  }
+  .import-tile > i {
+    @apply absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-white/85 text-primary;
+  }
+  .import-tile.on {
+    @apply border-money;
+  }
+  .import-tile.on > i {
+    @apply bg-money text-white;
+  }
+  .match-progress {
+    @apply mt-4;
+  }
+  .match-bar {
+    @apply h-2 w-full overflow-hidden rounded-full bg-muted;
+  }
+  .match-bar > span {
+    @apply block h-full rounded-full bg-money transition-all duration-300;
+  }
+  .match-list {
+    @apply my-4 flex flex-col gap-2;
+  }
+  .match-list li {
+    @apply flex items-center gap-3 rounded-xl border border-border p-2;
+  }
+  .match-list li img {
+    @apply size-11 shrink-0 rounded-md object-cover;
+  }
+  .match-list li > span {
+    @apply flex min-w-0 flex-col;
+  }
+  .match-list li b {
+    @apply truncate text-sm font-bold;
+  }
+  .match-list li small {
+    @apply text-xs text-muted-foreground;
+  }
+  .match-list li em {
+    @apply ml-auto inline-flex shrink-0 items-center gap-1 rounded-full bg-muted px-2 py-1 text-[11px] font-bold not-italic text-muted-foreground;
+  }
+  .match-list li em.ok {
+    @apply bg-money/15 text-money-ink;
+  }
+  .match-list li.pending {
+    @apply opacity-60;
+  }
 
-  .share-photo-grid { @apply mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4; }
-  .share-photo { @apply relative aspect-square overflow-hidden rounded-lg border-2 border-transparent shadow-sm disabled:opacity-40; }
-  .share-photo img { @apply h-full w-full object-cover; }
-  .share-photo.on { @apply border-money ring-2 ring-money/40; }
-  .share-photo-check { @apply absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-money text-white shadow; }
-  .share-select-bar { @apply mt-3 flex items-center justify-between; }
-  .share-select-bar .text-link { @apply text-xs font-semibold text-money-ink; }
-  .share-formats { @apply mt-4 grid grid-cols-2 gap-3; }
-  .share-format { @apply flex flex-col items-start gap-1 rounded-2xl border-2 border-border bg-surface p-3 text-left; }
-  .share-format b { @apply text-sm font-bold; }
-  .share-format small { @apply text-xs text-muted-foreground; }
-  .share-format.on { @apply border-money bg-money/10; }
-  .share-format.on svg { @apply text-money-ink; }
-  .ig-carousel { @apply mt-4 flex flex-col items-center gap-2; }
-  .ig-carousel-stage { @apply relative w-full overflow-hidden rounded-2xl bg-primary; aspect-ratio: 4 / 5; }
-  .ig-carousel-stage img { @apply absolute inset-0 h-full w-full object-cover; }
-  .ig-carousel-nav { @apply absolute top-1/2 -translate-y-1/2 grid place-items-center h-8 w-8 rounded-full bg-white/90 text-primary shadow; }
-  .ig-carousel-nav.prev { @apply left-2; }
-  .ig-carousel-nav.next { @apply right-2; }
-  .ig-carousel-count { @apply absolute right-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[11px] font-semibold text-white; }
-  .ig-carousel-dots { @apply flex items-center justify-center gap-1.5; }
-  .ig-carousel-dots i { @apply h-1.5 w-1.5 cursor-pointer rounded-full bg-border; }
-  .ig-carousel-dots i.on { @apply w-4 bg-money-ink; }
-  .ig-carousel-caption { @apply flex flex-col gap-0.5 text-center; }
-  .ig-carousel-caption .eyebrow { @apply text-muted-foreground; }
-  .ig-carousel-caption b { @apply text-sm font-bold; }
-  .ig-carousel-caption small { @apply text-xs text-muted-foreground; }
-  .ig-story { @apply relative mx-auto mt-4 w-full max-w-[240px] overflow-hidden rounded-2xl bg-primary; aspect-ratio: 9 / 16; }
-  .ig-story img { @apply absolute inset-0 h-full w-full object-cover; }
-  .ig-story-bars { @apply absolute inset-x-2 top-2 z-10 flex gap-1; }
-  .ig-story-bars i { @apply h-1 flex-1 rounded-full bg-white/40; }
-  .ig-story-bars i.on { @apply bg-white; }
-  .ig-story-caption { @apply absolute inset-x-0 bottom-0 z-10 flex flex-col gap-0.5 bg-gradient-to-t from-black/75 to-transparent p-3 text-white; }
-  .ig-story-caption .eyebrow { @apply text-white/80; }
-  .ig-story-caption b { @apply text-base font-bold leading-tight; }
-  .ig-story-caption small { @apply inline-flex items-center gap-1 text-[11px] text-white/85; }
-  .share-done { @apply mx-auto mt-5 grid size-14 place-items-center rounded-full bg-money/15 text-money-ink; }
-  .photo-tile.selected { @apply border-money ring-2 ring-money/40; }
-  .photo-tile:disabled { @apply opacity-40; }
-  .photo-select-check { @apply absolute right-1 top-1 z-10 grid size-5 place-items-center rounded-full bg-money text-white shadow; }
-  .share-bar { @apply sticky bottom-24 z-30 mt-4 flex flex-col gap-3; }
-  .share-bar .share-formats { @apply mt-0 gap-2; }
-  .share-bar .share-format { @apply flex-row items-center gap-2 p-2; }
-  .share-bar .money-action { @apply w-full; }
-  .cancel-link { @apply w-full text-center text-sm font-semibold bg-foreground text-background rounded-full px-4 py-2 hover:opacity-90; }
-  .cancel-text { @apply w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground; }
-  .scan-stage { @apply flex flex-col items-center gap-5 py-6; }
-  .scan-frame { @apply relative grid size-28 place-items-center overflow-hidden rounded-2xl border border-border bg-sky text-foreground; }
-  .scan-beam { @apply absolute inset-x-0 h-1/3 bg-gradient-to-b from-transparent via-white/80 to-transparent; animation: scan-sweep 1.4s ease-in-out infinite; }
-  @keyframes scan-sweep { 0% { transform: translateY(-120%); } 100% { transform: translateY(320%); } }
-  .scan-progress { @apply h-1.5 w-full overflow-hidden rounded-full bg-muted; }
-  .scan-progress i { @apply block h-full rounded-full bg-money transition-all duration-500; }
-  .scan-steps { @apply flex w-full flex-col gap-2.5; }
-  .scan-steps li { @apply flex items-center gap-2 text-sm text-muted-foreground; }
-  .scan-steps li.active { @apply font-semibold text-foreground; }
-  .scan-steps li.done { @apply text-money-ink; }
-  .scan-steps .spin { @apply animate-spin; }
-  .scan-steps .idle { @apply opacity-40; }
-  .meet-toast { @apply fixed inset-x-3 bottom-28 z-50 mx-auto flex max-w-md items-center gap-2 rounded-2xl border border-border bg-surface/95 p-3 shadow-xl backdrop-blur; animation: meet-in .35s ease-out; }
-  .meet-toast-main { @apply flex flex-1 items-center gap-3 text-left; }
-  .meet-toast-main strong { @apply block text-sm font-extrabold; }
-  .meet-toast-main small { @apply block text-xs text-muted-foreground; }
-  @keyframes meet-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-  .meet-map { @apply relative h-52 w-full overflow-hidden rounded-2xl border border-border bg-sky; }
-  .meet-map svg { @apply absolute inset-0 h-full w-full; }
-  .meet-streets path { @apply stroke-white; stroke-width: 7; fill: none; opacity: .85; }
-  .meet-river { @apply stroke-primary/25; stroke-width: 14; fill: none; }
-  .meet-route { @apply stroke-money; stroke-width: 5; fill: none; stroke-linecap: round; stroke-dasharray: 10 8; animation: meet-dash 1.2s linear infinite; }
-  .meet-route.metro { @apply stroke-primary; }
-  .meet-route.taxi { @apply stroke-foreground; }
-  @keyframes meet-dash { to { stroke-dashoffset: -18; } }
-  .meet-pin { @apply absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1; }
-  .meet-pin > span, .meet-pin > b { @apply grid size-8 place-items-center rounded-full text-xs font-extrabold shadow-md; }
-  .meet-pin.me > svg { @apply size-8 rounded-full bg-foreground p-2 text-white shadow-md; }
-  .meet-pin.them > b { @apply bg-money text-white; }
-  .meet-pin i { @apply rounded-full bg-surface/95 px-2 py-0.5 text-[11px] font-bold not-italic text-foreground shadow; }
-  .meet-eta { @apply absolute right-2 top-2 inline-flex items-center gap-1 rounded-full bg-surface/95 px-2.5 py-1 text-[11px] font-bold shadow; }
-  .meet-steps { @apply mt-3 flex flex-col gap-3; }
-  .meet-steps li { @apply flex items-start gap-3 text-sm font-semibold; }
-  .meet-steps li span { @apply grid size-6 shrink-0 place-items-center rounded-full bg-money/15 text-xs font-extrabold text-money-ink; }
+  .share-photo-grid {
+    @apply mt-4 grid grid-cols-3 gap-2 sm:grid-cols-4;
+  }
+  .share-photo {
+    @apply relative aspect-square overflow-hidden rounded-lg border-2 border-transparent shadow-sm disabled:opacity-40;
+  }
+  .share-photo img {
+    @apply h-full w-full object-cover;
+  }
+  .share-photo.on {
+    @apply border-money ring-2 ring-money/40;
+  }
+  .share-photo-check {
+    @apply absolute right-1 top-1 grid size-5 place-items-center rounded-full bg-money text-white shadow;
+  }
+  .share-select-bar {
+    @apply mt-3 flex items-center justify-between;
+  }
+  .share-select-bar .text-link {
+    @apply text-xs font-semibold text-money-ink;
+  }
+  .share-formats {
+    @apply mt-4 grid grid-cols-2 gap-3;
+  }
+  .share-format {
+    @apply flex flex-col items-start gap-1 rounded-2xl border-2 border-border bg-surface p-3 text-left;
+  }
+  .share-format b {
+    @apply text-sm font-bold;
+  }
+  .share-format small {
+    @apply text-xs text-muted-foreground;
+  }
+  .share-format.on {
+    @apply border-money bg-money/10;
+  }
+  .share-format.on svg {
+    @apply text-money-ink;
+  }
+  .ig-carousel {
+    @apply mt-4 flex flex-col items-center gap-2;
+  }
+  .ig-carousel-stage {
+    @apply relative w-full overflow-hidden rounded-2xl bg-primary;
+    aspect-ratio: 4 / 5;
+  }
+  .ig-carousel-stage img {
+    @apply absolute inset-0 h-full w-full object-cover;
+  }
+  .ig-carousel-nav {
+    @apply absolute top-1/2 -translate-y-1/2 grid place-items-center h-8 w-8 rounded-full bg-white/90 text-primary shadow;
+  }
+  .ig-carousel-nav.prev {
+    @apply left-2;
+  }
+  .ig-carousel-nav.next {
+    @apply right-2;
+  }
+  .ig-carousel-count {
+    @apply absolute right-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[11px] font-semibold text-white;
+  }
+  .ig-carousel-dots {
+    @apply flex items-center justify-center gap-1.5;
+  }
+  .ig-carousel-dots i {
+    @apply h-1.5 w-1.5 cursor-pointer rounded-full bg-border;
+  }
+  .ig-carousel-dots i.on {
+    @apply w-4 bg-money-ink;
+  }
+  .ig-carousel-caption {
+    @apply flex flex-col gap-0.5 text-center;
+  }
+  .ig-carousel-caption .eyebrow {
+    @apply text-muted-foreground;
+  }
+  .ig-carousel-caption b {
+    @apply text-sm font-bold;
+  }
+  .ig-carousel-caption small {
+    @apply text-xs text-muted-foreground;
+  }
+  .ig-story {
+    @apply relative mx-auto mt-4 w-full max-w-[240px] overflow-hidden rounded-2xl bg-primary;
+    aspect-ratio: 9 / 16;
+  }
+  .ig-story img {
+    @apply absolute inset-0 h-full w-full object-cover;
+  }
+  .ig-story-bars {
+    @apply absolute inset-x-2 top-2 z-10 flex gap-1;
+  }
+  .ig-story-bars i {
+    @apply h-1 flex-1 rounded-full bg-white/40;
+  }
+  .ig-story-bars i.on {
+    @apply bg-white;
+  }
+  .ig-story-caption {
+    @apply absolute inset-x-0 bottom-0 z-10 flex flex-col gap-0.5 bg-gradient-to-t from-black/75 to-transparent p-3 text-white;
+  }
+  .ig-story-caption .eyebrow {
+    @apply text-white/80;
+  }
+  .ig-story-caption b {
+    @apply text-base font-bold leading-tight;
+  }
+  .ig-story-caption small {
+    @apply inline-flex items-center gap-1 text-[11px] text-white/85;
+  }
+  .share-done {
+    @apply mx-auto mt-5 grid size-14 place-items-center rounded-full bg-money/15 text-money-ink;
+  }
+  .photo-tile.selected {
+    @apply border-money ring-2 ring-money/40;
+  }
+  .photo-tile:disabled {
+    @apply opacity-40;
+  }
+  .photo-select-check {
+    @apply absolute right-1 top-1 z-10 grid size-5 place-items-center rounded-full bg-money text-white shadow;
+  }
+  .share-bar {
+    @apply sticky bottom-24 z-30 mt-4 flex flex-col gap-3;
+  }
+  .share-bar .share-formats {
+    @apply mt-0 gap-2;
+  }
+  .share-bar .share-format {
+    @apply flex-row items-center gap-2 p-2;
+  }
+  .share-bar .money-action {
+    @apply w-full;
+  }
+  .cancel-link {
+    @apply w-full text-center text-sm font-semibold bg-foreground text-background rounded-full px-4 py-2 hover:opacity-90;
+  }
+  .cancel-text {
+    @apply w-full text-center text-sm font-semibold text-muted-foreground hover:text-foreground;
+  }
+  .scan-stage {
+    @apply flex flex-col items-center gap-5 py-6;
+  }
+  .scan-frame {
+    @apply relative grid size-28 place-items-center overflow-hidden rounded-2xl border border-border bg-sky text-foreground;
+  }
+  .scan-beam {
+    @apply absolute inset-x-0 h-1/3 bg-gradient-to-b from-transparent via-white/80 to-transparent;
+    animation: scan-sweep 1.4s ease-in-out infinite;
+  }
+  @keyframes scan-sweep {
+    0% {
+      transform: translateY(-120%);
+    }
+    100% {
+      transform: translateY(320%);
+    }
+  }
+  .scan-progress {
+    @apply h-1.5 w-full overflow-hidden rounded-full bg-muted;
+  }
+  .scan-progress i {
+    @apply block h-full rounded-full bg-money transition-all duration-500;
+  }
+  .scan-steps {
+    @apply flex w-full flex-col gap-2.5;
+  }
+  .scan-steps li {
+    @apply flex items-center gap-2 text-sm text-muted-foreground;
+  }
+  .scan-steps li.active {
+    @apply font-semibold text-foreground;
+  }
+  .scan-steps li.done {
+    @apply text-money-ink;
+  }
+  .scan-steps .spin {
+    @apply animate-spin;
+  }
+  .scan-steps .idle {
+    @apply opacity-40;
+  }
+  .meet-toast {
+    @apply fixed inset-x-3 bottom-28 z-50 mx-auto flex max-w-md items-center gap-2 rounded-2xl border border-border bg-surface/95 p-3 shadow-xl backdrop-blur;
+    animation: meet-in 0.35s ease-out;
+  }
+  .meet-toast-main {
+    @apply flex flex-1 items-center gap-3 text-left;
+  }
+  .meet-toast-main strong {
+    @apply block text-sm font-extrabold;
+  }
+  .meet-toast-main small {
+    @apply block text-xs text-muted-foreground;
+  }
+  @keyframes meet-in {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .meet-map {
+    @apply relative h-52 w-full overflow-hidden rounded-2xl border border-border bg-sky;
+  }
+  .meet-map svg {
+    @apply absolute inset-0 h-full w-full;
+  }
+  .meet-streets path {
+    @apply stroke-white;
+    stroke-width: 7;
+    fill: none;
+    opacity: 0.85;
+  }
+  .meet-river {
+    @apply stroke-primary/25;
+    stroke-width: 14;
+    fill: none;
+  }
+  .meet-route {
+    @apply stroke-money;
+    stroke-width: 5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-dasharray: 10 8;
+    animation: meet-dash 1.2s linear infinite;
+  }
+  .meet-route.metro {
+    @apply stroke-primary;
+  }
+  .meet-route.taxi {
+    @apply stroke-foreground;
+  }
+  @keyframes meet-dash {
+    to {
+      stroke-dashoffset: -18;
+    }
+  }
+  .meet-pin {
+    @apply absolute flex -translate-x-1/2 -translate-y-1/2 flex-col items-center gap-1;
+  }
+  .meet-pin > span,
+  .meet-pin > b {
+    @apply grid size-8 place-items-center rounded-full text-xs font-extrabold shadow-md;
+  }
+  .meet-pin.me > svg {
+    @apply size-8 rounded-full bg-foreground p-2 text-white shadow-md;
+  }
+  .meet-pin.them > b {
+    @apply bg-money text-white;
+  }
+  .meet-pin i {
+    @apply rounded-full bg-surface/95 px-2 py-0.5 text-[11px] font-bold not-italic text-foreground shadow;
+  }
+  .meet-eta {
+    @apply absolute right-2 top-2 inline-flex items-center gap-1 rounded-full bg-surface/95 px-2.5 py-1 text-[11px] font-bold shadow;
+  }
+  .meet-steps {
+    @apply mt-3 flex flex-col gap-3;
+  }
+  .meet-steps li {
+    @apply flex items-start gap-3 text-sm font-semibold;
+  }
+  .meet-steps li span {
+    @apply grid size-6 shrink-0 place-items-center rounded-full bg-money/15 text-xs font-extrabold text-money-ink;
+  }
 }
