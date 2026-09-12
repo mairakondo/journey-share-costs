@@ -16,8 +16,8 @@ import type { Database } from "@/lib/database.types";
  */
 export const requireSupabaseAuth = createMiddleware({ type: "function" }).server(
   async ({ next }) => {
-    const url = process.env.VITE_SUPABASE_URL;
-    const publishableKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    const url = process.env["VITE_SUPABASE_URL"];
+    const publishableKey = process.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
     if (!url || !publishableKey) {
       throw new Error("Supabase environment variables are not configured.");
     }
@@ -58,8 +58,8 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
 // endpoints safe, not this middleware.
 export const optionalSupabaseAuth = createMiddleware({ type: "function" }).server(
   async ({ next }) => {
-    const url = process.env.VITE_SUPABASE_URL;
-    const publishableKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    const url = process.env["VITE_SUPABASE_URL"];
+    const publishableKey = process.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
     if (!url || !publishableKey) {
       throw new Error("Supabase environment variables are not configured.");
     }
