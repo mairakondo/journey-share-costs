@@ -1,0 +1,10 @@
+REVOKE ALL ON FUNCTION public.on_trip_created() FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.touch_updated_at() FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON FUNCTION public.is_trip_member(uuid) FROM PUBLIC, anon;
+REVOKE ALL ON FUNCTION public.ensure_profile(text) FROM PUBLIC, anon;
+REVOKE ALL ON FUNCTION public.accept_trip_invite(text) FROM PUBLIC, anon;
+REVOKE ALL ON FUNCTION public.get_invite_preview(text) FROM PUBLIC;
+GRANT EXECUTE ON FUNCTION public.is_trip_member(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.ensure_profile(text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.accept_trip_invite(text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.get_invite_preview(text) TO anon, authenticated;
