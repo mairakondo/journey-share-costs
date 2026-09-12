@@ -1,13 +1,8 @@
-import { createBrowserClient } from "@supabase/ssr";
-
-import type { Database } from "@/lib/database.types";
-
-let client: ReturnType<typeof createBrowserClient<Database>> | undefined;
+// The generated client is preview-safe: it uses brokered storage when the app
+// runs inside the Lovable preview iframe, where localStorage/cookies can be
+// blocked (which previously crashed the page on first render).
+import { supabase } from "@/integrations/supabase/client";
 
 export function getSupabaseBrowserClient() {
-  client ??= createBrowserClient<Database>(
-    import.meta.env['VITE_SUPABASE_URL'] as string,
-    import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'] as string,
-  );
-  return client;
+  return supabase;
 }
