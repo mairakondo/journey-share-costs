@@ -7,6 +7,7 @@ export function CreateTrip({
   onClose,
   onCreate,
   creating = false,
+  error = null,
 }: {
   onClose: () => void;
   onCreate: (fields: {
@@ -16,6 +17,7 @@ export function CreateTrip({
     endDate: string;
   }) => void;
   creating?: boolean;
+  error?: string | null;
 }) {
   const [name, setName] = useState("");
   const [destination, setDestination] = useState("");
@@ -76,6 +78,7 @@ export function CreateTrip({
               />
             </label>
           </div>
+          {error && <p className="split-hint warn">{error}</p>}
           <button className="primary-action wide" type="submit" disabled={!name.trim() || creating}>
             {creating ? "Creating…" : "Create trip"} <ArrowRight size={19} />
           </button>

@@ -92,6 +92,7 @@ function DashboardPage() {
           onClose={() => setCreateOpen(false)}
           onCreate={(fields) => createTripMutation.mutate(fields)}
           creating={createTripMutation.isPending}
+          error={createTripMutation.error ? createTripMutation.error.message : null}
         />
       )}
     </AppShell>
