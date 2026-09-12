@@ -25,7 +25,7 @@ function TripCard({ trip, featured = false }: { trip: Trip; featured?: boolean }
     <Link
       to="/trips/$tripId"
       params={{ tripId: trip.id }}
-      search={status === "past" ? { view: "summary" } : undefined}
+      search={status === "past" ? { view: "summary" as const } : {}}
       className={featured ? "trip-card featured" : "trip-card compact-card"}
     >
       <img

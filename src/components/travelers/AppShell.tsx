@@ -13,8 +13,10 @@ export function AppShell({
   bottomNav,
   children,
 }: {
-  tripLabel?: string;
-  bottomNav?: { view: View; setView: (v: View) => void; planBadge: number; onPlanSeen: () => void };
+  tripLabel?: string | undefined;
+  bottomNav?:
+    | { view: View; setView: (v: View) => void; planBadge: number; onPlanSeen: () => void }
+    | undefined;
   children: ReactNode;
 }) {
   const [offline, setOffline] = useState(true);
