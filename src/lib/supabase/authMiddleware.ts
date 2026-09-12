@@ -16,8 +16,8 @@ import type { Database } from "@/lib/database.types";
  */
 export const requireSupabaseAuth = createMiddleware({ type: "function" }).server(
   async ({ next }) => {
-    const url = process.env.VITE_SUPABASE_URL;
-    const publishableKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    const url = process.env['VITE_SUPABASE_URL'];
+    const publishableKey = process.env['VITE_SUPABASE_PUBLISHABLE_KEY'];
     if (!url || !publishableKey) {
       throw new Error("Supabase environment variables are not configured.");
     }
@@ -48,6 +48,14 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
       throw new Error("UNAUTHENTICATED");
     }
 
+    // Profiles are what trips/members reference; create one on first authed call.
+    await supabase.rpc("ensure_profile", {
+      _display_name:
+        (user.user_metadata?.["display_name"] as string | undefined) ||
+        user.email?.split("@")[0] ||
+        "Traveler",
+    });
+
     return next({ context: { supabase, user } });
   },
 );
@@ -58,8 +66,8 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
 // endpoints safe, not this middleware.
 export const optionalSupabaseAuth = createMiddleware({ type: "function" }).server(
   async ({ next }) => {
-    const url = process.env.VITE_SUPABASE_URL;
-    const publishableKey = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+    const url = process.env['VITE_SUPABASE_URL'];
+    const publishableKey = process.env['VITE_SUPABASE_PUBLISHABLE_KEY'];
     if (!url || !publishableKey) {
       throw new Error("Supabase environment variables are not configured.");
     }

@@ -301,6 +301,7 @@ export type Database = {
     };
     Functions: {
       accept_trip_invite: { Args: { invite_code: string }; Returns: string };
+      ensure_profile: { Args: { _display_name: string }; Returns: undefined };
       get_invite_preview: { Args: { invite_code: string }; Returns: Json };
     };
     Enums: {
