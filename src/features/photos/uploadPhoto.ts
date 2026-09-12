@@ -14,7 +14,7 @@ export async function uploadTripPhoto(tripId: string, file: File): Promise<strin
   const path = `${tripId}/${crypto.randomUUID()}.${extensionFor(file)}`;
   const { error } = await getSupabaseBrowserClient()
     .storage.from(PHOTOS_BUCKET)
-    .upload(path, file, { contentType: file.type || undefined });
+    .upload(path, file, file.type ? { contentType: file.type } : {});
   if (error) throw error;
   return path;
 }
