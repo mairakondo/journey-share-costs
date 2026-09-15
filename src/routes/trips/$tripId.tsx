@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { z } from "zod";
 
 import { AppShell } from "@/components/travelers/AppShell";
+import { EditTrip } from "@/components/travelers/EditTrip";
 import { InviteModal } from "@/components/travelers/InviteModal";
 import { ReceiptConfirm } from "@/components/travelers/ReceiptConfirm";
 import { TripShell } from "@/components/travelers/TripShell";
@@ -12,7 +13,13 @@ import { deleteExpense, listExpenses, saveExpense } from "@/features/costs/costs
 import { assignPhotoStop, createPhoto, listPhotos } from "@/features/photos/photosServerFns";
 import { uploadTripPhoto } from "@/features/photos/uploadPhoto";
 import { deleteStop, listStops, saveStop } from "@/features/plan/planServerFns";
-import { createInvite, getTrip, listTripMembers } from "@/features/trips/tripsServerFns";
+import {
+  createInvite,
+  deleteTrip,
+  getTrip,
+  listTripMembers,
+  updateTrip,
+} from "@/features/trips/tripsServerFns";
 import type { Expense, Stop, View } from "@/lib/types";
 import { formatDateRange } from "@/lib/trip-utils";
 
@@ -28,9 +35,11 @@ export const Route = createFileRoute("/trips/$tripId")({
 function TripPage() {
   const { tripId } = Route.useParams();
   const { view: initialView } = Route.useSearch();
+  const navigate = useNavigate();
   const [view, setView] = useState<View>(initialView ?? "plan");
   const [scanOpen, setScanOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [newPhotoIds, setNewPhotoIds] = useState<string[]>([]);
   const [navBadgeSeen, setNavBadgeSeen] = useState(false);
   const dismissPhotos = (ids: string[]) =>
@@ -49,6 +58,28 @@ function TripPage() {
     enabled: !!user,
   });
   const trip = tripQuery.data;
+
+  const updateTripMutation = useMutation({
+    mutationFn: (fields: {
+      name: string;
+      destination: string;
+      startDate: string;
+      endDate: string;
+    }) => updateTrip({ data: { tripId, ...fields } }),
+    onSuccess: (updated) => {
+      queryClient.setQueryData(["trip", tripId], updated);
+      queryClient.invalidateQueries({ queryKey: ["my-trips"] });
+      setEditOpen(false);
+    },
+  });
+
+  const deleteTripMutation = useMutation({
+    mutationFn: () => deleteTrip({ data: { tripId } }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-trips"] });
+      navigate({ to: "/" });
+    },
+  });
 
   const stopsQuery = useQuery({
     queryKey: ["stops", tripId],
@@ -197,6 +228,7 @@ function TripPage() {
             setInviteOpen(true);
             if (!inviteMutation.data) inviteMutation.mutate();
           }}
+          onEdit={() => setEditOpen(true)}
           view={view}
           setView={setView}
           onScan={() => setScanOpen(true)}
@@ -236,6 +268,18 @@ function TripPage() {
           onClose={() => setInviteOpen(false)}
           code={inviteMutation.data?.code ?? null}
           loading={inviteMutation.isPending}
+        />
+      )}
+
+      {editOpen && trip && (
+        <EditTrip
+          trip={trip}
+          onClose={() => setEditOpen(false)}
+          onSave={(fields) => updateTripMutation.mutate(fields)}
+          onDelete={() => deleteTripMutation.mutate()}
+          saving={updateTripMutation.isPending}
+          deleting={deleteTripMutation.isPending}
+          error={updateTripMutation.error ? updateTripMutation.error.message : null}
         />
       )}
     </AppShell>

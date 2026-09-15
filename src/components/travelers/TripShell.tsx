@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowLeft, UserPlus } from "lucide-react";
+import { ArrowLeft, Pencil, UserPlus } from "lucide-react";
 
 import { Costs } from "@/components/travelers/Costs";
 import { IconButton } from "@/components/travelers/IconButton";
@@ -15,6 +15,7 @@ export function TripShell({
   trip,
   members,
   onInvite,
+  onEdit,
   view,
   setView,
   onScan,
@@ -36,6 +37,7 @@ export function TripShell({
   trip: Trip;
   members: TripMember[];
   onInvite: () => void;
+  onEdit: () => void;
   view: View;
   setView: (v: View) => void;
   onScan: () => void;
@@ -78,6 +80,9 @@ export function TripShell({
               </span>
             ))}
           </div>
+          <IconButton label="Edit trip" onClick={onEdit}>
+            <Pencil size={18} />
+          </IconButton>
           <IconButton label="Invite people to this trip" onClick={onInvite}>
             <UserPlus size={18} />
           </IconButton>

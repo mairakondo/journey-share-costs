@@ -2,6 +2,7 @@ import type { SupabaseClient, User } from "@supabase/supabase-js";
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
+import { PHOTOS_BUCKET } from "@/features/photos/photosServerFns";
 import { optionalSupabaseAuth, requireSupabaseAuth } from "@/lib/supabase/authMiddleware";
 import type { Database } from "@/lib/database.types";
 
@@ -88,6 +89,51 @@ export const createTrip = createServerFn({ method: "POST" })
       end_date: data.endDate || null,
     }),
   );
+
+export const updateTrip = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ tripId: z.string().uuid() }).merge(tripInput))
+  .handler(async ({ context, data }) => {
+    const { data: trip, error } = await context.supabase
+      .from("trips")
+      .update({
+        name: data.name,
+        destination: data.destination || null,
+        start_date: data.startDate || null,
+        end_date: data.endDate || null,
+      })
+      .eq("id", data.tripId)
+      .select(TRIP_COLUMNS)
+      .single();
+    if (error) throw error;
+    return trip;
+  });
+
+// Storage objects don't cascade with the DB row, and the member-scoped
+// storage RLS policy needs the caller to still be a trip_member — so photos
+// are removed first, while that's still true, then the trip row deletes
+// last (cascading stops/expenses/photos rows/trip_members/trip_invites).
+export const deleteTrip = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ tripId: z.string().uuid() }))
+  .handler(async ({ context, data }) => {
+    const { data: photoRows, error: photosError } = await context.supabase
+      .from("photos")
+      .select("storage_path")
+      .eq("trip_id", data.tripId);
+    if (photosError) throw photosError;
+
+    if (photoRows.length > 0) {
+      const { error: removeError } = await context.supabase.storage
+        .from(PHOTOS_BUCKET)
+        .remove(photoRows.map((p) => p.storage_path));
+      if (removeError) throw removeError;
+    }
+
+    const { error } = await context.supabase.from("trips").delete().eq("id", data.tripId);
+    if (error) throw error;
+    return { id: data.tripId };
+  });
 
 export type TripMember = { userId: string; role: string; displayName: string };
 
