@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Camera, MapPin, Plus, Users, Wallet } from "lucide-react";
+import { Camera, MapPin, Pencil, Plus, Users, Wallet } from "lucide-react";
 
 import { currencyForDestination, formatMoney } from "@/lib/currency";
 import { members } from "@/lib/mock-data";
@@ -9,6 +9,7 @@ import { computeBalances, resolveStop, splitLabel } from "@/lib/trip-utils";
 export function Costs({
   trip,
   onScan,
+  onEditBudget,
   stops,
   expenses,
   setView,
@@ -17,6 +18,7 @@ export function Costs({
 }: {
   trip: Trip;
   onScan: () => void;
+  onEditBudget: () => void;
   stops: Stop[];
   expenses: Expense[];
   setView: (v: View) => void;
@@ -25,9 +27,9 @@ export function Costs({
 }) {
   const currency = currencyForDestination(trip.destination);
   const total = expenses.reduce((s, e) => s + e.amount, 0);
-  const planned = 260000;
-  const pct = Math.min(100, Math.round((total / planned) * 100));
-  const over = total > planned;
+  const planned = trip.planned_budget;
+  const pct = planned ? Math.min(100, Math.round((total / planned) * 100)) : 0;
+  const over = planned != null && total > planned;
 
   const days = [...new Set(expenses.map((e) => e.day))].sort((a, b) => a - b);
   const balances = computeBalances(expenses);
@@ -56,31 +58,44 @@ export function Costs({
             <p className="eyebrow text-money-ink">Planned vs actual</p>
             <h3>
               {formatMoney(total, currency)}{" "}
-              <span>of {formatMoney(planned, currency)} planned</span>
+              {planned != null && <span>of {formatMoney(planned, currency)} planned</span>}
             </h3>
           </div>
-          <span className={over ? "settled-pill over" : "settled-pill"}>{pct}% used</span>
-        </header>
-        <div
-          className="budget-bar"
-          role="progressbar"
-          aria-valuenow={pct}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-label="Budget used"
-        >
-          <span className={over ? "over" : ""} style={{ width: `${pct}%` }} />
-        </div>
-        <footer>
-          {over ? (
-            <strong className="text-destructive">
-              {formatMoney(total - planned, currency)} over budget
-            </strong>
+          {planned != null ? (
+            <span className={over ? "settled-pill over" : "settled-pill"}>{pct}% used</span>
           ) : (
-            <strong>{formatMoney(planned - total, currency)} left</strong>
+            <button className="scan-chip" onClick={onEditBudget}>
+              <Pencil size={14} /> Set budget
+            </button>
           )}
-          <small>{expenses.length} expenses tracked</small>
-        </footer>
+        </header>
+        {planned != null && (
+          <>
+            <div
+              className="budget-bar"
+              role="progressbar"
+              aria-valuenow={pct}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-label="Budget used"
+            >
+              <span className={over ? "over" : ""} style={{ width: `${pct}%` }} />
+            </div>
+            <footer>
+              {over ? (
+                <strong className="text-destructive">
+                  {formatMoney(total - planned, currency)} over budget
+                </strong>
+              ) : (
+                <strong>{formatMoney(planned - total, currency)} left</strong>
+              )}
+              <small>{expenses.length} expenses tracked</small>
+            </footer>
+            <button className="summary-back" onClick={onEditBudget}>
+              <Pencil size={14} /> Edit planned budget
+            </button>
+          </>
+        )}
       </article>
 
       <div className="cost-layout">

@@ -66,6 +66,7 @@ function TripPage() {
       destination: string;
       startDate: string;
       endDate: string;
+      plannedBudget: number | null;
     }) => updateTrip({ data: { tripId, ...fields } }),
     onSuccess: (updated) => {
       queryClient.setQueryData(["trip", tripId], updated);

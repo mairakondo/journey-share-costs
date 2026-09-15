@@ -1,7 +1,8 @@
-import { ArrowRight, MapPin, Trash2, X } from "lucide-react";
+import { ArrowRight, MapPin, Trash2, Wallet, X } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
 import { IconButton } from "@/components/travelers/IconButton";
+import { currencyForDestination, currencySymbol } from "@/lib/currency";
 import type { Trip } from "@/lib/types";
 
 export function EditTrip({
@@ -20,6 +21,7 @@ export function EditTrip({
     destination: string;
     startDate: string;
     endDate: string;
+    plannedBudget: number | null;
   }) => void;
   onDelete: () => void;
   saving?: boolean;
@@ -30,12 +32,23 @@ export function EditTrip({
   const [destination, setDestination] = useState(trip.destination ?? "");
   const [startDate, setStartDate] = useState(trip.start_date ?? "");
   const [endDate, setEndDate] = useState(trip.end_date ?? "");
+  const [plannedBudget, setPlannedBudget] = useState(
+    trip.planned_budget != null ? String(trip.planned_budget) : "",
+  );
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const currency = currencyForDestination(destination);
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!name.trim()) return;
-    onSave({ name: name.trim(), destination: destination.trim(), startDate, endDate });
+    const budget = Number(plannedBudget.replace(",", "."));
+    onSave({
+      name: name.trim(),
+      destination: destination.trim(),
+      startDate,
+      endDate,
+      plannedBudget: plannedBudget.trim() && budget >= 0 ? budget : null,
+    });
   };
 
   return (
@@ -81,6 +94,18 @@ export function EditTrip({
               />
             </label>
           </div>
+          <label>
+            Planned budget
+            <div className="input-icon">
+              <Wallet size={17} />
+              <input
+                inputMode="decimal"
+                value={plannedBudget}
+                placeholder={`0.00 ${currencySymbol(currency)}`}
+                onChange={(e) => setPlannedBudget(e.target.value)}
+              />
+            </div>
+          </label>
           {error && <p className="split-hint warn">{error}</p>}
           <button className="primary-action wide" type="submit" disabled={!name.trim() || saving}>
             {saving ? "Saving…" : "Save changes"} <ArrowRight size={19} />

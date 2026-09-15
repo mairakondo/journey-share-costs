@@ -6,7 +6,7 @@ import { PHOTOS_BUCKET } from "@/features/photos/photosServerFns";
 import { optionalSupabaseAuth, requireSupabaseAuth } from "@/lib/supabase/authMiddleware";
 import type { Database } from "@/lib/database.types";
 
-const TRIP_COLUMNS = "id, name, destination, start_date, end_date";
+const TRIP_COLUMNS = "id, name, destination, start_date, end_date, planned_budget";
 
 type TripRow = {
   id: string;
@@ -14,6 +14,7 @@ type TripRow = {
   destination: string | null;
   start_date: string | null;
   end_date: string | null;
+  planned_budget: number | null;
 };
 
 // Inserting a trip and immediately .select()-ing it back fails RLS: the
@@ -29,6 +30,7 @@ async function insertTripAndRefetch(
     destination: string | null;
     start_date: string | null;
     end_date: string | null;
+    planned_budget: number | null;
   },
 ): Promise<TripRow> {
   const { error: tripError } = await supabase
@@ -76,6 +78,7 @@ const tripInput = z.object({
   destination: z.string().optional(),
   startDate: z.string().optional(),
   endDate: z.string().optional(),
+  plannedBudget: z.number().min(0).nullable().optional(),
 });
 
 export const createTrip = createServerFn({ method: "POST" })
@@ -87,6 +90,7 @@ export const createTrip = createServerFn({ method: "POST" })
       destination: data.destination || null,
       start_date: data.startDate || null,
       end_date: data.endDate || null,
+      planned_budget: data.plannedBudget ?? null,
     }),
   );
 
@@ -101,6 +105,7 @@ export const updateTrip = createServerFn({ method: "POST" })
         destination: data.destination || null,
         start_date: data.startDate || null,
         end_date: data.endDate || null,
+        planned_budget: data.plannedBudget ?? null,
       })
       .eq("id", data.tripId)
       .select(TRIP_COLUMNS)

@@ -6,6 +6,7 @@ export type Trip = {
   destination: string | null;
   start_date: string | null;
   end_date: string | null;
+  planned_budget: number | null;
 };
 
 export type Stop = {

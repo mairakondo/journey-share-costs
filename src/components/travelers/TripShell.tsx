@@ -110,6 +110,7 @@ export function TripShell({
         <Costs
           trip={trip}
           onScan={onScan}
+          onEditBudget={onEdit}
           stops={stops}
           expenses={expenses}
           setView={setView}
