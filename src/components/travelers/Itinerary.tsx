@@ -18,6 +18,8 @@ import { StopEditor } from "@/components/travelers/StopEditor";
 import type { Expense, Photo, Stop, Trip, View } from "@/lib/types";
 import { currencyForDestination, formatMoney } from "@/lib/currency";
 import { equalSplit, resolveStop, tripDayList } from "@/lib/trip-utils";
+import { useTripWeather } from "@/lib/useTripWeather";
+import { weatherCodeInfo } from "@/lib/weatherCodes";
 
 export function Itinerary({
   trip,
@@ -50,7 +52,13 @@ export function Itinerary({
 }) {
   const tripDays = tripDayList(trip.start_date, trip.end_date);
   const currency = currencyForDestination(trip.destination);
+  const weatherQuery = useTripWeather(trip);
   const [day, setDay] = useState(0);
+  const currentDayIso = tripDays[day]?.date?.toISOString().slice(0, 10) ?? null;
+  const todayWeather = currentDayIso
+    ? weatherQuery.data?.find((w) => w.date === currentDayIso)
+    : undefined;
+  const WeatherIcon = todayWeather ? weatherCodeInfo(todayWeather.code).Icon : CloudSun;
   const [editing, setEditing] = useState<Stop | null>(null);
   const [editingCost, setEditingCost] = useState<Expense | null>(null);
   const [addOpen, setAddOpen] = useState(false);
@@ -140,8 +148,8 @@ export function Itinerary({
           <div className="date-heading">
             <div>
               <div className="weather -mt-2">
-                <CloudSun size={23} />
-                <span>24°</span>
+                <WeatherIcon size={23} />
+                <span>{todayWeather ? `${Math.round(todayWeather.tempC)}°` : "—"}</span>
               </div>
               <p className="eyebrow">{tripDays[day]?.weekdayFull || `Day ${day + 1}`}</p>
               <div className="day-title-row mt-2">
