@@ -4,6 +4,7 @@ import { ArrowRight, Camera, Check, MapPin, Trash2, X } from "lucide-react";
 import { IconButton } from "@/components/travelers/IconButton";
 import { SplitPicker } from "@/components/travelers/SplitPicker";
 import { scanReceiptPhoto } from "@/features/costs/scanReceipt";
+import type { TripMember } from "@/features/trips/tripsServerFns";
 import { currencySymbol } from "@/lib/currency";
 import type { Expense, Stop } from "@/lib/types";
 import { normalizeSplit } from "@/lib/trip-utils";
@@ -12,6 +13,7 @@ export function ExpenseEditor({
   expense,
   stops,
   currency,
+  members,
   onClose,
   onSave,
   onDelete,
@@ -19,6 +21,7 @@ export function ExpenseEditor({
   expense: Expense;
   stops: Stop[];
   currency: string;
+  members: TripMember[];
   onClose: () => void;
   onSave: (e: Expense) => void;
   onDelete?: (() => void) | undefined;
@@ -153,10 +156,16 @@ export function ExpenseEditor({
           </label>
           <label>
             Paid by
-            <input
+            <select
               value={draft.payer}
               onChange={(e) => setDraft({ ...draft, payer: e.target.value })}
-            />
+            >
+              {members.map((m) => (
+                <option key={m.userId} value={m.userId}>
+                  {m.displayName}
+                </option>
+              ))}
+            </select>
           </label>
         </div>
         <div className="split-block">
@@ -165,6 +174,7 @@ export function ExpenseEditor({
             split={draft.split}
             amount={draft.amount}
             currency={currency}
+            members={members}
             onChange={(split) => setDraft({ ...draft, split })}
           />
         </div>

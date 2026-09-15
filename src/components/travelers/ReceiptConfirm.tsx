@@ -4,6 +4,7 @@ import { Camera, Check, MapPin, ReceiptText, X } from "lucide-react";
 import { IconButton } from "@/components/travelers/IconButton";
 import { SplitPicker } from "@/components/travelers/SplitPicker";
 import { scanReceiptPhoto } from "@/features/costs/scanReceipt";
+import type { TripMember } from "@/features/trips/tripsServerFns";
 import { currencySymbol, formatMoney } from "@/lib/currency";
 import type { Expense, Split, Stop } from "@/lib/types";
 import { equalSplit, resolveStop, splitLabel } from "@/lib/trip-utils";
@@ -12,18 +13,22 @@ export function ReceiptConfirm({
   onClose,
   stops,
   currency,
+  members,
+  currentUserId,
   onSave,
 }: {
   onClose: () => void;
   stops: Stop[];
   currency: string;
+  members: TripMember[];
+  currentUserId: string;
   onSave: (e: Expense) => void;
 }) {
   const [stage, setStage] = useState<"pick" | "scanning" | "review" | "done">("pick");
   const [scanError, setScanError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [confirmed, setConfirmed] = useState(false);
-  const [split, setSplit] = useState<Split>(equalSplit(["You", "Jon", "Ana"]));
+  const [split, setSplit] = useState<Split>(() => equalSplit(members.map((m) => m.userId)));
   const [draft, setDraft] = useState({
     amount: "0",
     label: "",
@@ -127,7 +132,7 @@ export function ReceiptConfirm({
       place: draft.place,
       label: draft.label,
       amount,
-      payer: "Maira",
+      payer: currentUserId,
       source: "scan",
       stopId: null,
       split,
@@ -214,7 +219,13 @@ export function ReceiptConfirm({
             </div>
             <div className="split-block">
               <p className="eyebrow">Split between travelers</p>
-              <SplitPicker split={split} amount={amount} currency={currency} onChange={setSplit} />
+              <SplitPicker
+                split={split}
+                amount={amount}
+                currency={currency}
+                members={members}
+                onChange={setSplit}
+              />
             </div>
             <button
               className="money-action"

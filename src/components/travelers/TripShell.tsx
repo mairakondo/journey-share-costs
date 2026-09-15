@@ -14,6 +14,7 @@ import { avatarTone, formatDateRange, initialsFor } from "@/lib/trip-utils";
 export function TripShell({
   trip,
   members,
+  currentUserId,
   onInvite,
   onEdit,
   view,
@@ -36,6 +37,7 @@ export function TripShell({
 }: {
   trip: Trip;
   members: TripMember[];
+  currentUserId: string | null;
   onInvite: () => void;
   onEdit: () => void;
   view: View;
@@ -91,6 +93,8 @@ export function TripShell({
       {view === "plan" && (
         <Itinerary
           trip={trip}
+          members={members}
+          currentUserId={currentUserId}
           setView={setView}
           stops={stops}
           onSaveStop={onSaveStop}
@@ -109,6 +113,8 @@ export function TripShell({
       {view === "costs" && (
         <Costs
           trip={trip}
+          members={members}
+          currentUserId={currentUserId}
           onScan={onScan}
           onEditBudget={onEdit}
           stops={stops}
@@ -130,7 +136,14 @@ export function TripShell({
         />
       )}
       {view === "summary" && (
-        <Summary trip={trip} stops={stops} expenses={expenses} photos={photos} />
+        <Summary
+          trip={trip}
+          members={members}
+          currentUserId={currentUserId}
+          stops={stops}
+          expenses={expenses}
+          photos={photos}
+        />
       )}
     </div>
   );

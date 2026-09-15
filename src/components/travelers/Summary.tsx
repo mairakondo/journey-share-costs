@@ -1,20 +1,30 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ChevronRight, Image, MapPin, WalletCards } from "lucide-react";
 
+import type { TripMember } from "@/features/trips/tripsServerFns";
 import { currencyForDestination, formatMoney } from "@/lib/currency";
-import { members } from "@/lib/mock-data";
 import { placeholderFor } from "@/lib/trip-placeholders";
 import type { Expense, Photo, Stop, Trip } from "@/lib/types";
-import { classifyTrip, computeBalances, formatDateRange } from "@/lib/trip-utils";
+import {
+  avatarTone,
+  classifyTrip,
+  computeBalances,
+  formatDateRange,
+  initialsFor,
+} from "@/lib/trip-utils";
 import { useDestinationPhoto } from "@/lib/useDestinationPhoto";
 
 export function Summary({
   trip,
+  members,
+  currentUserId,
   stops,
   expenses,
   photos,
 }: {
   trip: Trip;
+  members: TripMember[];
+  currentUserId: string | null;
   stops: Stop[];
   expenses: Expense[];
   photos: Photo[];
@@ -25,8 +35,9 @@ export function Summary({
   const currency = currencyForDestination(trip.destination);
   const total = expenses.reduce((s, e) => s + e.amount, 0);
   const places = new Set(stops.map((s) => s.place)).size;
-  const balances = computeBalances(expenses);
-  const memberFor = (name: string) => members.find((m) => m.name === name);
+  const balances = computeBalances(expenses, currentUserId);
+  const payerName = (userId: string) =>
+    members.find((m) => m.userId === userId)?.displayName ?? "Someone";
 
   const dayNumbers = Array.from(
     new Set([
@@ -147,18 +158,13 @@ export function Summary({
               <p className="text-sm text-muted-foreground">No shared expenses yet.</p>
             )}
             {balances.map((b) => {
-              const m = memberFor(b.name);
+              const memberIndex = members.findIndex((m) => m.userId === b.userId);
+              const name = payerName(b.userId);
               const text =
-                b.net > 0
-                  ? `${b.name} owes you`
-                  : b.net < 0
-                    ? `You owe ${b.name}`
-                    : `${b.name} settled`;
+                b.net > 0 ? `${name} owes you` : b.net < 0 ? `You owe ${name}` : `${name} settled`;
               return (
-                <article key={b.name}>
-                  <span className={m?.tone ?? "bg-muted text-foreground"}>
-                    {m?.initials ?? b.name.slice(0, 2).toUpperCase()}
-                  </span>
+                <article key={b.userId}>
+                  <span className={avatarTone(Math.max(0, memberIndex))}>{initialsFor(name)}</span>
                   {text}
                   <strong>
                     {b.net === 0

@@ -226,6 +226,7 @@ function TripPage() {
         <TripShell
           trip={trip}
           members={members}
+          currentUserId={user?.id ?? null}
           onInvite={() => {
             setInviteOpen(true);
             if (!inviteMutation.data) inviteMutation.mutate();
@@ -262,6 +263,8 @@ function TripPage() {
           onClose={() => setScanOpen(false)}
           stops={stops}
           currency={currencyForDestination(trip.destination)}
+          members={members}
+          currentUserId={user?.id ?? ""}
           onSave={(e) => saveExpenseMutation.mutate(e)}
         />
       )}

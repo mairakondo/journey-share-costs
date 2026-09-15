@@ -1,13 +1,21 @@
 import { Link } from "@tanstack/react-router";
 import { Camera, MapPin, Pencil, Plus, Users, Wallet } from "lucide-react";
 
+import type { TripMember } from "@/features/trips/tripsServerFns";
 import { currencyForDestination, formatMoney } from "@/lib/currency";
-import { members } from "@/lib/mock-data";
 import type { Expense, Stop, Trip, View } from "@/lib/types";
-import { computeBalances, resolveStop, splitLabel } from "@/lib/trip-utils";
+import {
+  avatarTone,
+  computeBalances,
+  initialsFor,
+  resolveStop,
+  splitLabel,
+} from "@/lib/trip-utils";
 
 export function Costs({
   trip,
+  members,
+  currentUserId,
   onScan,
   onEditBudget,
   stops,
@@ -17,6 +25,8 @@ export function Costs({
   tripLoading = false,
 }: {
   trip: Trip;
+  members: TripMember[];
+  currentUserId: string | null;
   onScan: () => void;
   onEditBudget: () => void;
   stops: Stop[];
@@ -32,8 +42,9 @@ export function Costs({
   const over = planned != null && total > planned;
 
   const days = [...new Set(expenses.map((e) => e.day))].sort((a, b) => a - b);
-  const balances = computeBalances(expenses);
-  const memberFor = (name: string) => members.find((m) => m.name === name);
+  const balances = computeBalances(expenses, currentUserId);
+  const memberFor = (userId: string) => members.find((m) => m.userId === userId);
+  const payerName = (userId: string) => memberFor(userId)?.displayName ?? "Someone";
 
   if (tripLocked) {
     return (
@@ -116,22 +127,21 @@ export function Costs({
               </article>
             )}
             {balances.map((b) => {
-              const m = memberFor(b.name);
+              const memberIndex = members.findIndex((m) => m.userId === b.userId);
+              const name = payerName(b.userId);
               const label =
                 b.net > 0
-                  ? `${b.name} owes you`
+                  ? `${name} owes you`
                   : b.net < 0
-                    ? `You owe ${b.name}`
-                    : `${b.name} is settled`;
+                    ? `You owe ${name}`
+                    : `${name} is settled`;
               const detail =
                 b.net === 0
                   ? "All caught up"
                   : `${b.sharedCount} shared expense${b.sharedCount === 1 ? "" : "s"}`;
               return (
-                <article key={b.name}>
-                  <span className={m?.tone ?? "bg-muted text-foreground"}>
-                    {m?.initials ?? b.name.slice(0, 2).toUpperCase()}
-                  </span>
+                <article key={b.userId}>
+                  <span className={avatarTone(Math.max(0, memberIndex))}>{initialsFor(name)}</span>
                   <div>
                     <h3>{label}</h3>
                     <p>{detail}</p>
@@ -209,7 +219,7 @@ export function Costs({
                         <dt>
                           <Wallet size={13} /> Paid by
                         </dt>
-                        <dd>{e.payer}</dd>
+                        <dd>{payerName(e.payer)}</dd>
                       </div>
                     </dl>
                   </article>

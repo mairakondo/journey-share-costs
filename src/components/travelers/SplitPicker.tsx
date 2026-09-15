@@ -1,19 +1,21 @@
 import { Check } from "lucide-react";
 
-import { members } from "@/lib/mock-data";
+import type { TripMember } from "@/features/trips/tripsServerFns";
 import type { Split, SplitMode } from "@/lib/types";
 import { currencySymbol, formatMoney } from "@/lib/currency";
-import { normalizeSplit, splitShares } from "@/lib/trip-utils";
+import { avatarTone, initialsFor, normalizeSplit, splitShares } from "@/lib/trip-utils";
 
 export function SplitPicker({
   split: rawSplit,
   amount,
   currency,
+  members,
   onChange,
 }: {
   split: Split | undefined;
   amount: number;
   currency: string;
+  members: TripMember[];
   onChange: (s: Split) => void;
 }) {
   const split = normalizeSplit(rawSplit);
@@ -63,13 +65,13 @@ export function SplitPicker({
         ))}
       </div>
       <div className="split-rows">
-        {members.map((m) => {
-          const on = split.participants.includes(m.name);
+        {members.map((m, i) => {
+          const on = split.participants.includes(m.userId);
           return (
-            <div key={m.name} className={on ? "split-row on" : "split-row"}>
-              <button className="split-person" onClick={() => toggle(m.name)} aria-pressed={on}>
-                <span className={m.tone}>{m.initials}</span>
-                {m.name}
+            <div key={m.userId} className={on ? "split-row on" : "split-row"}>
+              <button className="split-person" onClick={() => toggle(m.userId)} aria-pressed={on}>
+                <span className={avatarTone(i)}>{initialsFor(m.displayName)}</span>
+                {m.displayName}
                 <i>{on && <Check size={12} />}</i>
               </button>
               {on && split.mode !== "equal" && (
@@ -77,17 +79,17 @@ export function SplitPicker({
                   {split.mode === "exact" && <small>{currencySymbol(currency)}</small>}
                   <input
                     inputMode="decimal"
-                    aria-label={`${split.mode === "percent" ? "Percentage" : "Amount"} for ${m.name}`}
-                    value={String(split.values[m.name] ?? "")}
+                    aria-label={`${split.mode === "percent" ? "Percentage" : "Amount"} for ${m.displayName}`}
+                    value={String(split.values[m.userId] ?? "")}
                     onChange={(e) =>
-                      setValue(m.name, Number(e.target.value.replace(",", ".")) || 0)
+                      setValue(m.userId, Number(e.target.value.replace(",", ".")) || 0)
                     }
                   />
                   {split.mode === "percent" && <small>%</small>}
                 </div>
               )}
               {on && split.mode !== "exact" && (
-                <strong>{formatMoney(shares[m.name] ?? 0, currency)}</strong>
+                <strong>{formatMoney(shares[m.userId] ?? 0, currency)}</strong>
               )}
             </div>
           );

@@ -1,15 +1,14 @@
-import { members } from "@/lib/mock-data";
 import type { Expense, Photo, Split, SplitMode, Stop, Taggable, Trip } from "@/lib/types";
 
-export const equalSplit = (names: string[] = members.map((m) => m.name)): Split => ({
+export const equalSplit = (participantIds: string[]): Split => ({
   mode: "equal",
-  participants: names,
+  participants: participantIds,
   values: {},
 });
 
 export const normalizeSplit = (split?: Split | null): Split => ({
   mode: split?.mode ?? "equal",
-  participants: split?.participants ?? members.map((m) => m.name),
+  participants: split?.participants ?? [],
   values: split?.values ?? {},
 });
 
@@ -179,30 +178,26 @@ export function hashToIndex(value: string, modulo: number): number {
   return hash % modulo;
 }
 
-export type Balance = { name: string; net: number; sharedCount: number };
+export type Balance = { userId: string; net: number; sharedCount: number };
 
-// "Maira" is the payer name the app defaults new manual/scanned expenses to;
-// "You" is the name used everywhere else (splits, avatars) for the same
-// signed-in person. Balances are computed from the viewer's perspective, so
-// both need to resolve to the same identity.
-const VIEWER_NAMES = new Set(["You", "Maira"]);
-
-export function computeBalances(expenses: Expense[]): Balance[] {
+// Balances are computed from the signed-in viewer's own perspective:
+// positive means a person owes the viewer, negative means the viewer owes
+// them. Participants/payer are real trip_members.user_id values.
+export function computeBalances(expenses: Expense[], viewerId: string | null): Balance[] {
   const net: Record<string, number> = {};
   const sharedCount: Record<string, number> = {};
+  if (!viewerId) return [];
 
   for (const e of expenses) {
     const split = normalizeSplit(e.split);
-    if (!split.participants.some((p) => VIEWER_NAMES.has(p))) continue;
+    if (!split.participants.includes(viewerId)) continue;
 
     const shares = splitShares(e.split, e.amount);
-    const viewerShare = split.participants
-      .filter((p) => VIEWER_NAMES.has(p))
-      .reduce((s, p) => s + (shares[p] ?? 0), 0);
-    const payerIsViewer = VIEWER_NAMES.has(e.payer);
+    const viewerShare = shares[viewerId] ?? 0;
+    const payerIsViewer = e.payer === viewerId;
 
     for (const person of split.participants) {
-      if (VIEWER_NAMES.has(person)) continue;
+      if (person === viewerId) continue;
       if (payerIsViewer) {
         net[person] = (net[person] ?? 0) + (shares[person] ?? 0);
         sharedCount[person] = (sharedCount[person] ?? 0) + 1;
@@ -214,7 +209,11 @@ export function computeBalances(expenses: Expense[]): Balance[] {
   }
 
   return Object.keys(net)
-    .map((name) => ({ name, net: Math.round(net[name]!), sharedCount: sharedCount[name] ?? 0 }))
+    .map((userId) => ({
+      userId,
+      net: Math.round(net[userId]!),
+      sharedCount: sharedCount[userId] ?? 0,
+    }))
     .sort((a, b) => b.net - a.net);
 }
 

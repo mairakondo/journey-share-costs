@@ -15,6 +15,7 @@ import { ExpenseEditor } from "@/components/travelers/ExpenseEditor";
 import { IconButton } from "@/components/travelers/IconButton";
 import { PhotoLightbox } from "@/components/travelers/PhotoLightbox";
 import { StopEditor } from "@/components/travelers/StopEditor";
+import type { TripMember } from "@/features/trips/tripsServerFns";
 import type { Expense, Photo, Stop, Trip, View } from "@/lib/types";
 import { currencyForDestination, formatMoney } from "@/lib/currency";
 import { equalSplit, resolveStop, tripDayList } from "@/lib/trip-utils";
@@ -23,6 +24,8 @@ import { weatherCodeInfo } from "@/lib/weatherCodes";
 
 export function Itinerary({
   trip,
+  members,
+  currentUserId,
   setView,
   stops,
   onSaveStop,
@@ -37,6 +40,8 @@ export function Itinerary({
   dismissPhotos,
 }: {
   trip: Trip;
+  members: TripMember[];
+  currentUserId: string | null;
   setView: (v: View) => void;
   stops: Stop[];
   onSaveStop: (stop: Stop) => void;
@@ -52,6 +57,8 @@ export function Itinerary({
 }) {
   const tripDays = tripDayList(trip.start_date, trip.end_date);
   const currency = currencyForDestination(trip.destination);
+  const payerName = (userId: string) =>
+    members.find((m) => m.userId === userId)?.displayName ?? "Someone";
   const weatherQuery = useTripWeather(trip);
   const [day, setDay] = useState(0);
   const currentDayIso = tripDays[day]?.date?.toISOString().slice(0, 10) ?? null;
@@ -92,10 +99,10 @@ export function Itinerary({
     place: stop?.place ?? "",
     label: "",
     amount: 0,
-    payer: "Maira",
+    payer: currentUserId ?? "",
     source: "manual",
     stopId: stop?.id ?? null,
-    split: equalSplit(),
+    split: equalSplit(members.map((m) => m.userId)),
   });
 
   const costRow = (e: Expense) => (
@@ -109,7 +116,7 @@ export function Itinerary({
       <span>
         <b>{e.label || "Untitled cost"}</b>
         <small>
-          {e.time} · {e.payer}
+          {e.time} · {payerName(e.payer)}
           {e.source === "scan" ? " · receipt" : ""}
         </small>
       </span>
@@ -360,6 +367,7 @@ export function Itinerary({
           expense={editingCost}
           stops={stops}
           currency={currency}
+          members={members}
           onClose={() => setEditingCost(null)}
           onSave={saveExpense}
           onDelete={
