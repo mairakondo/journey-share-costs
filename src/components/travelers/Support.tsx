@@ -2,11 +2,11 @@ import { useState } from "react";
 import {
   Accessibility,
   HeartPulse,
-  Landmark,
   Languages,
   Locate,
   Phone,
   ShieldCheck,
+  Siren,
   Toilet,
 } from "lucide-react";
 
@@ -14,10 +14,14 @@ import { AccessFlow } from "@/components/travelers/support/AccessFlow";
 import { LocateFlow } from "@/components/travelers/support/LocateFlow";
 import { RestroomFlow } from "@/components/travelers/support/RestroomFlow";
 import { TranslateFlow } from "@/components/travelers/support/TranslateFlow";
-import type { Tool } from "@/lib/types";
+import type { TripMember } from "@/features/trips/tripsServerFns";
+import { formatDistance } from "@/lib/geocode";
+import type { Tool, Trip } from "@/lib/types";
+import { useEmergencyInfo } from "@/lib/useEmergencyInfo";
 
-export function Support() {
+export function Support({ trip, members }: { trip: Trip; members: TripMember[] }) {
   const [tool, setTool] = useState<Tool | null>(null);
+  const emergency = useEmergencyInfo(trip);
   return (
     <>
       <div className="support-intro">
@@ -42,7 +46,7 @@ export function Support() {
             id: "locate" as Tool,
             icon: <Locate />,
             title: "Share live location",
-            detail: "4 travelers in the group",
+            detail: `${members.length} traveler${members.length === 1 ? "" : "s"} in the group`,
           },
           {
             id: "restroom" as Tool,
@@ -68,41 +72,96 @@ export function Support() {
       </section>
       <h3 className="support-section-title">Emergency contacts</h3>
       <section className="support-grid">
-        {[
-          {
-            icon: <HeartPulse />,
-            label: "Nearest hospital",
-            title: "St. Luke's International Hospital",
-            detail: "Akashi-cho 9-1 · 2.4 km",
-            number: "+81 3 3541 5151",
-          },
-          {
-            icon: <Landmark />,
-            label: "U.S. Embassy",
-            title: "Embassy of the United States",
-            detail: "Akasaka 1-10-5 · 4.1 km",
-            number: "+81 3 3224 5000",
-          },
-          {
-            icon: <Phone />,
-            label: "National emergency",
-            title: "Police 110 · Fire & Ambulance 119",
-            detail: "Available 24 hours",
-            number: "110",
-          },
-        ].map((x) => (
-          <article className="support-card" key={x.label}>
-            <span className="support-icon">{x.icon}</span>
+        {emergency.isLoading && (
+          <article className="support-card">
+            <span className="support-icon">
+              <ShieldCheck />
+            </span>
             <div className="flex-1">
-              <p className="eyebrow">{x.label}</p>
-              <h3>{x.title}</h3>
-              <p>{x.detail}</p>
-              <a href={`tel:${x.number}`}>
-                <Phone size={16} /> {x.number}
-              </a>
+              <p className="eyebrow">Looking up local emergency info…</p>
+              <p>Finding the nearest hospital and police station.</p>
             </div>
           </article>
-        ))}
+        )}
+        {!emergency.isLoading && emergency.isError && (
+          <article className="support-card">
+            <span className="support-icon">
+              <ShieldCheck />
+            </span>
+            <div className="flex-1">
+              <p className="eyebrow">Couldn't load local emergency info</p>
+              <p>Check your connection and reopen this tab to try again.</p>
+            </div>
+          </article>
+        )}
+        {!emergency.isLoading && !emergency.isError && (
+          <>
+            <article className="support-card">
+              <span className="support-icon">
+                <HeartPulse />
+              </span>
+              <div className="flex-1">
+                <p className="eyebrow">Nearest hospital</p>
+                {emergency.data?.hospital ? (
+                  <>
+                    <h3>{emergency.data.hospital.name}</h3>
+                    <p>{formatDistance(emergency.data.hospital.distanceKm)} away</p>
+                    {emergency.data.hospital.tags["phone"] && (
+                      <a href={`tel:${emergency.data.hospital.tags["phone"]}`}>
+                        <Phone size={16} /> {emergency.data.hospital.tags["phone"]}
+                      </a>
+                    )}
+                  </>
+                ) : (
+                  <p>No hospital found nearby — call the number below instead.</p>
+                )}
+              </div>
+            </article>
+            <article className="support-card">
+              <span className="support-icon">
+                <Siren />
+              </span>
+              <div className="flex-1">
+                <p className="eyebrow">Nearest police station</p>
+                {emergency.data?.police ? (
+                  <>
+                    <h3>{emergency.data.police.name}</h3>
+                    <p>{formatDistance(emergency.data.police.distanceKm)} away</p>
+                    {emergency.data.police.tags["phone"] && (
+                      <a href={`tel:${emergency.data.police.tags["phone"]}`}>
+                        <Phone size={16} /> {emergency.data.police.tags["phone"]}
+                      </a>
+                    )}
+                  </>
+                ) : (
+                  <p>No station found nearby — call the number below instead.</p>
+                )}
+              </div>
+            </article>
+            <article className="support-card">
+              <span className="support-icon">
+                <Phone />
+              </span>
+              <div className="flex-1">
+                <p className="eyebrow">National emergency</p>
+                <h3>
+                  Police {emergency.data?.numbers.police} · Medical{" "}
+                  {emergency.data?.numbers.medical}
+                  {emergency.data?.numbers.fire !== emergency.data?.numbers.medical
+                    ? ` · Fire ${emergency.data?.numbers.fire}`
+                    : ""}
+                </h3>
+                <p>{emergency.data?.country ?? "Available 24 hours"}</p>
+                <a
+                  href={`tel:${emergency.data?.numbers.general ?? emergency.data?.numbers.police}`}
+                >
+                  <Phone size={16} />{" "}
+                  {emergency.data?.numbers.general ?? emergency.data?.numbers.police}
+                </a>
+              </div>
+            </article>
+          </>
+        )}
       </section>
       {tool === "restroom" && <RestroomFlow onClose={() => setTool(null)} />}
       {tool === "translate" && <TranslateFlow onClose={() => setTool(null)} />}

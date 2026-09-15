@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { geocodeDestination } from "@/lib/geocode";
+
 export type DayWeather = { date: string; tempC: number; code: number };
 
 const MS_DAY = 86_400_000;
@@ -19,18 +21,6 @@ function toArchiveSafeDate(dateStr: string): string {
     date.setUTCFullYear(date.getUTCFullYear() - 1);
   }
   return date.toISOString().slice(0, 10);
-}
-
-async function geocode(destination: string): Promise<{ lat: number; lon: number } | null> {
-  const place = destination.split(",")[0]?.trim() || destination;
-  const res = await fetch(
-    `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(place)}&count=1&language=en&format=json`,
-  );
-  if (!res.ok) return null;
-  const data = await res.json();
-  const hit = data.results?.[0];
-  if (!hit) return null;
-  return { lat: hit.latitude, lon: hit.longitude };
 }
 
 async function fetchDaily(
@@ -62,7 +52,7 @@ async function fetchTripWeather(
   startDate: string,
   endDate: string,
 ): Promise<DayWeather[]> {
-  const coords = await geocode(destination);
+  const coords = await geocodeDestination(destination);
   if (!coords) return [];
 
   const useForecast = daysFromToday(endDate) <= 15 && daysFromToday(startDate) >= -5;
