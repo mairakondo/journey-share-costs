@@ -7,14 +7,6 @@ export const members = [
   { name: "Luis", initials: "LM", tone: "bg-sun text-sun-foreground" },
 ];
 
-// Used by ExpenseEditor's "Scan a receipt" simulation — still a decorative
-// stand-in for real OCR, unrelated to any specific trip's data.
-export const sampleReceipts = [
-  { label: "teamLab tickets", place: "Toyosu 6-1-16", amount: 15600, time: "14:55" },
-  { label: "Suica top-up", place: "Shinjuku Station", amount: 3000, time: "10:20" },
-  { label: "Dinner at Omoide Yokocho", place: "Nishi-Shinjuku 1-2", amount: 11800, time: "20:10" },
-];
-
 // Support tab tools (translator, restrooms, accessible routes, live
 // location) are still fully mock — not yet connected to a backend.
 export const RESTROOMS = [

@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import { Check, Loader2, MapPin, ReceiptText, X } from "lucide-react";
+import { useRef, useState } from "react";
+import { Camera, Check, MapPin, ReceiptText, X } from "lucide-react";
 
 import { IconButton } from "@/components/travelers/IconButton";
 import { SplitPicker } from "@/components/travelers/SplitPicker";
+import { scanReceiptPhoto } from "@/features/costs/scanReceipt";
 import type { Expense, Split, Stop } from "@/lib/types";
 import { equalSplit, euro, resolveStop, splitLabel } from "@/lib/trip-utils";
 
@@ -15,31 +16,84 @@ export function ReceiptConfirm({
   stops: Stop[];
   onSave: (e: Expense) => void;
 }) {
+  const [stage, setStage] = useState<"pick" | "scanning" | "review" | "done">("pick");
+  const [scanError, setScanError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [confirmed, setConfirmed] = useState(false);
   const [split, setSplit] = useState<Split>(equalSplit(["You", "Jon", "Ana"]));
   const [draft, setDraft] = useState({
-    amount: "15600",
-    label: "teamLab tickets",
-    place: "Toyosu 6-1-16",
-    time: "14:55",
+    amount: "0",
+    label: "",
+    place: "",
+    time: "12:00",
     day: 1,
   });
   const amount = Number(draft.amount.replace(",", ".")) || 0;
   const match = resolveStop({ day: draft.day, time: draft.time, place: draft.place }, stops);
-  const SCAN_STEPS = [
-    "Capturing the receipt",
-    "Reading the text",
-    "Finding the total",
-    "Matching place and time",
-  ];
-  const [step, setStep] = useState(0);
-  const scanning = step < SCAN_STEPS.length;
-  useEffect(() => {
-    if (!scanning) return;
-    const t = setTimeout(() => setStep((s) => s + 1), step === 0 ? 700 : 850);
-    return () => clearTimeout(t);
-  }, [step, scanning]);
-  if (scanning)
+
+  const scanFile = async (file: File) => {
+    setStage("scanning");
+    setScanError(null);
+    try {
+      const r = await scanReceiptPhoto(file);
+      setDraft((d) => ({
+        ...d,
+        amount: String(r.amount),
+        label: r.label,
+        place: r.place,
+        time: r.time,
+      }));
+      setStage("review");
+    } catch (err) {
+      setScanError(err instanceof Error ? err.message : "Couldn't read that receipt.");
+      setStage("pick");
+    }
+  };
+
+  const fileInput = (
+    <input
+      ref={fileInputRef}
+      type="file"
+      accept="image/*"
+      capture="environment"
+      hidden
+      onChange={(e) => {
+        const file = e.target.files?.[0];
+        e.target.value = "";
+        if (file) void scanFile(file);
+      }}
+    />
+  );
+
+  if (stage === "pick")
+    return (
+      <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Scan a receipt">
+        <div className="modal-sheet receipt-sheet">
+          <div className="modal-head">
+            <div>
+              <p className="eyebrow">Receipt</p>
+              <h2>Scan a receipt</h2>
+            </div>
+            <IconButton label="Close" onClick={onClose}>
+              <X size={20} />
+            </IconButton>
+          </div>
+          {fileInput}
+          <button className="scan-inline" onClick={() => fileInputRef.current?.click()}>
+            <span>
+              <Camera size={20} />
+            </span>
+            <div>
+              <b>Take or choose a photo</b>
+              <small>We’ll read the amount, place and time for you</small>
+            </div>
+          </button>
+          {scanError && <p className="split-hint warn">{scanError}</p>}
+        </div>
+      </div>
+    );
+
+  if (stage === "scanning")
     return (
       <div className="modal-backdrop" role="dialog" aria-modal="true" aria-label="Scanning receipt">
         <div className="modal-sheet receipt-sheet">
@@ -57,21 +111,6 @@ export function ReceiptConfirm({
               <ReceiptText size={44} />
               <span className="scan-beam" />
             </div>
-            <div className="scan-progress">
-              <i style={{ width: `${((step + 1) / (SCAN_STEPS.length + 1)) * 100}%` }} />
-            </div>
-            <ul className="scan-steps">
-              {SCAN_STEPS.map((s, i) => (
-                <li key={s} className={i < step ? "done" : i === step ? "active" : ""}>
-                  {i < step ? (
-                    <Check size={15} />
-                  ) : (
-                    <Loader2 size={15} className={i === step ? "spin" : "idle"} />
-                  )}
-                  <span>{s}</span>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </div>

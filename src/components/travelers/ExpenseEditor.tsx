@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ArrowRight, Camera, Check, MapPin, Trash2, X } from "lucide-react";
 
 import { IconButton } from "@/components/travelers/IconButton";
 import { SplitPicker } from "@/components/travelers/SplitPicker";
-import { sampleReceipts } from "@/lib/mock-data";
+import { scanReceiptPhoto } from "@/features/costs/scanReceipt";
 import type { Expense, Stop } from "@/lib/types";
 import { normalizeSplit } from "@/lib/trip-utils";
 
@@ -24,12 +24,15 @@ export function ExpenseEditor({
   const [scanState, setScanState] = useState<"idle" | "scanning" | "done">(
     expense.source === "scan" ? "done" : "idle",
   );
+  const [scanError, setScanError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const isNew = !onDelete;
 
-  const scan = () => {
+  const scanFile = async (file: File) => {
     setScanState("scanning");
-    const r = sampleReceipts[Math.floor(Math.random() * sampleReceipts.length)]!;
-    setTimeout(() => {
+    setScanError(null);
+    try {
+      const r = await scanReceiptPhoto(file);
       setDraft((d) => ({
         ...d,
         label: r.label,
@@ -39,7 +42,10 @@ export function ExpenseEditor({
         source: "scan",
       }));
       setScanState("done");
-    }, 900);
+    } catch (err) {
+      setScanError(err instanceof Error ? err.message : "Couldn't read that receipt.");
+      setScanState("idle");
+    }
   };
   const canSave =
     Boolean(draft.label.trim()) &&
@@ -64,7 +70,23 @@ export function ExpenseEditor({
             <X size={20} />
           </IconButton>
         </div>
-        <button className="scan-inline" onClick={scan} disabled={scanState === "scanning"}>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          hidden
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            e.target.value = "";
+            if (file) void scanFile(file);
+          }}
+        />
+        <button
+          className="scan-inline"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={scanState === "scanning"}
+        >
           <span>
             <Camera size={20} />
           </span>
@@ -84,6 +106,7 @@ export function ExpenseEditor({
           </div>
           {scanState === "done" ? <Check size={18} /> : <ArrowRight size={18} />}
         </button>
+        {scanError && <p className="split-hint warn">{scanError}</p>}
         <div className="form-grid">
           <label>
             What was it?
