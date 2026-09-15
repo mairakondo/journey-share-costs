@@ -16,7 +16,8 @@ import { IconButton } from "@/components/travelers/IconButton";
 import { PhotoLightbox } from "@/components/travelers/PhotoLightbox";
 import { StopEditor } from "@/components/travelers/StopEditor";
 import type { Expense, Photo, Stop, Trip, View } from "@/lib/types";
-import { equalSplit, euro, resolveStop, tripDayList } from "@/lib/trip-utils";
+import { currencyForDestination, formatMoney } from "@/lib/currency";
+import { equalSplit, resolveStop, tripDayList } from "@/lib/trip-utils";
 
 export function Itinerary({
   trip,
@@ -48,6 +49,7 @@ export function Itinerary({
   dismissPhotos?: (ids: string[]) => void;
 }) {
   const tripDays = tripDayList(trip.start_date, trip.end_date);
+  const currency = currencyForDestination(trip.destination);
   const [day, setDay] = useState(0);
   const [editing, setEditing] = useState<Stop | null>(null);
   const [editingCost, setEditingCost] = useState<Expense | null>(null);
@@ -103,7 +105,7 @@ export function Itinerary({
           {e.source === "scan" ? " · receipt" : ""}
         </small>
       </span>
-      <strong>{euro(e.amount)}</strong>
+      <strong>{formatMoney(e.amount, currency)}</strong>
     </button>
   );
 
@@ -349,6 +351,7 @@ export function Itinerary({
         <ExpenseEditor
           expense={editingCost}
           stops={stops}
+          currency={currency}
           onClose={() => setEditingCost(null)}
           onSave={saveExpense}
           onDelete={

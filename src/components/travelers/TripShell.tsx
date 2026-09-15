@@ -108,6 +108,7 @@ export function TripShell({
       {view === "support" && <Support />}
       {view === "costs" && (
         <Costs
+          trip={trip}
           onScan={onScan}
           stops={stops}
           expenses={expenses}

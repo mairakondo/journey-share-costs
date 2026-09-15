@@ -2,15 +2,18 @@ import { Check } from "lucide-react";
 
 import { members } from "@/lib/mock-data";
 import type { Split, SplitMode } from "@/lib/types";
-import { euro, normalizeSplit, splitShares } from "@/lib/trip-utils";
+import { currencySymbol, formatMoney } from "@/lib/currency";
+import { normalizeSplit, splitShares } from "@/lib/trip-utils";
 
 export function SplitPicker({
   split: rawSplit,
   amount,
+  currency,
   onChange,
 }: {
   split: Split | undefined;
   amount: number;
+  currency: string;
   onChange: (s: Split) => void;
 }) {
   const split = normalizeSplit(rawSplit);
@@ -71,7 +74,7 @@ export function SplitPicker({
               </button>
               {on && split.mode !== "equal" && (
                 <div className="split-value">
-                  {split.mode === "exact" && <small>¥</small>}
+                  {split.mode === "exact" && <small>{currencySymbol(currency)}</small>}
                   <input
                     inputMode="decimal"
                     aria-label={`${split.mode === "percent" ? "Percentage" : "Amount"} for ${m.name}`}
@@ -83,7 +86,9 @@ export function SplitPicker({
                   {split.mode === "percent" && <small>%</small>}
                 </div>
               )}
-              {on && split.mode !== "exact" && <strong>{euro(shares[m.name] ?? 0)}</strong>}
+              {on && split.mode !== "exact" && (
+                <strong>{formatMoney(shares[m.name] ?? 0, currency)}</strong>
+              )}
             </div>
           );
         })}
@@ -93,9 +98,13 @@ export function SplitPicker({
       )}
       {split.mode === "exact" && split.participants.length > 0 && (
         <p className={Math.abs(exactDiff) > 1 ? "split-hint warn" : "split-hint"}>
-          Assigned {euro(exactTotal)} of {euro(amount)}
+          Assigned {formatMoney(exactTotal, currency)} of {formatMoney(amount, currency)}
           {Math.abs(exactDiff) > 1
-            ? ` — ${exactDiff > 0 ? `${euro(exactDiff)} left to assign` : `${euro(Math.abs(exactDiff))} over`}`
+            ? ` — ${
+                exactDiff > 0
+                  ? `${formatMoney(exactDiff, currency)} left to assign`
+                  : `${formatMoney(Math.abs(exactDiff), currency)} over`
+              }`
             : " — all set"}
         </p>
       )}

@@ -1,11 +1,13 @@
 import { Link } from "@tanstack/react-router";
 import { Camera, MapPin, Plus, Users, Wallet } from "lucide-react";
 
+import { currencyForDestination, formatMoney } from "@/lib/currency";
 import { members } from "@/lib/mock-data";
-import type { Expense, Stop, View } from "@/lib/types";
-import { computeBalances, euro, resolveStop, splitLabel } from "@/lib/trip-utils";
+import type { Expense, Stop, Trip, View } from "@/lib/types";
+import { computeBalances, resolveStop, splitLabel } from "@/lib/trip-utils";
 
 export function Costs({
+  trip,
   onScan,
   stops,
   expenses,
@@ -13,6 +15,7 @@ export function Costs({
   tripLocked = false,
   tripLoading = false,
 }: {
+  trip: Trip;
   onScan: () => void;
   stops: Stop[];
   expenses: Expense[];
@@ -20,6 +23,7 @@ export function Costs({
   tripLocked?: boolean;
   tripLoading?: boolean;
 }) {
+  const currency = currencyForDestination(trip.destination);
   const total = expenses.reduce((s, e) => s + e.amount, 0);
   const planned = 260000;
   const pct = Math.min(100, Math.round((total / planned) * 100));
@@ -51,7 +55,8 @@ export function Costs({
           <div>
             <p className="eyebrow text-money-ink">Planned vs actual</p>
             <h3>
-              {euro(total)} <span>of {euro(planned)} planned</span>
+              {formatMoney(total, currency)}{" "}
+              <span>of {formatMoney(planned, currency)} planned</span>
             </h3>
           </div>
           <span className={over ? "settled-pill over" : "settled-pill"}>{pct}% used</span>
@@ -68,9 +73,11 @@ export function Costs({
         </div>
         <footer>
           {over ? (
-            <strong className="text-destructive">{euro(total - planned)} over budget</strong>
+            <strong className="text-destructive">
+              {formatMoney(total - planned, currency)} over budget
+            </strong>
           ) : (
-            <strong>{euro(planned - total)} left</strong>
+            <strong>{formatMoney(planned - total, currency)} left</strong>
           )}
           <small>{expenses.length} expenses tracked</small>
         </footer>
@@ -119,7 +126,9 @@ export function Costs({
                       b.net > 0 ? "positive" : b.net < 0 ? "text-money-ink" : "muted-amount"
                     }
                   >
-                    {b.net === 0 ? "¥0" : `${b.net > 0 ? "+" : "−"} ${euro(Math.abs(b.net))}`}
+                    {b.net === 0
+                      ? formatMoney(0, currency)
+                      : `${b.net > 0 ? "+" : "−"} ${formatMoney(Math.abs(b.net), currency)}`}
                   </strong>
                 </article>
               );
@@ -144,7 +153,10 @@ export function Costs({
             <header>
               <h3>Day {d + 1}</h3>
               <strong>
-                {euro(expenses.filter((e) => e.day === d).reduce((s, e) => s + e.amount, 0))}
+                {formatMoney(
+                  expenses.filter((e) => e.day === d).reduce((s, e) => s + e.amount, 0),
+                  currency,
+                )}
               </strong>
             </header>
             {expenses
@@ -159,7 +171,7 @@ export function Costs({
                     </div>
                     <div className="cost-title-row">
                       <h4>{e.label}</h4>
-                      <strong>{euro(e.amount)}</strong>
+                      <strong>{formatMoney(e.amount, currency)}</strong>
                     </div>
                     <dl className="cost-details">
                       <div className="cost-detail-full">

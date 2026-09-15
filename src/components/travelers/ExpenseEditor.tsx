@@ -4,18 +4,21 @@ import { ArrowRight, Camera, Check, MapPin, Trash2, X } from "lucide-react";
 import { IconButton } from "@/components/travelers/IconButton";
 import { SplitPicker } from "@/components/travelers/SplitPicker";
 import { scanReceiptPhoto } from "@/features/costs/scanReceipt";
+import { currencySymbol } from "@/lib/currency";
 import type { Expense, Stop } from "@/lib/types";
 import { normalizeSplit } from "@/lib/trip-utils";
 
 export function ExpenseEditor({
   expense,
   stops,
+  currency,
   onClose,
   onSave,
   onDelete,
 }: {
   expense: Expense;
   stops: Stop[];
+  currency: string;
   onClose: () => void;
   onSave: (e: Expense) => void;
   onDelete?: (() => void) | undefined;
@@ -118,7 +121,7 @@ export function ExpenseEditor({
           </label>
           <div className="two-cols">
             <label>
-              Amount (¥)
+              Amount ({currencySymbol(currency)})
               <input
                 inputMode="decimal"
                 value={draft.amount ? String(draft.amount) : ""}
@@ -161,6 +164,7 @@ export function ExpenseEditor({
           <SplitPicker
             split={draft.split}
             amount={draft.amount}
+            currency={currency}
             onChange={(split) => setDraft({ ...draft, split })}
           />
         </div>

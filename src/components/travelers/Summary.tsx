@@ -1,10 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ChevronRight, Image, MapPin, WalletCards } from "lucide-react";
 
+import { currencyForDestination, formatMoney } from "@/lib/currency";
 import { members } from "@/lib/mock-data";
 import { placeholderFor } from "@/lib/trip-placeholders";
 import type { Expense, Photo, Stop, Trip } from "@/lib/types";
-import { classifyTrip, computeBalances, euro, formatDateRange } from "@/lib/trip-utils";
+import { classifyTrip, computeBalances, formatDateRange } from "@/lib/trip-utils";
 import { useDestinationPhoto } from "@/lib/useDestinationPhoto";
 
 export function Summary({
@@ -21,6 +22,7 @@ export function Summary({
   const destinationPhoto = useDestinationPhoto(trip);
   const image = destinationPhoto.data ?? placeholderFor(trip.id);
   const status = classifyTrip(trip);
+  const currency = currencyForDestination(trip.destination);
   const total = expenses.reduce((s, e) => s + e.amount, 0);
   const places = new Set(stops.map((s) => s.place)).size;
   const balances = computeBalances(expenses);
@@ -42,7 +44,7 @@ export function Summary({
     return {
       day,
       title: dayStops[0]?.title ?? "Free day",
-      detail: `${dayStops.length} stop${dayStops.length === 1 ? "" : "s"} · ${euro(daySpend)} spent · ${dayPhotoCount} photo${dayPhotoCount === 1 ? "" : "s"}`,
+      detail: `${dayStops.length} stop${dayStops.length === 1 ? "" : "s"} · ${formatMoney(daySpend, currency)} spent · ${dayPhotoCount} photo${dayPhotoCount === 1 ? "" : "s"}`,
     };
   });
 
@@ -80,7 +82,7 @@ export function Summary({
           <div className="summary-stats">
             <article>
               <WalletCards />
-              <strong>{euro(total)}</strong>
+              <strong>{formatMoney(total, currency)}</strong>
               <span>Total spent</span>
             </article>
             <article>
@@ -120,14 +122,14 @@ export function Summary({
         )}
         {spendByDay.length > 0 && (
           <article className="recap-card">
-            <p className="eyebrow text-money-ink">{euro(total)} spent in total</p>
+            <p className="eyebrow text-money-ink">{formatMoney(total, currency)} spent in total</p>
             <h3>Where the money went</h3>
             <div className="recap-spend">
               {spendByDay.map((s) => (
                 <article key={s.day}>
                   <header>
                     <span>Day {s.day + 1}</span>
-                    {euro(s.amount)}
+                    {formatMoney(s.amount, currency)}
                   </header>
                   <div className="recap-bar">
                     <span style={{ width: `${s.pct}%` }} />
@@ -159,7 +161,9 @@ export function Summary({
                   </span>
                   {text}
                   <strong>
-                    {b.net === 0 ? "¥0" : `${b.net > 0 ? "+" : "−"} ${euro(Math.abs(b.net))}`}
+                    {b.net === 0
+                      ? formatMoney(0, currency)
+                      : `${b.net > 0 ? "+" : "−"} ${formatMoney(Math.abs(b.net), currency)}`}
                   </strong>
                 </article>
               );

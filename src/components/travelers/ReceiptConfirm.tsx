@@ -4,16 +4,19 @@ import { Camera, Check, MapPin, ReceiptText, X } from "lucide-react";
 import { IconButton } from "@/components/travelers/IconButton";
 import { SplitPicker } from "@/components/travelers/SplitPicker";
 import { scanReceiptPhoto } from "@/features/costs/scanReceipt";
+import { currencySymbol, formatMoney } from "@/lib/currency";
 import type { Expense, Split, Stop } from "@/lib/types";
-import { equalSplit, euro, resolveStop, splitLabel } from "@/lib/trip-utils";
+import { equalSplit, resolveStop, splitLabel } from "@/lib/trip-utils";
 
 export function ReceiptConfirm({
   onClose,
   stops,
+  currency,
   onSave,
 }: {
   onClose: () => void;
   stops: Stop[];
+  currency: string;
   onSave: (e: Expense) => void;
 }) {
   const [stage, setStage] = useState<"pick" | "scanning" | "review" | "done">("pick");
@@ -157,7 +160,7 @@ export function ReceiptConfirm({
               <Check size={34} />
             </span>
             <p>
-              {euro(amount)} split {splitLabel(split)}
+              {formatMoney(amount, currency)} split {splitLabel(split)}
             </p>
             <p className="text-sm">
               {match
@@ -173,7 +176,7 @@ export function ReceiptConfirm({
             <div className="amount-edit">
               <label>Amount</label>
               <div className="amount-input-wrap">
-                <span>¥</span>
+                <span>{currencySymbol(currency)}</span>
                 <input
                   value={draft.amount}
                   inputMode="decimal"
@@ -211,7 +214,7 @@ export function ReceiptConfirm({
             </div>
             <div className="split-block">
               <p className="eyebrow">Split between travelers</p>
-              <SplitPicker split={split} amount={amount} onChange={setSplit} />
+              <SplitPicker split={split} amount={amount} currency={currency} onChange={setSplit} />
             </div>
             <button
               className="money-action"

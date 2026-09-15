@@ -66,8 +66,6 @@ export function resolveStop(item: Taggable, stops: Stop[]): Stop | null {
   return best && best.score > 0.6 ? best.stop : null;
 }
 
-export const euro = (n: number) => `¥${Math.round(n).toLocaleString("en-US")}`;
-
 export function groupPhotosByStop(dayPhotos: Photo[], stops: Stop[]) {
   const groups: { stop: Stop | null; photos: Photo[] }[] = [];
   const push = (stop: Stop | null, photo: Photo) => {

@@ -20,6 +20,7 @@ import {
   listTripMembers,
   updateTrip,
 } from "@/features/trips/tripsServerFns";
+import { currencyForDestination } from "@/lib/currency";
 import type { Expense, Stop, View } from "@/lib/types";
 import { formatDateRange } from "@/lib/trip-utils";
 
@@ -259,6 +260,7 @@ function TripPage() {
         <ReceiptConfirm
           onClose={() => setScanOpen(false)}
           stops={stops}
+          currency={currencyForDestination(trip.destination)}
           onSave={(e) => saveExpenseMutation.mutate(e)}
         />
       )}
