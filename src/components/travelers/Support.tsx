@@ -173,7 +173,7 @@ export function Support({
       </section>
       {tool === "restroom" && <RestroomFlow trip={trip} onClose={() => setTool(null)} />}
       {tool === "translate" && <TranslateFlow trip={trip} onClose={() => setTool(null)} />}
-      {tool === "access" && <AccessFlow onClose={() => setTool(null)} />}
+      {tool === "access" && <AccessFlow trip={trip} onClose={() => setTool(null)} />}
       {tool === "locate" && (
         <LocateFlow
           tripId={trip.id}
