@@ -1,5 +1,3 @@
-import type { Traveler } from "@/lib/types";
-
 export const members = [
   { name: "You", initials: "MK", tone: "bg-primary text-primary-foreground" },
   { name: "Jon", initials: "JR", tone: "bg-sky text-sky-foreground" },
@@ -34,50 +32,5 @@ export const ACCESSIBLE = [
     name: "Tokyo Skytree deck",
     detail: "Lifts to all floors · priority queue",
     tags: ["Lift", "Accessible restroom"],
-  },
-];
-
-export const TRAVELERS: Traveler[] = [
-  { name: "Maira", place: "Senso-ji main hall", when: "now", initials: "M" },
-  { name: "Yuki", place: "Nakamise shopping street", when: "2 min ago", initials: "Y" },
-  { name: "Tom", place: "Asakusa station · exit 4", when: "5 min ago", initials: "T" },
-  { name: "Lena", place: "Sumida park riverside", when: "9 min ago", initials: "L" },
-];
-
-export const MEET_ROUTES = [
-  {
-    id: "walk",
-    label: "Walk",
-    time: "8 min",
-    detail: "650 m · through Nakamise street",
-    steps: [
-      "Leave Senso-ji by the main gate",
-      "Walk south along Nakamise street",
-      "Pass the second souvenir arch",
-      "Yuki is waiting by the red lanterns",
-    ],
-  },
-  {
-    id: "metro",
-    label: "Metro",
-    time: "6 min",
-    detail: "Ginza line · 1 stop, step-free",
-    steps: [
-      "Enter Asakusa station, exit 4 lifts",
-      "Ginza line toward Shibuya · 1 stop",
-      "Leave by exit 1",
-      "Meet Yuki at the street corner",
-    ],
-  },
-  {
-    id: "taxi",
-    label: "Taxi",
-    time: "4 min",
-    detail: "≈ ¥760 · busy traffic now",
-    steps: [
-      "Taxi rank outside the temple gate",
-      "Show the saved address in Japanese",
-      "Arrive at Nakamise street",
-    ],
   },
 ];

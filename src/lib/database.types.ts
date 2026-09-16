@@ -71,6 +71,44 @@ export type Database = {
           },
         ];
       };
+      member_locations: {
+        Row: {
+          accuracy_m: number | null;
+          expires_at: string;
+          lat: number;
+          lon: number;
+          trip_id: string;
+          updated_at: string;
+          user_id: string;
+        };
+        Insert: {
+          accuracy_m?: number | null;
+          expires_at: string;
+          lat: number;
+          lon: number;
+          trip_id: string;
+          updated_at?: string;
+          user_id: string;
+        };
+        Update: {
+          accuracy_m?: number | null;
+          expires_at?: string;
+          lat?: number;
+          lon?: number;
+          trip_id?: string;
+          updated_at?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "member_locations_trip_id_fkey";
+            columns: ["trip_id"];
+            isOneToOne: false;
+            referencedRelation: "trips";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       photos: {
         Row: {
           created_at: string;

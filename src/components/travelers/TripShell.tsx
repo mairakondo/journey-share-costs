@@ -109,7 +109,9 @@ export function TripShell({
           dismissPhotos={dismissPhotos}
         />
       )}
-      {view === "support" && <Support trip={trip} members={members} />}
+      {view === "support" && (
+        <Support trip={trip} members={members} currentUserId={currentUserId} />
+      )}
       {view === "costs" && (
         <Costs
           trip={trip}

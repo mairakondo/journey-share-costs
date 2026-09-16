@@ -19,7 +19,15 @@ import { formatDistance } from "@/lib/geocode";
 import type { Tool, Trip } from "@/lib/types";
 import { useEmergencyInfo } from "@/lib/useEmergencyInfo";
 
-export function Support({ trip, members }: { trip: Trip; members: TripMember[] }) {
+export function Support({
+  trip,
+  members,
+  currentUserId,
+}: {
+  trip: Trip;
+  members: TripMember[];
+  currentUserId: string | null;
+}) {
   const [tool, setTool] = useState<Tool | null>(null);
   const emergency = useEmergencyInfo(trip);
   return (
@@ -166,7 +174,14 @@ export function Support({ trip, members }: { trip: Trip; members: TripMember[] }
       {tool === "restroom" && <RestroomFlow trip={trip} onClose={() => setTool(null)} />}
       {tool === "translate" && <TranslateFlow trip={trip} onClose={() => setTool(null)} />}
       {tool === "access" && <AccessFlow onClose={() => setTool(null)} />}
-      {tool === "locate" && <LocateFlow onClose={() => setTool(null)} />}
+      {tool === "locate" && (
+        <LocateFlow
+          tripId={trip.id}
+          members={members}
+          currentUserId={currentUserId}
+          onClose={() => setTool(null)}
+        />
+      )}
     </>
   );
 }

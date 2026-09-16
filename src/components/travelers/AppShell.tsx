@@ -1,11 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Bell, ChevronRight, Plane, WifiOff, X } from "lucide-react";
+import { Bell, Plane, WifiOff, X } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
 import { BottomNav } from "@/components/travelers/BottomNav";
 import { IconButton } from "@/components/travelers/IconButton";
-import { MeetFlow } from "@/components/travelers/support/MeetFlow";
-import { TRAVELERS } from "@/lib/mock-data";
 import type { View } from "@/lib/types";
 
 export function AppShell({
@@ -20,8 +18,6 @@ export function AppShell({
   children: ReactNode;
 }) {
   const [offline, setOffline] = useState(true);
-  const [meetAlert, setMeetAlert] = useState(false);
-  const [meetOpen, setMeetOpen] = useState(false);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -50,13 +46,7 @@ export function AppShell({
                 {tripLabel}
               </span>
             )}
-            <IconButton
-              label="Meet request from Yuki"
-              onClick={() => {
-                setMeetOpen(false);
-                setMeetAlert(true);
-              }}
-            >
+            <IconButton label="Notifications">
               <Bell size={20} />
             </IconButton>
             <button className="avatar">MK</button>
@@ -74,29 +64,6 @@ export function AppShell({
           />
         )}
       </div>
-
-      {meetAlert && !meetOpen && (
-        <div className="meet-toast" role="status">
-          <button
-            className="meet-toast-main"
-            onClick={() => {
-              setMeetOpen(true);
-              setMeetAlert(false);
-            }}
-          >
-            <span className="traveler-dot">Y</span>
-            <span className="flex-1 text-left">
-              <strong>Yuki wants to meet you</strong>
-              <small>Nakamise shopping street · 8 min walk</small>
-            </span>
-            <ChevronRight size={18} />
-          </button>
-          <IconButton label="Dismiss notification" onClick={() => setMeetAlert(false)}>
-            <X size={17} />
-          </IconButton>
-        </div>
-      )}
-      {meetOpen && <MeetFlow traveler={TRAVELERS[1]!} onClose={() => setMeetOpen(false)} />}
     </main>
   );
 }
