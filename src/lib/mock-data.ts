@@ -36,26 +36,6 @@ export const RESTROOMS = [
   },
 ];
 
-export const PHRASES = [
-  {
-    en: "Where is the nearest restroom?",
-    jp: "一番近いトイレはどこですか？",
-    ro: "Ichiban chikai toire wa doko desu ka?",
-  },
-  { en: "A table for four, please.", jp: "4名でお願いします。", ro: "Yonmei de onegaishimasu." },
-  {
-    en: "Does this have meat or fish?",
-    jp: "これに肉や魚は入っていますか？",
-    ro: "Kore ni niku ya sakana wa haitte imasu ka?",
-  },
-  {
-    en: "Can you help me, please?",
-    jp: "手伝っていただけますか？",
-    ro: "Tetsudatte itadakemasu ka?",
-  },
-  { en: "How much does it cost?", jp: "いくらですか？", ro: "Ikura desu ka?" },
-];
-
 export const ACCESSIBLE = [
   {
     name: "Asakusa station (Ginza line)",
