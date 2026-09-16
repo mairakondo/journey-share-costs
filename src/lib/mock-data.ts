@@ -7,35 +7,8 @@ export const members = [
   { name: "Luis", initials: "LM", tone: "bg-sun text-sun-foreground" },
 ];
 
-// Support tab tools (translator, restrooms, accessible routes, live
-// location) are still fully mock — not yet connected to a backend.
-export const RESTROOMS = [
-  {
-    name: "Senso-ji temple grounds",
-    detail: "Asakusa 2-3-1 · 3 min walk",
-    tags: ["Accessible", "Baby change"],
-    clean: "Very clean",
-  },
-  {
-    name: "Asakusa station · exit 4",
-    detail: "Inside gates · 6 min walk",
-    tags: ["Accessible"],
-    clean: "Clean",
-  },
-  {
-    name: "Family Mart Kaminarimon",
-    detail: "Ask at counter · 8 min walk",
-    tags: ["Free"],
-    clean: "Clean",
-  },
-  {
-    name: "Sumida park north gate",
-    detail: "Riverside path · 11 min walk",
-    tags: ["Accessible", "Baby change"],
-    clean: "Basic",
-  },
-];
-
+// Support tab tools (accessible routes, live location) are still fully
+// mock — not yet connected to a backend.
 export const ACCESSIBLE = [
   {
     name: "Asakusa station (Ginza line)",

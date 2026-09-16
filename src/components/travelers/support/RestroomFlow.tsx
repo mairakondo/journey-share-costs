@@ -1,34 +1,39 @@
-import { useEffect, useState } from "react";
-import { Accessibility, Baby, Footprints, Locate, Navigation, Toilet } from "lucide-react";
+import { useState } from "react";
+import { Accessibility, Baby, CircleDollarSign, Locate, Navigation, Toilet } from "lucide-react";
 
 import { ToolSheet } from "@/components/travelers/support/ToolSheet";
-import { RESTROOMS } from "@/lib/mock-data";
+import { formatDistance } from "@/lib/geocode";
+import type { Trip } from "@/lib/types";
+import { useNearbyRestrooms } from "@/lib/useNearbyRestrooms";
 
-export function RestroomFlow({ onClose }: { onClose: () => void }) {
-  const [locating, setLocating] = useState(true);
+export function RestroomFlow({ onClose, trip }: { onClose: () => void; trip: Trip }) {
+  const nearby = useNearbyRestrooms(trip);
   const [only, setOnly] = useState(false);
-  const [going, setGoing] = useState<string | null>(null);
-  useEffect(() => {
-    const t = setTimeout(() => setLocating(false), 1200);
-    return () => clearTimeout(t);
-  }, []);
-  const list = only ? RESTROOMS.filter((r) => r.tags.includes("Accessible")) : RESTROOMS;
+
+  const restrooms = nearby.data?.restrooms ?? [];
+  const list = only ? restrooms.filter((r) => r.wheelchair === "yes") : restrooms;
+
   return (
-    <ToolSheet title="Find restrooms" subtitle="Around Senso-ji, Asakusa" onClose={onClose}>
-      {locating ? (
+    <ToolSheet
+      title="Find restrooms"
+      subtitle={
+        nearby.data?.usedDeviceLocation
+          ? "Near your current location"
+          : `Around ${trip.destination ?? "your destination"}`
+      }
+      onClose={onClose}
+    >
+      {nearby.isLoading ? (
         <div className="tool-loading">
           <Locate size={20} /> Finding restrooms near you…
         </div>
-      ) : going ? (
-        <div className="tool-done">
-          <span>
-            <Navigation size={22} />
-          </span>
-          <h3>Walking to {going}</h3>
-          <p>Follow the blue route · arrive in about 3 min</p>
-          <button className="secondary-action wide" onClick={() => setGoing(null)}>
-            Back to list
-          </button>
+      ) : nearby.isError ? (
+        <div className="tool-loading">
+          <Locate size={20} /> Couldn't load nearby restrooms — check your connection.
+        </div>
+      ) : restrooms.length === 0 ? (
+        <div className="tool-loading">
+          <Toilet size={20} /> No mapped restrooms found nearby.
         </div>
       ) : (
         <>
@@ -42,34 +47,45 @@ export function RestroomFlow({ onClose }: { onClose: () => void }) {
           </div>
           <ul className="tool-list">
             {list.map((r) => (
-              <li key={r.name}>
+              <li key={r.id}>
                 <span className="tool-list-icon">
                   <Toilet size={18} />
                 </span>
                 <div className="flex-1">
-                  <strong>{r.name}</strong>
-                  <small>
-                    {r.detail} · {r.clean}
-                  </small>
+                  <strong>{r.name === "Unnamed" ? "Public restroom" : r.name}</strong>
+                  <small>{formatDistance(r.distanceKm)} away</small>
                   <span className="tool-tags">
-                    {r.tags.map((t) => (
-                      <i key={t}>
-                        {t === "Baby change" ? (
-                          <Baby size={12} />
-                        ) : t === "Accessible" ? (
-                          <Accessibility size={12} />
-                        ) : null}
-                        {t}
+                    {r.wheelchair === "yes" && (
+                      <i>
+                        <Accessibility size={12} /> Accessible
                       </i>
-                    ))}
+                    )}
+                    {r.babyChange && (
+                      <i>
+                        <Baby size={12} /> Baby change
+                      </i>
+                    )}
+                    {r.fee && (
+                      <i>
+                        <CircleDollarSign size={12} /> Fee
+                      </i>
+                    )}
                   </span>
                 </div>
-                <button className="scan-chip" onClick={() => setGoing(r.name)}>
-                  <Footprints size={15} /> Go
-                </button>
+                <a
+                  className="scan-chip"
+                  href={`https://www.google.com/maps/dir/?api=1&destination=${r.lat},${r.lon}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Navigation size={15} /> Go
+                </a>
               </li>
             ))}
           </ul>
+          {only && list.length === 0 && (
+            <p className="split-hint warn mt-3">No accessible restrooms mapped nearby.</p>
+          )}
         </>
       )}
     </ToolSheet>

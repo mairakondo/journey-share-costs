@@ -52,7 +52,7 @@ export function Support({ trip, members }: { trip: Trip; members: TripMember[] }
             id: "restroom" as Tool,
             icon: <Toilet />,
             title: "Find restrooms",
-            detail: "4 nearby, 2 accessible",
+            detail: "Toilets & accessibility nearby",
           },
           {
             id: "access" as Tool,
@@ -163,7 +163,7 @@ export function Support({ trip, members }: { trip: Trip; members: TripMember[] }
           </>
         )}
       </section>
-      {tool === "restroom" && <RestroomFlow onClose={() => setTool(null)} />}
+      {tool === "restroom" && <RestroomFlow trip={trip} onClose={() => setTool(null)} />}
       {tool === "translate" && <TranslateFlow trip={trip} onClose={() => setTool(null)} />}
       {tool === "access" && <AccessFlow onClose={() => setTool(null)} />}
       {tool === "locate" && <LocateFlow onClose={() => setTool(null)} />}
