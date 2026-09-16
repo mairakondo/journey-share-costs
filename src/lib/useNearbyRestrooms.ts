@@ -13,6 +13,12 @@ export type NearbyRestrooms = {
   restrooms: Restroom[];
   center: Coords;
   usedDeviceLocation: boolean;
+  // True when the Overpass lookup itself failed (timeout, rate limit, bad
+  // gateway — the free service is flaky), as opposed to it succeeding with
+  // zero results. Lets the UI say "temporarily unavailable" instead of
+  // wrongly implying nothing is mapped nearby, without treating a flaky
+  // third-party service outage as a hard app error.
+  unavailable: boolean;
 };
 
 const RADIUS_M = 2000;
@@ -42,16 +48,26 @@ function getCurrentPosition(timeoutMs = 6000): Promise<Coords | null> {
 async function fetchRestrooms(destination: string): Promise<NearbyRestrooms> {
   const deviceLocation = await getCurrentPosition();
   const center = deviceLocation ?? (await geocodeDestination(destination));
-  if (!center) return { restrooms: [], center: { lat: 0, lon: 0 }, usedDeviceLocation: false };
+  if (!center) {
+    return {
+      restrooms: [],
+      center: { lat: 0, lon: 0 },
+      usedDeviceLocation: false,
+      unavailable: false,
+    };
+  }
 
-  const places = await findNearby(center, "amenity=toilets", RADIUS_M, 12);
+  const places = await findNearby(center, "amenity=toilets", RADIUS_M, 12).catch(() => null);
+  if (places === null) {
+    return { restrooms: [], center, usedDeviceLocation: !!deviceLocation, unavailable: true };
+  }
   const restrooms = places.map((p) => ({
     ...p,
     wheelchair: wheelchairStatus(p.tags["wheelchair"]),
     babyChange: p.tags["changing_table"] === "yes",
     fee: p.tags["fee"] === "yes",
   }));
-  return { restrooms, center, usedDeviceLocation: !!deviceLocation };
+  return { restrooms, center, usedDeviceLocation: !!deviceLocation, unavailable: false };
 }
 
 export function useNearbyRestrooms(trip: { destination: string | null }) {

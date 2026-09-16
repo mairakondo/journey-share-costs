@@ -31,6 +31,11 @@ export function AccessFlow({ onClose, trip }: { onClose: () => void; trip: Trip 
         <div className="tool-loading">
           <Locate size={20} /> Couldn't load accessible places — check your connection.
         </div>
+      ) : nearby.data?.unavailable ? (
+        <div className="tool-loading">
+          <Accessibility size={20} /> Accessibility data is temporarily unavailable — try again
+          shortly.
+        </div>
       ) : places.length === 0 ? (
         <div className="tool-loading">
           <Accessibility size={20} /> No wheelchair-accessible places mapped nearby yet.

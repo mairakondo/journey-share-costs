@@ -31,6 +31,10 @@ export function RestroomFlow({ onClose, trip }: { onClose: () => void; trip: Tri
         <div className="tool-loading">
           <Locate size={20} /> Couldn't load nearby restrooms — check your connection.
         </div>
+      ) : nearby.data?.unavailable ? (
+        <div className="tool-loading">
+          <Toilet size={20} /> Restroom data is temporarily unavailable — try again shortly.
+        </div>
       ) : restrooms.length === 0 ? (
         <div className="tool-loading">
           <Toilet size={20} /> No mapped restrooms found nearby.

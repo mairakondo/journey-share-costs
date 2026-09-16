@@ -11,6 +11,12 @@ export type AccessiblePlace = OverpassPlace & {
 export type AccessiblePlaces = {
   places: AccessiblePlace[];
   usedDeviceLocation: boolean;
+  // True when the Overpass lookup itself failed (timeout, rate limit, bad
+  // gateway — the free service is flaky), as opposed to it succeeding with
+  // zero results. Lets the UI say "temporarily unavailable" instead of
+  // wrongly implying nothing is mapped nearby, without treating a flaky
+  // third-party service outage as a hard app error.
+  unavailable: boolean;
 };
 
 const RADIUS_M = 3000;
@@ -65,11 +71,14 @@ function getCurrentPosition(timeoutMs = 6000): Promise<Coords | null> {
 async function fetchAccessiblePlaces(destination: string): Promise<AccessiblePlaces> {
   const deviceLocation = await getCurrentPosition();
   const center = deviceLocation ?? (await geocodeDestination(destination));
-  if (!center) return { places: [], usedDeviceLocation: false };
+  if (!center) return { places: [], usedDeviceLocation: false, unavailable: false };
 
-  const found = await findNearby(center, 'wheelchair=yes]["name"', RADIUS_M, 15);
+  const found = await findNearby(center, 'wheelchair=yes]["name"', RADIUS_M, 15).catch(() => null);
+  if (found === null) {
+    return { places: [], usedDeviceLocation: !!deviceLocation, unavailable: true };
+  }
   const places = found.map((p) => ({ ...p, ...classify(p.tags) }));
-  return { places, usedDeviceLocation: !!deviceLocation };
+  return { places, usedDeviceLocation: !!deviceLocation, unavailable: false };
 }
 
 export function useAccessiblePlaces(trip: { destination: string | null }) {
