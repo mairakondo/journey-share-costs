@@ -1,10 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Bell, WifiOff, X } from "lucide-react";
+import { Bell, Plane, WifiOff, X } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
 import { BottomNav } from "@/components/travelers/BottomNav";
 import { IconButton } from "@/components/travelers/IconButton";
-import { ScoutFaceIcon } from "@/components/travelers/ScoutFaceIcon";
 import type { View } from "@/lib/types";
 
 export function AppShell({
@@ -37,7 +36,7 @@ export function AppShell({
         <header className="topbar">
           <Link to="/" className="brand" aria-label="Travelers home">
             <span className="brand-mark">
-              <ScoutFaceIcon size={19} />
+              <Plane size={19} />
             </span>
             <span>Travelers</span>
           </Link>
