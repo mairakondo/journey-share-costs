@@ -33,6 +33,7 @@ export function Itinerary({
   tripLocked = false,
   tripLoading = false,
   photos,
+  onDeletePhoto,
   expenses,
   onSaveExpense,
   onDeleteExpense,
@@ -49,6 +50,7 @@ export function Itinerary({
   tripLocked?: boolean;
   tripLoading?: boolean;
   photos: Photo[];
+  onDeletePhoto: (photoId: string) => void;
   expenses: Expense[];
   onSaveExpense: (expense: Expense) => void;
   onDeleteExpense: (id: string) => void;
@@ -389,6 +391,10 @@ export function Itinerary({
           onPrev={(p) => setViewing(p)}
           onNext={(p) => setViewing(p)}
           onMove={() => setView("photos")}
+          onDelete={() => {
+            onDeletePhoto(viewing.id);
+            setViewing(null);
+          }}
         />
       )}
     </>

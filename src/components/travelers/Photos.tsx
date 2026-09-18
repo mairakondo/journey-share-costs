@@ -23,6 +23,7 @@ export function Photos({
   photos,
   onUploadPhoto,
   onAssignPhoto,
+  onDeletePhoto,
   onImported,
   tripLocked = false,
   tripLoading = false,
@@ -31,6 +32,7 @@ export function Photos({
   photos: Photo[];
   onUploadPhoto: (file: File, day: number) => Promise<{ id: string }>;
   onAssignPhoto: (photoId: string, stopId: string | null, day: number) => void;
+  onDeletePhoto: (photoId: string) => void;
   onImported?: (ids: string[]) => void;
   tripLocked?: boolean;
   tripLoading?: boolean;
@@ -381,6 +383,10 @@ export function Photos({
           onNext={(p) => setViewing(p)}
           onMove={() => {
             setAssigning(viewing);
+            setViewing(null);
+          }}
+          onDelete={() => {
+            onDeletePhoto(viewing.id);
             setViewing(null);
           }}
         />

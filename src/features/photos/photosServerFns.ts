@@ -93,3 +93,24 @@ export const assignPhotoStop = createServerFn({ method: "POST" })
     if (error) throw error;
     return { id: data.id };
   });
+
+export const deletePhoto = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(z.object({ id: z.string().uuid() }))
+  .handler(async ({ context, data }) => {
+    const { data: row, error: findError } = await context.supabase
+      .from("photos")
+      .select("storage_path")
+      .eq("id", data.id)
+      .single();
+    if (findError) throw findError;
+
+    const { error: removeError } = await context.supabase.storage
+      .from(PHOTOS_BUCKET)
+      .remove([row.storage_path]);
+    if (removeError) throw removeError;
+
+    const { error } = await context.supabase.from("photos").delete().eq("id", data.id);
+    if (error) throw error;
+    return { id: data.id };
+  });

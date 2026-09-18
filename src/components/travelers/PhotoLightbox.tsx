@@ -1,4 +1,5 @@
-import { ChevronLeft, ChevronRight, MapPin, Shuffle, X } from "lucide-react";
+import { useState } from "react";
+import { ChevronLeft, ChevronRight, MapPin, Shuffle, Trash2, X } from "lucide-react";
 
 import { IconButton } from "@/components/travelers/IconButton";
 import type { Photo, Stop } from "@/lib/types";
@@ -12,6 +13,7 @@ export function PhotoLightbox({
   onPrev,
   onNext,
   onMove,
+  onDelete,
 }: {
   photo: Photo;
   photos: Photo[];
@@ -20,7 +22,9 @@ export function PhotoLightbox({
   onPrev: (p: Photo) => void;
   onNext: (p: Photo) => void;
   onMove: () => void;
+  onDelete: () => void;
 }) {
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const idx = photos.findIndex((p) => p.id === photo.id);
   const prev = photos[idx - 1];
   const next = photos[idx + 1];
@@ -56,7 +60,31 @@ export function PhotoLightbox({
         >
           <Shuffle size={16} /> Move
         </button>
+        <button
+          className="icon-button"
+          aria-label="Delete photo"
+          title="Delete photo"
+          onClick={(e) => {
+            e.stopPropagation();
+            setConfirmingDelete(true);
+          }}
+        >
+          <Trash2 size={18} />
+        </button>
       </div>
+      {confirmingDelete && (
+        <div className="lightbox-confirm" onClick={(e) => e.stopPropagation()}>
+          <p>Delete this photo? This can’t be undone.</p>
+          <div className="flex gap-2">
+            <button className="secondary-action" onClick={() => setConfirmingDelete(false)}>
+              Cancel
+            </button>
+            <button className="scan-chip-ink" onClick={onDelete}>
+              <Trash2 size={15} /> Delete
+            </button>
+          </div>
+        </div>
+      )}
       <div className="lightbox-stage" onClick={(e) => e.stopPropagation()}>
         <img src={photo.src} alt={`${photo.place} memory`} />
         {prev && (

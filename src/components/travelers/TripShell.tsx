@@ -28,6 +28,7 @@ export function TripShell({
   photos,
   onUploadPhoto,
   onAssignPhoto,
+  onDeletePhoto,
   expenses,
   onSaveExpense,
   onDeleteExpense,
@@ -51,6 +52,7 @@ export function TripShell({
   photos: Photo[];
   onUploadPhoto: (file: File, day: number) => Promise<{ id: string }>;
   onAssignPhoto: (photoId: string, stopId: string | null, day: number) => void;
+  onDeletePhoto: (photoId: string) => void;
   expenses: Expense[];
   onSaveExpense: (expense: Expense) => void;
   onDeleteExpense: (id: string) => void;
@@ -102,6 +104,7 @@ export function TripShell({
           tripLocked={tripLocked}
           tripLoading={tripLoading}
           photos={photos}
+          onDeletePhoto={onDeletePhoto}
           expenses={expenses}
           onSaveExpense={onSaveExpense}
           onDeleteExpense={onDeleteExpense}
@@ -132,6 +135,7 @@ export function TripShell({
           photos={photos}
           onUploadPhoto={onUploadPhoto}
           onAssignPhoto={onAssignPhoto}
+          onDeletePhoto={onDeletePhoto}
           onImported={onImported}
           tripLocked={tripLocked}
           tripLoading={tripLoading}

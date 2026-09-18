@@ -10,7 +10,12 @@ import { ReceiptConfirm } from "@/components/travelers/ReceiptConfirm";
 import { TripShell } from "@/components/travelers/TripShell";
 import { useSupabaseSession } from "@/features/auth/useSupabaseSession";
 import { deleteExpense, listExpenses, saveExpense } from "@/features/costs/costsServerFns";
-import { assignPhotoStop, createPhoto, listPhotos } from "@/features/photos/photosServerFns";
+import {
+  assignPhotoStop,
+  createPhoto,
+  deletePhoto,
+  listPhotos,
+} from "@/features/photos/photosServerFns";
 import { uploadTripPhoto } from "@/features/photos/uploadPhoto";
 import { deleteStop, listStops, saveStop } from "@/features/plan/planServerFns";
 import {
@@ -184,6 +189,11 @@ function TripPage() {
     onSuccess: invalidatePhotos,
   });
 
+  const deletePhotoMutation = useMutation({
+    mutationFn: (id: string) => deletePhoto({ data: { id } }),
+    onSuccess: invalidatePhotos,
+  });
+
   const membersQuery = useQuery({
     queryKey: ["trip-members", tripId],
     queryFn: () => listTripMembers({ data: { tripId } }),
@@ -243,6 +253,7 @@ function TripPage() {
           photos={photos}
           onUploadPhoto={(file, day) => uploadPhotoMutation.mutateAsync({ file, day })}
           onAssignPhoto={(id, stopId, day) => assignPhotoMutation.mutate({ id, stopId, day })}
+          onDeletePhoto={(id) => deletePhotoMutation.mutate(id)}
           expenses={expenses}
           onSaveExpense={(expense) => saveExpenseMutation.mutate(expense)}
           onDeleteExpense={(id) => deleteExpenseMutation.mutate(id)}
