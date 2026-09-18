@@ -19,7 +19,6 @@ export function TripShell({
   onEdit,
   view,
   setView,
-  onScan,
   stops,
   onSaveStop,
   onDeleteStop,
@@ -43,7 +42,6 @@ export function TripShell({
   onEdit: () => void;
   view: View;
   setView: (v: View) => void;
-  onScan: () => void;
   stops: Stop[];
   onSaveStop: (stop: Stop) => void;
   onDeleteStop: (id: string) => void;
@@ -120,7 +118,6 @@ export function TripShell({
           trip={trip}
           members={members}
           currentUserId={currentUserId}
-          onScan={onScan}
           onEditBudget={onEdit}
           stops={stops}
           expenses={expenses}

@@ -132,7 +132,7 @@ function extractJsonObject(text: string): string {
 }
 
 // Uses Claude's vision API directly (no SDK) to read a photographed receipt
-// and pull out the fields ExpenseEditor/ReceiptConfirm need. Requires an
+// and pull out the fields ExpenseEditor needs. Requires an
 // ANTHROPIC_API_KEY server secret — never exposed to the browser.
 export const scanReceipt = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

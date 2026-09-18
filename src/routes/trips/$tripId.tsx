@@ -6,7 +6,6 @@ import { z } from "zod";
 import { AppShell } from "@/components/travelers/AppShell";
 import { EditTrip } from "@/components/travelers/EditTrip";
 import { InviteModal } from "@/components/travelers/InviteModal";
-import { ReceiptConfirm } from "@/components/travelers/ReceiptConfirm";
 import { TripShell } from "@/components/travelers/TripShell";
 import { useSupabaseSession } from "@/features/auth/useSupabaseSession";
 import { deleteExpense, listExpenses, saveExpense } from "@/features/costs/costsServerFns";
@@ -25,7 +24,6 @@ import {
   listTripMembers,
   updateTrip,
 } from "@/features/trips/tripsServerFns";
-import { currencyForDestination } from "@/lib/currency";
 import type { Expense, Stop, View } from "@/lib/types";
 import { formatDateRange } from "@/lib/trip-utils";
 
@@ -43,7 +41,6 @@ function TripPage() {
   const { view: initialView } = Route.useSearch();
   const navigate = useNavigate();
   const [view, setView] = useState<View>(initialView ?? "plan");
-  const [scanOpen, setScanOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [newPhotoIds, setNewPhotoIds] = useState<string[]>([]);
@@ -244,7 +241,6 @@ function TripPage() {
           onEdit={() => setEditOpen(true)}
           view={view}
           setView={setView}
-          onScan={() => setScanOpen(true)}
           stops={stops}
           onSaveStop={(stop) => saveStopMutation.mutate(stop)}
           onDeleteStop={(id) => deleteStopMutation.mutate(id)}
@@ -267,17 +263,6 @@ function TripPage() {
             {tripLocked ? "Sign in to view this trip." : "Loading trip…"}
           </p>
         </div>
-      )}
-
-      {scanOpen && trip && (
-        <ReceiptConfirm
-          onClose={() => setScanOpen(false)}
-          stops={stops}
-          currency={currencyForDestination(trip.destination)}
-          members={members}
-          currentUserId={user?.id ?? ""}
-          onSave={(e) => saveExpenseMutation.mutate(e)}
-        />
       )}
 
       {inviteOpen && (

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Camera, MapPin, Pencil, Plus, Users, Wallet } from "lucide-react";
+import { MapPin, Pencil, Plus, Users, Wallet } from "lucide-react";
 
 import { ExpenseEditor } from "@/components/travelers/ExpenseEditor";
 import type { TripMember } from "@/features/trips/tripsServerFns";
@@ -19,7 +19,6 @@ export function Costs({
   trip,
   members,
   currentUserId,
-  onScan,
   onEditBudget,
   stops,
   expenses,
@@ -32,7 +31,6 @@ export function Costs({
   trip: Trip;
   members: TripMember[];
   currentUserId: string | null;
-  onScan: () => void;
   onEditBudget: () => void;
   stops: Stop[];
   expenses: Expense[];
@@ -200,9 +198,6 @@ export function Costs({
         <div className="timeline-head-actions">
           <button onClick={() => setEditingCost(newGeneralExpense())} className="scan-chip">
             <Plus size={16} /> Add cost
-          </button>
-          <button onClick={onScan} className="scan-chip">
-            <Camera size={16} /> Receipt
           </button>
         </div>
       </div>
