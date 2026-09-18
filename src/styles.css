@@ -991,11 +991,19 @@
   .form-grid input,
   .amount-edit input,
   .two-cols input {
-    @apply mt-2 w-full rounded-xl border border-input bg-surface px-4 py-3 text-sm font-semibold text-foreground outline-none focus:border-primary;
+    @apply mt-2 w-full min-w-0 rounded-xl border border-input bg-surface px-4 py-3 text-sm font-semibold text-foreground outline-none focus:border-primary;
   }
   .two-cols {
     @apply grid grid-cols-2 gap-3;
     margin-top: 1rem;
+  }
+  /* Grid items default to min-width:auto, so a native date/time input's own
+     intrinsic minimum width (much wider in some browsers, e.g. iOS Safari)
+     can refuse to shrink to its 1fr track and overlap the sibling column.
+     min-w-0 overrides that and lets the input shrink/clip inside its cell. */
+  .two-cols > label,
+  .two-cols > div {
+    min-width: 0;
   }
   .input-icon {
     @apply relative;
