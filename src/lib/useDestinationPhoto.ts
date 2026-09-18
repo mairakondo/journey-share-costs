@@ -9,7 +9,7 @@ export type DestinationPhoto = { src: string; alt: string };
 // recognizable scenic photo (e.g. Wikipedia's "Maui" article uses a Landsat
 // satellite image) — skip those.
 const NON_PHOTO_PATTERN =
-  /landsat|satellite|\bmap\b|locator|topographic|relief|flag_of|coat_of_arms|seal_of|emblem_of|logo|\bicon\b|\bchart\b|\bgraph\b|orthographic/i;
+  /landsat|satellite|\bmap\b|locator|topographic|relief|flag_of|coat_of_arms|seal_of|emblem_of|logo|\bicon\b|\bchart\b|\bgraph\b|orthographic|portrait|press_conference|official_visit|state_visit|meets_|award_ceremony|funeral|inauguration|swearing_in|state_funeral/i;
 
 type CommonsImageInfo = { width: number; height: number; thumburl: string };
 type CommonsPage = { title: string; imageinfo?: CommonsImageInfo[] };
@@ -61,6 +61,33 @@ async function fetchFromCommonsCategory(
   return { src: pick.info.thumburl, alt: `${place}, via Wikimedia Commons` };
 }
 
+type WikiDirectPage = { title: string; thumbnail?: { source: string } };
+
+// The place's own Wikipedia article (exact title, not a search) usually has
+// a single carefully curated infobox photo — e.g. Tokyo's is a genuine
+// skyline shot. Tried before the Commons category scan because that scan
+// pulls in anything loosely filed under the category, including unrelated
+// portraits and event photos that happen to pass the size/aspect filters.
+async function fetchFromWikipediaTitle(place: string): Promise<DestinationPhoto | null> {
+  const params = new URLSearchParams({
+    action: "query",
+    titles: place,
+    prop: "pageimages",
+    piprop: "thumbnail",
+    pithumbsize: "960",
+    redirects: "1",
+    format: "json",
+    origin: "*",
+  });
+  const res = await fetch(`https://en.wikipedia.org/w/api.php?${params}`);
+  if (!res.ok) return null;
+  const data = await res.json();
+  const pages = Object.values(data.query?.pages ?? {}) as WikiDirectPage[];
+  const page = pages.find((p) => p.thumbnail);
+  if (!page?.thumbnail || NON_PHOTO_PATTERN.test(page.thumbnail.source)) return null;
+  return { src: page.thumbnail.source, alt: `${page.title}, via Wikipedia` };
+}
+
 type WikiPage = { index?: number; title: string; thumbnail?: { source: string } };
 
 // Fallback when the place has no useful Commons category: Wikipedia's
@@ -103,6 +130,7 @@ export function useDestinationPhoto(trip: {
   return useQuery({
     queryKey: ["destination-photo", keyword, trip.id],
     queryFn: async () =>
+      (await fetchFromWikipediaTitle(keyword)) ??
       (await fetchFromCommonsCategory(keyword, trip.id)) ??
       (await fetchFromWikipediaSearch(keyword)),
     staleTime: Infinity,
