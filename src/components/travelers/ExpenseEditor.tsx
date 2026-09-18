@@ -68,7 +68,8 @@ export function ExpenseEditor({
         <div className="modal-head">
           <div>
             <p className="eyebrow">
-              Day {draft.day + 1} · {draft.source === "scan" ? "From receipt" : "Manual"}
+              {draft.day === null ? "General trip cost" : `Day ${draft.day + 1}`} ·{" "}
+              {draft.source === "scan" ? "From receipt" : "Manual"}
             </p>
             <h2>{isNew ? "Add cost" : "Edit cost"}</h2>
           </div>

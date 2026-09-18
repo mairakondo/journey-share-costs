@@ -42,7 +42,7 @@ export function Summary({
   const dayNumbers = Array.from(
     new Set([
       ...stops.map((s) => s.day),
-      ...expenses.map((e) => e.day),
+      ...expenses.flatMap((e) => (e.day === null ? [] : [e.day])),
       ...photos.map((p) => p.day),
     ]),
   ).sort((a, b) => a - b);

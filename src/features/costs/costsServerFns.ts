@@ -8,7 +8,7 @@ const EXPENSE_COLUMNS = "id, day, time, place, label, amount, payer, source, sto
 
 type ExpenseRow = {
   id: string;
-  day: number;
+  day: number | null;
   time: string;
   place: string;
   label: string;
@@ -57,7 +57,7 @@ const splitSchema = z.object({
 const expenseInput = z.object({
   tripId: z.string().uuid(),
   id: z.string().uuid().optional(),
-  day: z.number().int().min(0),
+  day: z.number().int().min(0).nullable(),
   time: z.string().regex(/^[0-2][0-9]:[0-5][0-9]$/),
   place: z.string(),
   label: z.string().min(1),

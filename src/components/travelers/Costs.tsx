@@ -1,12 +1,15 @@
 import { Link } from "@tanstack/react-router";
+import { useState } from "react";
 import { Camera, MapPin, Pencil, Plus, Users, Wallet } from "lucide-react";
 
+import { ExpenseEditor } from "@/components/travelers/ExpenseEditor";
 import type { TripMember } from "@/features/trips/tripsServerFns";
 import { currencyForDestination, formatMoney } from "@/lib/currency";
 import type { Expense, Stop, Trip, View } from "@/lib/types";
 import {
   avatarTone,
   computeBalances,
+  equalSplit,
   initialsFor,
   resolveStop,
   splitLabel,
@@ -20,6 +23,8 @@ export function Costs({
   onEditBudget,
   stops,
   expenses,
+  onSaveExpense,
+  onDeleteExpense,
   setView,
   tripLocked = false,
   tripLoading = false,
@@ -31,6 +36,8 @@ export function Costs({
   onEditBudget: () => void;
   stops: Stop[];
   expenses: Expense[];
+  onSaveExpense: (expense: Expense) => void;
+  onDeleteExpense: (id: string) => void;
   setView: (v: View) => void;
   tripLocked?: boolean;
   tripLoading?: boolean;
@@ -41,7 +48,31 @@ export function Costs({
   const pct = planned ? Math.min(100, Math.round((total / planned) * 100)) : 0;
   const over = planned != null && total > planned;
 
-  const days = [...new Set(expenses.map((e) => e.day))].sort((a, b) => a - b);
+  const [editingCost, setEditingCost] = useState<Expense | null>(null);
+  const newGeneralExpense = (): Expense => ({
+    id: `e${Date.now()}`,
+    day: null,
+    time: "12:00",
+    place: "",
+    label: "",
+    amount: 0,
+    payer: currentUserId ?? "",
+    source: "manual",
+    stopId: null,
+    split: equalSplit(members.map((m) => m.userId)),
+  });
+  const saveExpense = (e: Expense) => {
+    onSaveExpense(e);
+    setEditingCost(null);
+  };
+  const deleteExpense = (id: string) => onDeleteExpense(id);
+
+  const generalExpenses = expenses
+    .filter((e) => e.day === null)
+    .sort((a, b) => a.time.localeCompare(b.time));
+  const days = [...new Set(expenses.flatMap((e) => (e.day === null ? [] : [e.day])))].sort(
+    (a, b) => a - b,
+  );
   const balances = computeBalances(expenses, currentUserId);
   const memberFor = (userId: string) => members.find((m) => m.userId === userId);
   const payerName = (userId: string) => memberFor(userId)?.displayName ?? "Someone";
@@ -167,12 +198,57 @@ export function Costs({
           <h2>Spending timeline</h2>
         </div>
         <div className="timeline-head-actions">
+          <button onClick={() => setEditingCost(newGeneralExpense())} className="scan-chip">
+            <Plus size={16} /> Add cost
+          </button>
           <button onClick={onScan} className="scan-chip">
             <Camera size={16} /> Receipt
           </button>
         </div>
       </div>
       <div className="spend-timeline">
+        {generalExpenses.length > 0 && (
+          <section>
+            <header>
+              <h3>General trip costs</h3>
+              <strong>
+                {formatMoney(
+                  generalExpenses.reduce((s, e) => s + e.amount, 0),
+                  currency,
+                )}
+              </strong>
+            </header>
+            {generalExpenses.map((e) => (
+              <article
+                key={e.id}
+                onClick={() => setEditingCost(e)}
+                className="cursor-pointer transition-opacity hover:opacity-70"
+              >
+                <div className="cost-card-head">
+                  <span className="cost-time">{e.time}</span>
+                </div>
+                <div className="cost-title-row">
+                  <h4>{e.label}</h4>
+                  <strong>{formatMoney(e.amount, currency)}</strong>
+                </div>
+                <dl className="cost-details">
+                  <div>
+                    <dt>
+                      <Users size={13} /> Split
+                    </dt>
+                    <dd>{splitLabel(e.split)}</dd>
+                  </div>
+                  <div>
+                    <dt>
+                      <Wallet size={13} /> Paid by
+                    </dt>
+                    <dd>{payerName(e.payer)}</dd>
+                  </div>
+                </dl>
+              </article>
+            ))}
+          </section>
+        )}
         {days.map((d) => (
           <section key={d}>
             <header>
@@ -231,6 +307,24 @@ export function Costs({
       <button className="secondary-action mt-4" onClick={() => setView("plan")}>
         <Plus size={17} /> Add a cost in the timeline
       </button>
+      {editingCost && (
+        <ExpenseEditor
+          expense={editingCost}
+          stops={stops}
+          currency={currency}
+          members={members}
+          onClose={() => setEditingCost(null)}
+          onSave={saveExpense}
+          onDelete={
+            expenses.some((x) => x.id === editingCost.id)
+              ? () => {
+                  deleteExpense(editingCost.id);
+                  setEditingCost(null);
+                }
+              : undefined
+          }
+        />
+      )}
     </>
   );
 }

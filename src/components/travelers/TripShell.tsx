@@ -124,6 +124,8 @@ export function TripShell({
           onEditBudget={onEdit}
           stops={stops}
           expenses={expenses}
+          onSaveExpense={onSaveExpense}
+          onDeleteExpense={onDeleteExpense}
           setView={setView}
           tripLocked={tripLocked}
           tripLoading={tripLoading}

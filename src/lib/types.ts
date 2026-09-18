@@ -32,7 +32,7 @@ export type Split = { mode: SplitMode; participants: string[]; values: Record<st
 
 export type Expense = {
   id: string;
-  day: number;
+  day: number | null;
   time: string;
   place: string;
   label: string;
@@ -43,6 +43,6 @@ export type Expense = {
   split: Split;
 };
 
-export type Taggable = { day: number; time: string; place: string; stopId?: string | null };
+export type Taggable = { day: number | null; time: string; place: string; stopId?: string | null };
 
 export type Tool = "restroom" | "translate" | "access" | "locate";

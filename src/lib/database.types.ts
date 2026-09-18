@@ -12,7 +12,7 @@ export type Database = {
         Row: {
           amount: number;
           created_at: string;
-          day: number;
+          day: number | null;
           id: string;
           label: string;
           payer: string;
@@ -27,7 +27,7 @@ export type Database = {
         Insert: {
           amount: number;
           created_at?: string;
-          day: number;
+          day?: number | null;
           id?: string;
           label: string;
           payer: string;
@@ -42,7 +42,7 @@ export type Database = {
         Update: {
           amount?: number;
           created_at?: string;
-          day?: number;
+          day?: number | null;
           id?: string;
           label?: string;
           payer?: string;
