@@ -1005,6 +1005,18 @@
   .two-cols > div {
     min-width: 0;
   }
+  /* iOS Safari renders type="date"/"time" as a native pill widget that's
+     composited above sibling content and doesn't reliably respect a CSS
+     width — it visually overlaps the next column instead of shrinking.
+     Stripping the native appearance forces it back into normal box layout
+     (our own border/radius/padding already give it the same pill look),
+     so width:100% actually constrains it. */
+  .two-cols input[type="date"],
+  .two-cols input[type="time"] {
+    -webkit-appearance: none;
+    appearance: none;
+    max-width: 100%;
+  }
   .input-icon {
     @apply relative;
   }
