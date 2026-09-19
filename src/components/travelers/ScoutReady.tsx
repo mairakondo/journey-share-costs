@@ -1,92 +1,80 @@
-// Scout, now modeled on the Japanese long-tailed tit ("shima-enaga"),
-// waving with a rolled map — used for "nothing planned yet" empty states
-// (no trips, no activities for a day).
+// Scout, the Japanese long-tailed tit ("shima-enaga"), waving with a
+// rolled map — used for "nothing planned yet" empty states (no trips,
+// no activities for a day). Rounded-triangle body, thick soft outlines,
+// warm cream fill — matches the reference craft style.
+const INK = "#33261C";
+
 export function ScoutReady({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 220 260" className={className} aria-hidden="true">
+    <svg viewBox="0 0 240 260" className={className} aria-hidden="true">
       <path
-        d="M108 190 C104 214 100 236 92 252 L106 250 C112 230 116 208 118 190 Z"
-        fill="#8A7A68"
-        stroke="#23262F"
-        strokeWidth="2.6"
+        d="M74 162 C46 158 20 166 10 184 C8 192 12 198 20 198 C44 196 66 184 80 168 Z"
+        fill="#8B6F47"
+        stroke={INK}
+        strokeWidth="5"
         strokeLinejoin="round"
       />
       <path
-        d="M124 190 C128 214 132 236 140 252 L126 250 C120 230 116 208 114 190 Z"
+        d="M80 168 C62 162 46 166 38 176 C52 180 68 178 80 172 Z"
         fill="#B8AE9E"
-        stroke="#23262F"
-        strokeWidth="2.6"
+        stroke={INK}
+        strokeWidth="4"
         strokeLinejoin="round"
       />
 
       <path
-        d="M60 150 C56 114 82 86 116 86 C150 86 176 114 172 150 C170 182 150 204 116 208 C82 204 62 182 60 150 Z"
-        fill="#FBFAF8"
-        stroke="#23262F"
-        strokeWidth="3"
+        d="M120 82 C100 90 80 110 68 145 C60 175 62 200 78 215 C95 226 125 230 144 230 C163 230 193 226 210 215 C226 200 228 175 220 145 C208 110 188 90 168 82 C158 76 130 76 120 82 Z"
+        fill="#FDF6E4"
+        stroke={INK}
+        strokeWidth="6"
         strokeLinejoin="round"
       />
 
-      <ellipse cx="96" cy="210" rx="9" ry="5.5" fill="#242424" />
-      <ellipse cx="136" cy="210" rx="9" ry="5.5" fill="#242424" />
-
       <path
-        d="M70 152 C50 146 32 152 26 170 C44 174 64 166 76 152 Z"
-        fill="#EDEAE1"
-        stroke="#23262F"
-        strokeWidth="2.6"
-        strokeLinejoin="round"
-      />
-
-      <g transform="rotate(-35 168 140)">
-        <path
-          d="M162 152 C182 146 200 152 206 170 C188 174 168 166 156 152 Z"
-          fill="#EDEAE1"
-          stroke="#23262F"
-          strokeWidth="2.6"
-          strokeLinejoin="round"
-        />
-      </g>
-      <path
-        d="M188 108 L194 100 M198 116 L206 112"
-        stroke="#23262F"
-        strokeWidth="1.8"
+        d="M130 222 L124 232 M138 224 L136 234"
+        stroke={INK}
+        strokeWidth="2.4"
         strokeLinecap="round"
-        opacity=".5"
+      />
+      <path
+        d="M160 222 L158 232 M168 220 L170 230"
+        stroke={INK}
+        strokeWidth="2.4"
+        strokeLinecap="round"
       />
 
-      <g transform="translate(46,150) rotate(18)">
+      <ellipse cx="172" cy="144" rx="9.5" ry="10.5" fill={INK} />
+      <circle cx="168.5" cy="140" r="2.5" fill="#fff" opacity=".95" />
+      <ellipse cx="128" cy="144" rx="9.5" ry="10.5" fill={INK} />
+      <circle cx="124.5" cy="140" r="2.5" fill="#fff" opacity=".95" />
+      <path
+        d="M141 164 L159 164 L150 153 Z"
+        fill="#4A4038"
+        stroke={INK}
+        strokeWidth="2.4"
+        strokeLinejoin="round"
+      />
+
+      <path
+        d="M120 188 C100 182 82 188 74 204 C92 208 112 202 124 190 Z"
+        fill="#8B6F47"
+        stroke={INK}
+        strokeWidth="5"
+        strokeLinejoin="round"
+      />
+      <g transform="translate(90,176) rotate(-14)">
         <rect
           x="0"
           y="0"
-          width="26"
-          height="11"
-          rx="5.5"
-          fill="#FBFAF7"
-          stroke="#23262F"
-          strokeWidth="2.2"
+          width="30"
+          height="13"
+          rx="6.5"
+          fill="#FDF6E4"
+          stroke={INK}
+          strokeWidth="3"
         />
-        <line x1="7" y1="5.5" x2="19" y2="5.5" stroke="#C9832A" strokeWidth="1.6" opacity=".6" />
+        <line x1="8" y1="6.5" x2="22" y2="6.5" stroke="#C9832A" strokeWidth="1.8" opacity=".65" />
       </g>
-
-      <path
-        d="M76 122 C84 98 102 88 116 88 C130 88 148 98 156 122 C146 110 130 102 116 102 C102 102 86 110 76 122 Z"
-        fill="#9C8D79"
-        stroke="#23262F"
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <circle cx="100" cy="150" r="9" fill="#1A1A1A" />
-      <circle cx="132" cy="150" r="9" fill="#1A1A1A" />
-      <circle cx="97" cy="147" r="2.2" fill="#fff" opacity=".9" />
-      <circle cx="129" cy="147" r="2.2" fill="#fff" opacity=".9" />
-      <path
-        d="M108 162 L124 162 L116 174 Z"
-        fill="#5B5B5B"
-        stroke="#23262F"
-        strokeWidth="1.6"
-        strokeLinejoin="round"
-      />
     </svg>
   );
 }
