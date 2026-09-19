@@ -1,4 +1,40 @@
-import type { Expense, Photo, Split, SplitMode, Stop, Taggable, Trip } from "@/lib/types";
+import type { Expense, Photo, Split, SplitMode, Stop, TagColor, Taggable, Trip } from "@/lib/types";
+
+export const TAG_COLORS: { key: TagColor; label: string; swatch: string; badge: string }[] = [
+  {
+    key: "blue",
+    label: "Blue",
+    swatch: "bg-tag-blue",
+    badge: "bg-tag-blue text-tag-blue-foreground",
+  },
+  {
+    key: "green",
+    label: "Green",
+    swatch: "bg-tag-green",
+    badge: "bg-tag-green text-tag-green-foreground",
+  },
+  {
+    key: "yellow",
+    label: "Yellow",
+    swatch: "bg-tag-yellow",
+    badge: "bg-tag-yellow text-tag-yellow-foreground",
+  },
+  {
+    key: "coral",
+    label: "Coral",
+    swatch: "bg-tag-coral",
+    badge: "bg-tag-coral text-tag-coral-foreground",
+  },
+  {
+    key: "purple",
+    label: "Purple",
+    swatch: "bg-tag-purple",
+    badge: "bg-tag-purple text-tag-purple-foreground",
+  },
+];
+
+export const tagBadgeClasses = (color: TagColor): string =>
+  TAG_COLORS.find((c) => c.key === color)?.badge ?? TAG_COLORS[0]!.badge;
 
 export const equalSplit = (participantIds: string[]): Split => ({
   mode: "equal",

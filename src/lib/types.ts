@@ -9,6 +9,8 @@ export type Trip = {
   planned_budget: number | null;
 };
 
+export type TagColor = "blue" | "green" | "yellow" | "coral" | "purple";
+
 export type Stop = {
   id: string;
   day: number;
@@ -16,6 +18,7 @@ export type Stop = {
   title: string;
   place: string;
   tag: string;
+  tagColor: TagColor;
 };
 
 export type Photo = {

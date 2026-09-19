@@ -2,6 +2,31 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 import { requireSupabaseAuth } from "@/lib/supabase/authMiddleware";
+import type { Stop, TagColor } from "@/lib/types";
+
+const STOP_COLUMNS = "id, day, time, title, place, tag, tag_color";
+
+type StopRow = {
+  id: string;
+  day: number;
+  time: string;
+  title: string;
+  place: string;
+  tag: string;
+  tag_color: string;
+};
+
+function toStop(row: StopRow): Stop {
+  return {
+    id: row.id,
+    day: row.day,
+    time: row.time,
+    title: row.title,
+    place: row.place,
+    tag: row.tag,
+    tagColor: row.tag_color as TagColor,
+  };
+}
 
 export const listStops = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
@@ -9,13 +34,15 @@ export const listStops = createServerFn({ method: "GET" })
   .handler(async ({ context, data }) => {
     const { data: rows, error } = await context.supabase
       .from("stops")
-      .select("id, day, time, title, place, tag")
+      .select(STOP_COLUMNS)
       .eq("trip_id", data.tripId)
       .order("day")
       .order("time");
     if (error) throw error;
-    return rows;
+    return rows.map(toStop);
   });
+
+const tagColorSchema = z.enum(["blue", "green", "yellow", "coral", "purple"]);
 
 const stopInput = z.object({
   tripId: z.string().uuid(),
@@ -25,32 +52,34 @@ const stopInput = z.object({
   title: z.string().min(1),
   place: z.string(),
   tag: z.string(),
+  tagColor: tagColorSchema,
 });
 
 export const saveStop = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(stopInput)
   .handler(async ({ context, data }) => {
-    const { id, tripId, ...fields } = data;
+    const { id, tripId, tagColor, ...fields } = data;
+    const row = { ...fields, tag_color: tagColor };
 
     if (id) {
-      const { data: row, error } = await context.supabase
+      const { data: updated, error } = await context.supabase
         .from("stops")
-        .update(fields)
+        .update(row)
         .eq("id", id)
-        .select("id, day, time, title, place, tag")
+        .select(STOP_COLUMNS)
         .single();
       if (error) throw error;
-      return row;
+      return toStop(updated);
     }
 
-    const { data: row, error } = await context.supabase
+    const { data: created, error } = await context.supabase
       .from("stops")
-      .insert({ ...fields, trip_id: tripId })
-      .select("id, day, time, title, place, tag")
+      .insert({ ...row, trip_id: tripId })
+      .select(STOP_COLUMNS)
       .single();
     if (error) throw error;
-    return row;
+    return toStop(created);
   });
 
 export const deleteStop = createServerFn({ method: "POST" })

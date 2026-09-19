@@ -106,6 +106,7 @@ function TripPage() {
           title: stop.title,
           place: stop.place,
           tag: stop.tag,
+          tagColor: stop.tagColor,
         },
       });
     },

@@ -182,6 +182,7 @@ export type Database = {
           id: string;
           place: string;
           tag: string;
+          tag_color: string;
           time: string;
           title: string;
           trip_id: string;
@@ -193,6 +194,7 @@ export type Database = {
           id?: string;
           place?: string;
           tag?: string;
+          tag_color?: string;
           time: string;
           title: string;
           trip_id: string;
@@ -204,6 +206,7 @@ export type Database = {
           id?: string;
           place?: string;
           tag?: string;
+          tag_color?: string;
           time?: string;
           title?: string;
           trip_id?: string;

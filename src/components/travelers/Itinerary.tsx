@@ -18,7 +18,7 @@ import { StopEditor } from "@/components/travelers/StopEditor";
 import type { TripMember } from "@/features/trips/tripsServerFns";
 import type { Expense, Photo, Stop, Trip, View } from "@/lib/types";
 import { currencyForDestination, formatMoney } from "@/lib/currency";
-import { equalSplit, resolveStop, tripDayList } from "@/lib/trip-utils";
+import { equalSplit, resolveStop, tagBadgeClasses, tripDayList } from "@/lib/trip-utils";
 import { useTripWeather } from "@/lib/useTripWeather";
 import { weatherCodeInfo } from "@/lib/weatherCodes";
 
@@ -191,6 +191,7 @@ export function Itinerary({
                         title: "",
                         place: "",
                         tag: "Explore",
+                        tagColor: "blue",
                       });
                     }}
                   >
@@ -247,7 +248,11 @@ export function Itinerary({
                     <div className="stop-card-head">
                       <div className="stop-title-row">
                         <h3>{stop.title}</h3>
-                        {stop.tag && <span className="spot-badge">{stop.tag}</span>}
+                        {stop.tag && (
+                          <span className={`spot-badge ${tagBadgeClasses(stop.tagColor)}`}>
+                            {stop.tag}
+                          </span>
+                        )}
                       </div>
                       <div className="stop-actions">
                         <IconButton label={`Edit ${stop.title}`} onClick={() => setEditing(stop)}>

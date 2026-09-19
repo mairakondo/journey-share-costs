@@ -3,6 +3,7 @@ import { Check, Clock, MapPin, Trash2, X } from "lucide-react";
 
 import { IconButton } from "@/components/travelers/IconButton";
 import type { Stop } from "@/lib/types";
+import { TAG_COLORS } from "@/lib/trip-utils";
 
 export function StopEditor({
   stop,
@@ -74,6 +75,19 @@ export function StopEditor({
                 onChange={(e) => setDraft({ ...draft, tag: e.target.value })}
               />
             </label>
+          </div>
+          <div className="tag-color-picker" role="radiogroup" aria-label="Tag color">
+            {TAG_COLORS.map((c) => (
+              <button
+                key={c.key}
+                type="button"
+                role="radio"
+                aria-checked={draft.tagColor === c.key}
+                aria-label={c.label}
+                className={`tag-color-swatch ${c.swatch} ${draft.tagColor === c.key ? "active" : ""}`}
+                onClick={() => setDraft({ ...draft, tagColor: c.key })}
+              />
+            ))}
           </div>
         </div>
         <button

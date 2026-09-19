@@ -72,6 +72,16 @@
   --color-violet-soft: var(--violet-soft);
   --color-coral: var(--coral);
   --color-cyan: var(--cyan);
+  --color-tag-blue: var(--tag-blue);
+  --color-tag-blue-foreground: var(--tag-blue-foreground);
+  --color-tag-green: var(--tag-green);
+  --color-tag-green-foreground: var(--tag-green-foreground);
+  --color-tag-yellow: var(--tag-yellow);
+  --color-tag-yellow-foreground: var(--tag-yellow-foreground);
+  --color-tag-coral: var(--tag-coral);
+  --color-tag-coral-foreground: var(--tag-coral-foreground);
+  --color-tag-purple: var(--tag-purple);
+  --color-tag-purple-foreground: var(--tag-purple-foreground);
 }
 
 :root {
@@ -119,6 +129,16 @@
   --violet-soft: oklch(0.9 0.03 235);
   --coral: oklch(0.83 0.13 82);
   --cyan: oklch(0.86 0.05 235);
+  --tag-blue: oklch(0.86 0.05 235);
+  --tag-blue-foreground: oklch(0.26 0.03 245);
+  --tag-green: oklch(0.85 0.08 165);
+  --tag-green-foreground: oklch(0.28 0.05 165);
+  --tag-yellow: oklch(0.87 0.09 92);
+  --tag-yellow-foreground: oklch(0.28 0.04 80);
+  --tag-coral: oklch(0.83 0.1 30);
+  --tag-coral-foreground: oklch(0.32 0.08 30);
+  --tag-purple: oklch(0.86 0.06 300);
+  --tag-purple-foreground: oklch(0.3 0.06 300);
 }
 
 .dark {
@@ -574,7 +594,16 @@
     @apply flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1;
   }
   .spot-badge {
-    @apply inline-flex shrink-0 rounded-md bg-sky px-2 py-1 text-[10px] font-extrabold text-sky-foreground;
+    @apply inline-flex shrink-0 rounded-md px-2 py-1 text-[10px] font-extrabold;
+  }
+  .tag-color-picker {
+    @apply mt-2 flex items-center gap-2;
+  }
+  .tag-color-swatch {
+    @apply size-8 shrink-0 rounded-full border-2 border-transparent transition active:scale-95;
+  }
+  .tag-color-swatch.active {
+    @apply border-foreground;
   }
   .stop-actions {
     @apply flex shrink-0 items-center gap-1;
