@@ -14,6 +14,7 @@ import {
 import { ExpenseEditor } from "@/components/travelers/ExpenseEditor";
 import { IconButton } from "@/components/travelers/IconButton";
 import { PhotoLightbox } from "@/components/travelers/PhotoLightbox";
+import { ScoutReady } from "@/components/travelers/ScoutReady";
 import { StopEditor } from "@/components/travelers/StopEditor";
 import type { TripMember } from "@/features/trips/tripsServerFns";
 import type { Expense, Photo, Stop, Trip, View } from "@/lib/types";
@@ -312,9 +313,10 @@ export function Itinerary({
               );
             })}
             {dayStops.length === 0 && (
-              <p className="empty-day">
-                No activities yet for this day. Tap “Add” to plan something.
-              </p>
+              <div className="empty-day empty-scout">
+                <ScoutReady className="empty-scout-illo" />
+                <p>No activities yet for this day. Tap “Add” to plan something.</p>
+              </div>
             )}
             {looseExpenses.length > 0 && (
               <article className="stop-card">
