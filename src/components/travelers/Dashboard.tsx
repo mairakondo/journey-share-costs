@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Plus } from "lucide-react";
 
-import { ScoutReady } from "@/components/travelers/ScoutReady";
 import { members } from "@/lib/mock-data";
 import type { Trip } from "@/lib/types";
 import { classifyTrip, daysBetween, daysUntil, formatDateRange } from "@/lib/trip-utils";
@@ -143,10 +142,7 @@ export function Dashboard({ trips, onCreate }: { trips: Trip[]; onCreate: () => 
       )}
 
       {trips.length === 0 && (
-        <div className="empty-day empty-scout mt-7">
-          <ScoutReady className="empty-scout-illo" />
-          <p>No trips yet. Tap “Create trip” to plan your first one.</p>
-        </div>
+        <p className="empty-day mt-7">No trips yet. Tap “Create trip” to plan your first one.</p>
       )}
     </div>
   );
