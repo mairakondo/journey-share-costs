@@ -1,5 +1,17 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import {
+  DndContext,
+  DragOverlay,
+  PointerSensor,
+  useDraggable,
+  useDroppable,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type DragStartEvent,
+} from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
+import { useState, type ReactNode } from "react";
 import {
   CloudSun,
   Footprints,
@@ -21,6 +33,57 @@ import { currencyForDestination, formatMoney } from "@/lib/currency";
 import { equalSplit, resolveStop, tagBadgeClasses, tripDayList } from "@/lib/trip-utils";
 import { useTripWeather } from "@/lib/useTripWeather";
 import { weatherCodeInfo } from "@/lib/weatherCodes";
+
+const DAY_DROP_PREFIX = "day-";
+
+function DraggableStopCard({
+  stop,
+  className,
+  children,
+}: {
+  stop: Stop;
+  className: string;
+  children: ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: stop.id,
+  });
+  return (
+    <article
+      ref={setNodeRef}
+      className={className}
+      style={{ transform: CSS.Translate.toString(transform), touchAction: "none" }}
+      data-dragging={isDragging || undefined}
+      {...listeners}
+      {...attributes}
+    >
+      {children}
+    </article>
+  );
+}
+
+function DroppableDayTab({
+  dayIndex,
+  active,
+  onClick,
+  children,
+}: {
+  dayIndex: number;
+  active: boolean;
+  onClick: () => void;
+  children: ReactNode;
+}) {
+  const { setNodeRef, isOver } = useDroppable({ id: `${DAY_DROP_PREFIX}${dayIndex}` });
+  return (
+    <button
+      ref={setNodeRef}
+      onClick={onClick}
+      className={[active ? "active" : "", isOver ? "drop-target" : ""].filter(Boolean).join(" ")}
+    >
+      {children}
+    </button>
+  );
+}
 
 export function Itinerary({
   trip,
@@ -73,6 +136,23 @@ export function Itinerary({
   const [addOpen, setAddOpen] = useState(false);
   const [viewing, setViewing] = useState<Photo | null>(null);
   const [viewingPool, setViewingPool] = useState<Photo[]>([]);
+  const [draggingStop, setDraggingStop] = useState<Stop | null>(null);
+  const dragSensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+  );
+
+  const handleDragStart = (event: DragStartEvent) => {
+    setDraggingStop(stops.find((s) => s.id === event.active.id) ?? null);
+  };
+  const handleDragEnd = (event: DragEndEvent) => {
+    setDraggingStop(null);
+    const targetId = event.over?.id;
+    if (typeof targetId !== "string" || !targetId.startsWith(DAY_DROP_PREFIX)) return;
+    const targetDay = Number(targetId.slice(DAY_DROP_PREFIX.length));
+    const stop = stops.find((s) => s.id === event.active.id);
+    if (!stop || stop.day === targetDay) return;
+    onSaveStop({ ...stop, day: targetDay });
+  };
 
   const dayStops = stops.filter((s) => s.day === day).sort((a, b) => a.time.localeCompare(b.time));
   const dayExpenses = expenses.filter((e) => e.day === day);
@@ -142,13 +222,13 @@ export function Itinerary({
   }
 
   return (
-    <>
+    <DndContext sensors={dragSensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
       <div className="day-strip">
         {tripDays.map((d, i) => (
-          <button key={i} onClick={() => setDay(i)} className={day === i ? "active" : ""}>
+          <DroppableDayTab key={i} dayIndex={i} active={day === i} onClick={() => setDay(i)}>
             <span>Day {i + 1}</span>
             {d.label}
-          </button>
+          </DroppableDayTab>
         ))}
       </div>
 
@@ -236,9 +316,10 @@ export function Itinerary({
               const cover = freshPhotos[0] ?? matchedPhotos[0];
               const matchedExpenses = stopExpenses(stop.id);
               return (
-                <article
-                  className={freshPhotos.length > 0 ? "stop-card has-new" : "stop-card"}
+                <DraggableStopCard
                   key={stop.id}
+                  stop={stop}
+                  className={freshPhotos.length > 0 ? "stop-card has-new" : "stop-card"}
                 >
                   <div className="time">{stop.time}</div>
                   <div className="timeline-dot">
@@ -313,7 +394,7 @@ export function Itinerary({
                       </div>
                     </div>
                   </div>
-                </article>
+                </DraggableStopCard>
               );
             })}
             {dayStops.length === 0 && (
@@ -402,6 +483,14 @@ export function Itinerary({
           }}
         />
       )}
-    </>
+      <DragOverlay>
+        {draggingStop && (
+          <div className="drag-chip">
+            <span>{draggingStop.time}</span>
+            {draggingStop.title || "Untitled activity"}
+          </div>
+        )}
+      </DragOverlay>
+    </DndContext>
   );
 }
