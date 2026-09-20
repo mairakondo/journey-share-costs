@@ -52,12 +52,7 @@ function DraggableStopCard({
     <article
       ref={setNodeRef}
       className={className}
-      style={{
-        transform: CSS.Translate.toString(transform),
-        touchAction: "pan-y",
-        userSelect: "none",
-        WebkitUserSelect: "none",
-      }}
+      style={{ transform: CSS.Translate.toString(transform), touchAction: "none" }}
       data-dragging={isDragging || undefined}
       {...listeners}
       {...attributes}
@@ -143,7 +138,7 @@ export function Itinerary({
   const [viewingPool, setViewingPool] = useState<Photo[]>([]);
   const [draggingStop, setDraggingStop] = useState<Stop | null>(null);
   const dragSensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { delay: 3000, tolerance: 5 } }),
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
   );
 
   const handleDragStart = (event: DragStartEvent) => {
