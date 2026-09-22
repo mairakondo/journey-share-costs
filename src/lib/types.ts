@@ -48,4 +48,4 @@ export type Expense = {
 
 export type Taggable = { day: number | null; time: string; place: string; stopId?: string | null };
 
-export type Tool = "restroom" | "translate" | "access" | "locate";
+export type Tool = "restroom" | "translate" | "access" | "locate" | "moodboard";

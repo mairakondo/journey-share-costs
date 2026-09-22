@@ -5,6 +5,7 @@ import {
   Languages,
   Locate,
   Phone,
+  Shirt,
   ShieldCheck,
   Siren,
   Toilet,
@@ -12,6 +13,7 @@ import {
 
 import { AccessFlow } from "@/components/travelers/support/AccessFlow";
 import { LocateFlow } from "@/components/travelers/support/LocateFlow";
+import { MoodBoardModal } from "@/components/travelers/support/MoodBoardModal";
 import { RestroomFlow } from "@/components/travelers/support/RestroomFlow";
 import { TranslateFlow } from "@/components/travelers/support/TranslateFlow";
 import type { TripMember } from "@/features/trips/tripsServerFns";
@@ -77,6 +79,18 @@ export function Support({
             </span>
           </button>
         ))}
+      </section>
+      <h3 className="support-section-title">Trip inspiration</h3>
+      <section className="tool-grid">
+        <button className="tool-card" onClick={() => setTool("moodboard")}>
+          <span className="support-icon">
+            <Shirt />
+          </span>
+          <span className="flex-1 text-left">
+            <strong>Outfit inspiration</strong>
+            <small>A mood board to pack around</small>
+          </span>
+        </button>
       </section>
       <h3 className="support-section-title">Emergency contacts</h3>
       <section className="support-grid">
@@ -182,6 +196,7 @@ export function Support({
           onClose={() => setTool(null)}
         />
       )}
+      {tool === "moodboard" && <MoodBoardModal onClose={() => setTool(null)} />}
     </>
   );
 }
