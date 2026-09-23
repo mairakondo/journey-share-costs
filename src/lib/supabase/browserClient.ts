@@ -1,13 +1,8 @@
-import { createBrowserClient } from "@supabase/ssr";
+import { supabase } from "@/integrations/supabase/client";
 
-import type { Database } from "@/lib/database.types";
-
-let client: ReturnType<typeof createBrowserClient<Database>> | undefined;
-
+// Single shared browser client (managed connection settings + preview-safe
+// session storage). Keeping one client means the session written at sign-in is
+// the same one every hook and upload reads.
 export function getSupabaseBrowserClient() {
-  client ??= createBrowserClient<Database>(
-    import.meta.env.VITE_SUPABASE_URL as string,
-    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string,
-  );
-  return client;
+  return supabase;
 }
