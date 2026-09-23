@@ -73,14 +73,8 @@ export const requireSupabaseAuth = createMiddleware({ type: "function" }).server
     } = await supabase.auth.getUser(token);
     if (error || !user) throw new Error("UNAUTHENTICATED");
 
-    // Keep a profile row for this user so trip ownership FKs resolve.
-    await supabase.rpc("ensure_profile", {
-      _display_name:
-        (user.user_metadata?.["display_name"] as string | undefined) ??
-        user.email?.split("@")[0] ??
-        "Traveler",
-    });
-
+    // Profile rows are created by the on_auth_user_created trigger at
+    // sign-up (handle_new_user()), not here.
     return next({ context: { supabase, user: user as User } });
   },
 );
