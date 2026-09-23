@@ -78,11 +78,6 @@ export function Support({
           </button>
         ))}
       </section>
-      <h3 className="support-section-title">Trip inspiration</h3>
-      <figure className="mood-board">
-        <img src="/moodboards/hawaii-trip-outfits.webp" alt="Hawaii trip outfit mood board" />
-        <figcaption>Outfit inspiration to pack around</figcaption>
-      </figure>
       <h3 className="support-section-title">Emergency contacts</h3>
       <section className="support-grid">
         {emergency.isLoading && (
@@ -176,6 +171,11 @@ export function Support({
           </>
         )}
       </section>
+      <h3 className="support-section-title">Trip inspiration</h3>
+      <figure className="mood-board">
+        <img src="/moodboards/hawaii-trip-outfits.webp" alt="Hawaii trip outfit mood board" />
+        <figcaption>Outfit inspiration to pack around</figcaption>
+      </figure>
       {tool === "restroom" && <RestroomFlow trip={trip} onClose={() => setTool(null)} />}
       {tool === "translate" && <TranslateFlow trip={trip} onClose={() => setTool(null)} />}
       {tool === "access" && <AccessFlow trip={trip} onClose={() => setTool(null)} />}
