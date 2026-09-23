@@ -77,6 +77,51 @@ export type Database = {
           },
         ]
       }
+      member_locations: {
+        Row: {
+          accuracy_m: number | null
+          expires_at: string
+          lat: number
+          lon: number
+          trip_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          accuracy_m?: number | null
+          expires_at: string
+          lat: number
+          lon: number
+          trip_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          accuracy_m?: number | null
+          expires_at?: string
+          lat?: number
+          lon?: number
+          trip_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "member_locations_trip_id_fkey"
+            columns: ["trip_id"]
+            isOneToOne: false
+            referencedRelation: "trips"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "member_locations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       photos: {
         Row: {
           created_at: string
@@ -150,6 +195,7 @@ export type Database = {
           id: string
           place: string
           tag: string
+          tag_color: string
           time: string
           title: string
           trip_id: string
@@ -161,6 +207,7 @@ export type Database = {
           id?: string
           place?: string
           tag?: string
+          tag_color?: string
           time: string
           title: string
           trip_id: string
@@ -172,6 +219,7 @@ export type Database = {
           id?: string
           place?: string
           tag?: string
+          tag_color?: string
           time?: string
           title?: string
           trip_id?: string
@@ -273,6 +321,7 @@ export type Database = {
           end_date: string | null
           id: string
           name: string
+          planned_budget: number | null
           start_date: string | null
         }
         Insert: {
@@ -282,6 +331,7 @@ export type Database = {
           end_date?: string | null
           id?: string
           name: string
+          planned_budget?: number | null
           start_date?: string | null
         }
         Update: {
@@ -291,6 +341,7 @@ export type Database = {
           end_date?: string | null
           id?: string
           name?: string
+          planned_budget?: number | null
           start_date?: string | null
         }
         Relationships: [
