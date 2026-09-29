@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { AppShell } from "@/components/travelers/AppShell";
@@ -147,7 +148,11 @@ function TripPage() {
         },
       });
     },
-    onSuccess: invalidateExpenses,
+    onSuccess: (_result, expense) => {
+      invalidateExpenses();
+      const isNew = !expenses.some((e) => e.id === expense.id);
+      if (isNew) toast.success(`Added "${expense.label || "cost"}"`);
+    },
   });
 
   const deleteExpenseMutation = useMutation({
